@@ -10,7 +10,7 @@
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 
-namespace Dgmjr.Enumerations.CodeGeneration;
+namespace Dgmjr.Enumerations.CodeGenerator;
 
 public record struct EnumerationTypeDeclaration
 {

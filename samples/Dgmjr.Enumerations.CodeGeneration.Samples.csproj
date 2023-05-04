@@ -21,9 +21,9 @@
     <PackageReference Include="Dgmjr.Abstractions" />
     <PackageReference Include="System.ComponentModel.Usings" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Dgmjr.Enumerations.CodeGenerator">
-      <HintPath>$(PkgDgmjr_Enumerations_CodeGenerator)/analyzers/cs/netstandard2.0/Dgmjr.Enumerations.CodeGenerator.dll</HintPath>
+  <!-- <ItemGroup>
+    <Reference Include="Dgmjr.Enumerations.CodeGenerator.dll">
+      <HintPath>$(PkgDgmjr_Enumerations_CodeGenerator)/analyzers/cs/Dgmjr.Enumerations.CodeGenerator.dll</HintPath>
     </Reference>
-  </ItemGroup>
+  </ItemGroup> -->
 </Project>

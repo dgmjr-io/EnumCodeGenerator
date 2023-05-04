@@ -15,8 +15,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <OutputPath>analyers/cs</OutputPath>
+    <OutputPath>analyzers/cs</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" />
@@ -24,7 +26,8 @@
         <PackageReference Include="Microsoft.CodeAnalysis.Common" />
         <PackageReference Include="System.Text.Json" />
         <PackageReference Include="Scriban.Signed" />
-        <PackageReference Include="ThisAssembly" />
+        <PackageReference Include="ThisAssembly.AssemblyInfo" />
+        <PackageReference Include="ThisAssembly.Project" />
         <PackageReference Include="Dgmjr.ComponentModel" />
         <PackageReference Include="Dgmjr.System.Extensions" />
     </ItemGroup>
@@ -35,10 +38,10 @@
     </ItemGroup>
 
     <PropertyGroup>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <IncludeBuildOutput>true</IncludeBuildOutput>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageFile Include="$(OutputDir)%(AssemblyName)\*dll" PackagePath="analyzers/dotnet/cs/netstandard2.0/$(AssemblyName).dll" Visible="false" />
-    </ItemGroup>
+    <!-- <ItemGroup>
+        <PackageFile Include="$(OutputPath)/**/*.ll" PackagePath="analyzers/dotnet/cs/%(Filename).dll" Visible="false" />
+    </ItemGroup> -->
 </Project>
