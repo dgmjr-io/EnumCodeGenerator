@@ -350,12 +350,20 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        context.RegisterPostInitializationOutput(
+            (context) =>
+                context.AddSource(
+                    Constants.GenerateEnumerationTypesFileName,
+                    Constants.GenerateEnumerationTypeAttributesDeclaration
+                )
+        );
+
         foreach (var attributeName in Constants.GenerateEnumerationTypeAttributes)
         {
             var syntaxProvider = context.SyntaxProvider
                 .ForAttributeWithMetadataName(attributeName, Include, Transform)
                 .Collect();
-            context.RegisterSourceOutput(syntaxProvider, Generate);
+            context.RegisterImplementationSourceOutput(syntaxProvider, Generate);
         }
         context.RegisterPostInitializationOutput(
             (context) =>

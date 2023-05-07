@@ -10,15 +10,15 @@
  *      License: MIT (https://opensource.org/licenses/MIT)
 -->
 
-
-
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <OutputPath>analyzers/cs</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <!-- <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules> -->
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <IsNuGetized>true</IsNuGetized>
+    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" />
@@ -30,18 +30,29 @@
         <PackageReference Include="ThisAssembly.Project" />
         <PackageReference Include="Dgmjr.ComponentModel" />
         <PackageReference Include="Dgmjr.System.Extensions" />
+        <ProjectReference Include="./Attributes/Dgmjr.Enumerations.CodeGenerator.Attributes.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <Compile Remove="./Resources/*" />
+        <Compile Remove="./Attributes/**/*.*" />
         <EmbeddedResource Include="./Resources/**/*" />
     </ItemGroup>
 
     <PropertyGroup>
-        <IncludeBuildOutput>true</IncludeBuildOutput>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
     </PropertyGroup>
 
-    <!-- <ItemGroup>
-        <PackageFile Include="$(OutputPath)/**/*.ll" PackagePath="analyzers/dotnet/cs/%(Filename).dll" Visible="false" />
-    </ItemGroup> -->
+    <ItemGroup>
+        <PackageFile Include="$(OutputPath)/**/*.dll" Pack="true" PackagePath="analyzers/cs/%(RecursiveDir)%(Filename)%(Extension)" />
+        <PackageFile Include="./Attributes/**/bin/**/Dgmjr.Enumerations.CodeGenerator.Attributes.dll" Pack="true" PackagePath="lib/netstandard2.0/%(Filename)%(Extension)" />
+        <None Remove="$(OutputPath)/**"  />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- <Reference Update="Microsoft.CodeAnalysis.Analyzers.dll" Pack="true" PackagePath="analyzers/cs/Microsoft.CodeAnalysis.Analyzers.dll" />
+        <Reference Update="Microsoft.CodeAnalysis.CSharp.dll" Pack="true" PackagePath="analyzers/cs/Microsoft.CodeAnalysis.CSharp.dll" />
+        <Reference Update="Microsoft.CodeAnalysis.CSharp.Workspaces.dll" Pack="true" PackagePath="analyzers/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.dll" />
+        <Reference Update="Microsoft.CodeAnalysis.Common.dll" Pack="true" PackagePath="analyzers/cs/Microsoft.CodeAnalysis.Common.dll" /> -->
+    </ItemGroup>
 </Project>
