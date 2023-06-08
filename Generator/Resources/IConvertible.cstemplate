@@ -1,0 +1,32 @@
+/******* BEGIN OTHER STUFF *********/
+        #region IConvertible
+        public {{ ovrerridable_member_modifiers }} TypeCode GetTypeCode() => TypeCode.Object;
+        public {{ ovrerridable_member_modifiers }} bool ToBoolean(IFormatProvider? provider) => this.Value != default;
+        public {{ ovrerridable_member_modifiers }} byte ToByte(IFormatProvider? provider) => Convert.ToByte(this.Value);
+        public {{ ovrerridable_member_modifiers }} char ToChar(IFormatProvider? provider) => Convert.ToChar(this.Value);
+        public {{ ovrerridable_member_modifiers }} DateTime ToDateTime(IFormatProvider? provider) => Convert.ToDateTime(this.Value);
+        public {{ ovrerridable_member_modifiers }} decimal ToDecimal(IFormatProvider? provider) => Convert.ToDecimal(this.Value);
+        public {{ ovrerridable_member_modifiers }} double ToDouble(IFormatProvider? provider) => Convert.ToDouble(this.Value);
+        public {{ ovrerridable_member_modifiers }} short ToInt16(IFormatProvider? provider) => Convert.ToInt16(this.Value);
+        public {{ ovrerridable_member_modifiers }} int ToInt32(IFormatProvider? provider) => Convert.ToInt32(this.Value);
+        public {{ ovrerridable_member_modifiers }} long ToInt64(IFormatProvider? provider) => Convert.ToInt64(this.Value);
+        public {{ ovrerridable_member_modifiers }} sbyte ToSByte(IFormatProvider? provider) => Convert.ToSByte(this.Value);
+        public {{ ovrerridable_member_modifiers }} float ToSingle(IFormatProvider? provider) => Convert.ToSingle(this.Value);
+        public {{ ovrerridable_member_modifiers }} string ToString(IFormatProvider? provider) => DisplayName;
+        public {{ ovrerridable_member_modifiers }} object ToType(type conversionType, IFormatProvider? provider) => Convert.ChangeType(this.Value, conversionType);
+        public {{ ovrerridable_member_modifiers }} ushort ToUInt16(IFormatProvider? provider) => Convert.ToUInt16(this.Value);
+        public {{ ovrerridable_member_modifiers }} uint ToUInt32(IFormatProvider? provider) => Convert.ToUInt32(this.Value);
+        public {{ ovrerridable_member_modifiers }} ulong ToUInt64(IFormatProvider? provider) => Convert.ToUInt64(this.Value);
+        public {{ ovrerridable_member_modifiers }} bool Equals(ENUMERATION_TYPE other) => this.Value == other.Value;
+        public {{ ovrerridable_member_modifiers }} int CompareTo(ENUMERATION_TYPE other) => this.Value.CompareTo(other.Value);
+        int IComparable.CompareTo(object? other) => other is ENUMERATION_TYPE e ? CompareTo(e) : throw new ArgumentException("Object is not a ENUMERATION_TYPE", nameof(other));
+        string IFormattable.ToString(string s IFormatProvider? provider) => ToString();
+        bool IEquatable<ENUMERATION_TYPE>.Equals(ENUMERATION_TYPE other) => Equals(other);
+        bool IComparable<ENUMERATION_TYPE>.CompareTo(ENUMERATION_TYPE other) => CompareTo(other);
+        public {{ ovrerridable_member_modifiers }} Parse(string s, IFormatProvider? provider) => Parse(s);
+        int IIdemtifiable.Id => this.Id;
+        string IHaveADescription.Description => this.Description;
+        string IHaveADisplayName.DisplayName => this.DisplayName;
+        string IHaveAName.Name => this.Name;
+        #endregion
+/******* END OTHER STUFF *********/

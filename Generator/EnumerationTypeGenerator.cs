@@ -11,7 +11,7 @@
  */
 
 namespace Dgmjr.Enumerations.CodeGenerator;
-
+// extern alias XDoc;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -21,7 +21,9 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using DisplayAttribute = Constants.DisplayAttribute;
 
 [Generator]
 public class EnumerationTypeGenerator : IIncrementalGenerator
@@ -30,10 +32,11 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
     private const string Display = nameof(Display);
     private const string Value = nameof(Value);
     private const string UriAttribute = nameof(UriAttribute);
-    private const string GuidKeyName = "Guid";
+    private const string GuidPropertyName = "Guid";
     private const string GuidAttribute = nameof(GuidAttribute);
     private const string Prompt = nameof(Prompt);
     private const string DefaultUrnPattern = "urn:{0}:{1}:{1}";
+    private const string Uri = nameof(Uri);
 
     private static bool Include(SyntaxNode node, CancellationToken cancellationToken) =>
         node is EnumDeclarationSyntax enumDeclaration
@@ -103,8 +106,12 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
                 {
                     Name = nameof(DisplayAttribute.Description),
                     Type = typeof(string),
-                    Value = /*enumValue.GetDocumentationCommentXml().SelectXpath("//summary", false).FirstOrDefault()?.Value ?? */
-                    enumValue.Name,
+                    Value =
+                        enumValue
+                            .GetDocumentationCommentXml()
+                            .SelectXpath("//summary", false)
+                            .FirstOrDefault()
+                            ?.Value ?? enumValue.Name,
                     XmlDoc =
                         enumValue
                             .GetDocumentationCommentXml()
@@ -153,9 +160,9 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
                     Type = typeof(string),
                     Value = null
                 },
-                [nameof(GuidKeyName)] = new EnumerationAttributeDeclaration
+                [GuidPropertyName] = new EnumerationAttributeDeclaration
                 {
-                    Name = nameof(Guid),
+                    Name = GuidPropertyName,
                     Type = typeof(string),
                     Value = null
                 }
@@ -295,8 +302,8 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
                     Value = (int?)enumValue.ConstantValue ?? 0,
                     Attributes = attributesDictionary,
                     XmlDoc = $"""
-                /// <summary>{(enumValue.GetDocumentationCommentXml().SelectXpath("//summary", false)?.FirstOrDefault()?.Value ?? attributesDictionary[nameof(DisplayAttribute.Name)].Value)?.ToString()?.Replace(Environment.NewLine, Environment.NewLine + "/// ")}</summary>
-                /// <remarks>{(enumValue.GetDocumentationCommentXml().SelectXpath("//remarks", false)?.FirstOrDefault()?.Value ?? attributesDictionary[nameof(DisplayAttribute.Description)].Value)?.ToString()?.Replace(Environment.NewLine, Environment.NewLine + "/// ")}</remarks>
+                /// <summary>{(enumValue.GetDocumentationCommentXml().SelectXpath("//summary", false)?.FirstOrDefault()?.Value ?? attributesDictionary[nameof(DisplayAttribute.Name)].Value)?.ToString().Replace(Environment.NewLine, Environment.NewLine + "/// ")?.Trim()}</summary>
+                /// <remarks>{(enumValue.GetDocumentationCommentXml().SelectXpath("//remarks", false)?.FirstOrDefault()?.Value ?? attributesDictionary[nameof(DisplayAttribute.Description)].Value)?.ToString()?.Replace(Environment.NewLine, Environment.NewLine + "/// ")?.Trim()}</remarks>
                 /// <seealso cref="global::{enumTypeSymbol.ContainingNamespace.ToDisplayString()}.@{enumTypeSymbol.Name}.@{enumValue.Name}">{enumTypeSymbol.Name}</seealso>
                 """
                 }
@@ -306,7 +313,7 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
         var xmlComment = "";
         try
         {
-            var doc = System.Xml.Linq.XDocument.Parse(enumTypeSymbol.GetDocumentationCommentXml());
+            var doc = XD.Parse(enumTypeSymbol.GetDocumentationCommentXml());
             xmlComment = Join(
                 Environment.NewLine,
                 doc.XPathSelectElements("//member/*").Select(xe => xe.ToString()).ToArray()
@@ -317,8 +324,19 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
             // ignored
         }
 
+        var enumerationTypeDeclarationSyntax = context.TargetNode.SyntaxTree
+            .GetCompilationUnitRoot()
+            .DescendantNodes()
+            .OfType<BaseTypeDeclarationSyntax>()
+            .FirstOrDefault(tds => tds.TryGetInferredMemberName() == enumerationTypeNameString);
+        var enumerationTypeDeclarationSymbol =
+            enumerationTypeDeclarationSyntax != null
+                ? context.SemanticModel.GetDeclaredSymbol(enumerationTypeDeclarationSyntax)
+                : null;
+
         return new EnumerationTypeDeclaration
         {
+            Symbol = enumerationTypeDeclarationSymbol,
             EnumerationTypeName = enumerationTypeNameString,
             EnumTypeName = enumTypeSymbol.Name,
             Namespace = namespaceString ?? enumTypeSymbol.ContainingNamespace.ToDisplayString(),
@@ -344,7 +362,8 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
             Attributes = membersDictionary
                 .SelectMany(x => x.Value.Attributes.ToDictionary(a => a.Key, a => a.Value.Type))
                 .Distinct()
-                .ToDictionary(x => x.Key, x => x.Value)
+                .ToDictionary(x => x.Key, x => x.Value),
+            OtherStuff = null
         };
     }
 
@@ -365,13 +384,6 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
                 .Collect();
             context.RegisterImplementationSourceOutput(syntaxProvider, Generate);
         }
-        context.RegisterPostInitializationOutput(
-            (context) =>
-                context.AddSource(
-                    Constants.GenerateEnumerationTypesFileName,
-                    Constants.GenerateEnumerationTypeAttributesDeclaration
-                )
-        );
     }
 
     private static void Generate(
@@ -381,141 +393,12 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
     {
         foreach (var enumerationType in values)
         {
-            if (enumerationType is null)
+            if (enumerationType is not null)
             {
-                continue;
+                var template = Constants.EnumerationTypeDeclarationTemplate;
+                var result = template.Render(enumerationType);
+                context.AddSource($"{enumerationType.Value.EnumerationTypeName}.g.cs", result);
             }
-
-            var template = Constants.EnumerationTypeDeclarationTemplate;
-            var result = template.Render(enumerationType);
-            context.AddSource($"{enumerationType.Value.EnumerationTypeName}.g.cs", result);
         }
-    }
-
-    public class NamedEnumType : type
-    {
-        public NamedEnumType(string @namespace, string name)
-        {
-            _namespace = @namespace;
-            _mame = name;
-        }
-
-        public override Assembly Assembly => typeof(NamedEnumType).Assembly;
-
-        public override string AssemblyQualifiedName => FullName + ", " + Assembly.FullName;
-
-        public override type BaseType => typeof(Enum);
-
-        public override string FullName => throw new NotImplementedException();
-
-        public override Guid GUID => throw new NotImplementedException();
-
-        public override Module Module => throw new NotImplementedException();
-
-        private string _namespace = "";
-        public override string Namespace => _namespace;
-
-        public override type UnderlyingSystemType => typeof(Enum).UnderlyingSystemType;
-
-        private string _mame = "";
-        public override string Name => _mame;
-
-        public override ConstructorInfo[] GetConstructors(BindingFlags bindingAttr) =>
-            throw new NotImplementedException();
-
-        public override object[] GetCustomAttributes(bool inherit) =>
-            throw new NotImplementedException();
-
-        public override object[] GetCustomAttributes(type attributeType, bool inherit) =>
-            throw new NotImplementedException();
-
-        public override type GetElementType() => throw new NotImplementedException();
-
-        public override EventInfo GetEvent(string name, BindingFlags bindingAttr) =>
-            throw new NotImplementedException();
-
-        public override EventInfo[] GetEvents(BindingFlags bindingAttr) =>
-            throw new NotImplementedException();
-
-        public override FieldInfo GetField(string name, BindingFlags bindingAttr) =>
-            throw new NotImplementedException();
-
-        public override FieldInfo[] GetFields(BindingFlags bindingAttr) =>
-            throw new NotImplementedException();
-
-        public override type GetInterface(string name, bool ignoreCase) =>
-            throw new NotImplementedException();
-
-        public override type[] GetInterfaces() => throw new NotImplementedException();
-
-        public override MemberInfo[] GetMembers(BindingFlags bindingAttr) =>
-            throw new NotImplementedException();
-
-        public override MethodInfo[] GetMethods(BindingFlags bindingAttr) =>
-            throw new NotImplementedException();
-
-        public override type GetNestedType(string name, BindingFlags bindingAttr) =>
-            throw new NotImplementedException();
-
-        public override type[] GetNestedTypes(BindingFlags bindingAttr) =>
-            throw new NotImplementedException();
-
-        public override PropertyInfo[] GetProperties(BindingFlags bindingAttr) =>
-            throw new NotImplementedException();
-
-        public override object InvokeMember(
-            string name,
-            BindingFlags invokeAttr,
-            Binder binder,
-            object target,
-            object[] args,
-            ParameterModifier[] modifiers,
-            CultureInfo culture,
-            string[] namedParameters
-        ) => throw new NotImplementedException();
-
-        public override bool IsDefined(type attributeType, bool inherit) =>
-            throw new NotImplementedException();
-
-        protected override TypeAttributes GetAttributeFlagsImpl() =>
-            throw new NotImplementedException();
-
-        protected override ConstructorInfo GetConstructorImpl(
-            BindingFlags bindingAttr,
-            Binder binder,
-            CallingConventions callConvention,
-            type[] types,
-            ParameterModifier[] modifiers
-        ) => throw new NotImplementedException();
-
-        protected override MethodInfo GetMethodImpl(
-            string name,
-            BindingFlags bindingAttr,
-            Binder binder,
-            CallingConventions callConvention,
-            type[] types,
-            ParameterModifier[] modifiers
-        ) => throw new NotImplementedException();
-
-        protected override PropertyInfo GetPropertyImpl(
-            string name,
-            BindingFlags bindingAttr,
-            Binder binder,
-            type returnType,
-            type[] types,
-            ParameterModifier[] modifiers
-        ) => throw new NotImplementedException();
-
-        protected override bool HasElementTypeImpl() => throw new NotImplementedException();
-
-        protected override bool IsArrayImpl() => throw new NotImplementedException();
-
-        protected override bool IsByRefImpl() => throw new NotImplementedException();
-
-        protected override bool IsCOMObjectImpl() => throw new NotImplementedException();
-
-        protected override bool IsPointerImpl() => throw new NotImplementedException();
-
-        protected override bool IsPrimitiveImpl() => throw new NotImplementedException();
     }
 }

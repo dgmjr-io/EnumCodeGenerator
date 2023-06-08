@@ -1,42 +1,62 @@
 <!--
  * Dgmjr.Enumerations.CodeGenerator.csproj
- * 
+ *
  *   Created: 2023-05-03-02:01:51
  *   Modified: 2023-05-03-02:01:52
- * 
+ *
  *   Author: David G. Moore, Jr. <david@dgmjr.io>
- *   
+ *
  *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
 -->
 
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <!-- <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules> -->
-    <IsRoslynComponent>true</IsRoslynComponent>
-    <IsNuGetized>true</IsNuGetized>
-    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+        <TargetFrameworks>netstandard2.0;net7.0</TargetFrameworks>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <Title>DGMJR Enums ➡️ Enumerations Generator</Title>
+        <NoWarn>$(NoWarn);RS1035</NoWarn>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
         <PackageReference Include="Microsoft.CodeAnalysis.Common" />
-        <PackageReference Include="System.Text.Json" />
-        <PackageReference Include="Scriban.Signed" />
-        <PackageReference Include="ThisAssembly.AssemblyInfo" />
-        <PackageReference Include="ThisAssembly.Project" />
+        <!-- <PackageReference Include="System.ComponentModel.Annotations" /> -->
+        <PackageReference Include="System.ComponentModel.Usings" IncludeAssets="Build" />
+        <PackageReference Include="Dgmjr.CodeGeneration.Constants" PrivateAssets="All" />
+        <!-- <PackageReference Include="Scriban.Signed" Aliases="SSign" PrivateAssets="All"/> -->
+        <PackageReference Include="Scriban.Signed" Aliases="SUn" PrivateAssets="All" />
+        <PackageReference Include="ThisAssembly.AssemblyInfo">
+          <GeneratePathProperty></GeneratePathProperty>
+          <CopyLocal></CopyLocal>
+          <IncludeAssets></IncludeAssets>
+          <ExcludeAssets></ExcludeAssets>
+        </PackageReference>
+        <PackageReference Include="ThisAssembly.Project">
+          <GeneratePathProperty></GeneratePathProperty>
+          <CopyLocal></CopyLocal>
+          <IncludeAssets></IncludeAssets>
+          <ExcludeAssets></ExcludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CSharp" PrivateAssets="All" />
+        <!-- <PackageReference Include="ThisAssembly.Resources" /> -->
+        <!-- <PackageReference Include="System.Xml.XDocument" Aliases="XDoc" /> -->
         <PackageReference Include="Dgmjr.ComponentModel" />
         <PackageReference Include="Dgmjr.System.Extensions" />
-        <ProjectReference Include="./Attributes/Dgmjr.Enumerations.CodeGenerator.Attributes.csproj" />
+        <PackageReference Include="System.Text.Json.Usings" />
+        <PackageReference Include="System.Threading.Tasks.Extensions" />
+        <!-- <ProjectReference Include="./Attributes/Dgmjr.Enumerations.CodeGenerator.Attributes.csproj" /> -->
     </ItemGroup>
 
     <ItemGroup>
         <Compile Remove="./Resources/*" />
         <Compile Remove="./Attributes/**/*.*" />
-        <EmbeddedResource Include="./Resources/**/*" />
+        <EmbeddedResource Include="$(MSBuildThisFileDirectory)/Resources/**/*.cstemplate" LogicalName="%(Filename)%(Extension)" Kind="Text" />
+        <InternalsVisibleTo Include="Dgmjr.Enumerations.CodeGenerator.Tests, PublicKey=00240000048000009400000006020000002400005253413100040000010001000d802c8a5e6d2d2a7487bf92dd89a0689f004d27d8eaef54cc62aed0afd643dc33222f020003d3fc79c76c0a791eb7ae56d0d17bac639122f17a8f7f246ae6481045146327ebc0eab8878dbdc79aa6ad1bc26b56bbe0ce5eb443c7450a3496d8bc181135c01b98e974ef825ea9b247bd4bc95023b9394e7073e278cde1ca0c94" />
+        <InternalsVisibleTo Include="tests, PublicKey=00240000048000009400000006020000002400005253413100040000010001000d802c8a5e6d2d2a7487bf92dd89a0689f004d27d8eaef54cc62aed0afd643dc33222f020003d3fc79c76c0a791eb7ae56d0d17bac639122f17a8f7f246ae6481045146327ebc0eab8878dbdc79aa6ad1bc26b56bbe0ce5eb443c7450a3496d8bc181135c01b98e974ef825ea9b247bd4bc95023b9394e7073e278cde1ca0c94" />
     </ItemGroup>
 
     <PropertyGroup>
@@ -44,12 +64,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageFile Include="$(OutputPath)/**/*.dll" Pack="true" PackagePath="analyzers/cs/%(RecursiveDir)%(Filename)%(Extension)" />
-        <PackageFile Include="./Attributes/**/bin/**/Dgmjr.Enumerations.CodeGenerator.Attributes.dll" Pack="true" PackagePath="lib/netstandard2.0/%(Filename)%(Extension)" />
-        <None Remove="$(OutputPath)/**"  />
+        <PackageFile Include="$(OutputPath)/**/*.*" Pack="true" PackagePath="analyzers/cs/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" />
+        <!-- <PackageFile Include="./Attributes/**/bin/$(Configuration)/*.dll" Exclude="**/System.Xml.XDocument.dll" Pack="true" PackagePath="lib/netstandard2.0/%(Filename)%(Extension)" /> -->
+        <!-- <None Remove="$(OutputPath)/**" /> -->
     </ItemGroup>
 
     <ItemGroup>
+        <!-- <Reference Remove="System.ml.XDocument" /> -->
         <!-- <Reference Update="Microsoft.CodeAnalysis.Analyzers.dll" Pack="true" PackagePath="analyzers/cs/Microsoft.CodeAnalysis.Analyzers.dll" />
         <Reference Update="Microsoft.CodeAnalysis.CSharp.dll" Pack="true" PackagePath="analyzers/cs/Microsoft.CodeAnalysis.CSharp.dll" />
         <Reference Update="Microsoft.CodeAnalysis.CSharp.Workspaces.dll" Pack="true" PackagePath="analyzers/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.dll" />

@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Sdk Name="MetapackageSdk" />
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="./Generator/Dgmjr.Enumerations.CodeGenerator.csproj" />
+        <ProjectReference Include="./samples/Dgmjr.Enumerations.CodeGeneration.Samples.csproj" />
+        <ProjectReference Include="./tests/Dgmjr.Enumerations.CodeGenerator.Tests.csproj" />
+    </ItemGroup>
+</Project>

@@ -1,11 +1,11 @@
 <!--
  * Dgmjr.Enumerations.CodeGeneration.Samples.csproj
- * 
+ *
  *   Created: 2023-01-02-02:11:40
  *   Modified: 2023-01-02-02:11:41
- * 
+ *
  *   Author: David G. Mooore, Jr. <david@dgmjr.io>
- *   
+ *
  *   Copyright © 2022-2023 David G. Mooore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
 -->
@@ -13,6 +13,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net7.0</TargetFrameworks>
+    <WarningsAsErrors>CS8784</WarningsAsErrors>
+    <Configurations>Local;Debug;Staging;Release;Testing;Test</Configurations>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <SourceGenerator Include="Dgmjr.Enumerations.CodeGenerator" />
@@ -20,10 +23,11 @@
     <PackageReference Include="Dgmjr.Enumerations.Enumeration" />
     <PackageReference Include="Dgmjr.Abstractions" />
     <PackageReference Include="System.ComponentModel.Usings" />
+    <PackageReference Include="Dgmjr.CodeGeneration.Extensions.ITypeSymbolExtensions" PrivateAssets="All"/>
   </ItemGroup>
   <!-- <ItemGroup>
     <Reference Include="Dgmjr.Enumerations.CodeGenerator.dll">
-      <HintPath>$(PkgDgmjr_Enumerations_CodeGenerator)/analyzers/cs/Dgmjr.Enumerations.CodeGenerator.dll</HintPath>
+      <HintPath>$(PkgDgmjr_Enumerations_CodeGenerator)/analyzers/cs/netstandard2.0/Dgmjr.Enumerations.CodeGenerator.dll</HintPath>
     </Reference>
   </ItemGroup> -->
 </Project>

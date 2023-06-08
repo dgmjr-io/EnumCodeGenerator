@@ -1,0 +1,361 @@
+#nullable enable
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+// using System.Text.Json.Serialization;
+using Dgmjr.Enumerations;
+using Dgmjr.Enumerations.Abstractions;
+using Dgmjr.Abstractions;
+using Convert = System.Convert;
+using {{ enum_namespace }};
+
+namespace {{ namespace }};
+
+    using {{ enum_type }} = {{ enum_namespace }.{{ enum_type }};
+    using {{ enumeration_type }} = {{ enumeration_type }};
+    using I{{ enumeration_type }} = Abstractions.I{{ enumeration_type }};
+
+namespace Abstractions
+{
+    ///<summary>This interface is an abstraction of all the methods and properties present in the code-geneerated enumeration <see cfef="{{ {{ enumeration_type }}_type }}" />, which itself is based off of the <see langword="enum" /> <see cref="{{ enum_namespace }}.{{ {{ enum_type }}_name }}" />.
+    public interface I{{ enumeration_type }}
+} : IEnumeration<{{ enumeration_type }}, int>, IComparable <{{ enumeration_type }}>, IEquatable <{{ enumeration_type }}>, IComparable, IFormattable, IConvertible, IEquatable<I{{ enumeration_type }}>, IComparable<I{{ enumeration_type }}>
+        #if NET7_0_OR_GREATER
+        , IParsable<{{ enumeration_type }}>
+        #endif
+        {
+
+        }
+    }
+
+    {{ xml_doc }}
+[{{ generated_code_attribute }}]
+    public partial
+{{ {{ enumeration_type }}_type }}
+{{ enumeration_type }} : I{{ enumeration_type }}
+    {
+        protected
+{{ enumeration_type }} () : this(default, default, default, default) { }
+
+public
+{{ enumeration_type }}
+({{ enum_type }} value, int id, string ? name = null, string ? description = null)
+        {
+    Value = value;
+    Id = id;
+    Name = name ?? value.ToString();
+    Description = description;
+}
+
+object IIdentifiable.Id => Id;
+object IHaveAValue.Value => Value;
+public {{ enum_type }} Value { get; private set; }
+
+{{ ~ for attribute in attributes ~}}
+public
+{{ attribute.value.name }}
+{{ attribute.key }}
+{ get; init set; } = default!;
+{{ end ~}}
+
+public override string ToString() => Name;
+
+public static {{ enumeration_type }} FromValue({{ enum_type }} value) => FromValue(value, throwOnNotFound: true);
+public static {{ enumeration_type }} FromValue({{ enum_type }} value, bool throwOnNotFound)
+{
+    var result = {{ enumeration_type }}.All.FirstOrDefault(x => x.Value.Equals(value));
+    if (result == default && throwOnNotFound)
+    {
+        throw new ArgumentOutOfRangeException(nameof(value), value, $"The value {value} is not a valid {{ enumeration_type }}.");
+    }
+
+    return result;
+}
+
+public static {{ enumeration_type }} FromId(int id) => FromId(id, throwOnNotFound: true);
+public static {{ enumeration_type }} FromId(int id, bool throwOnNotFound)
+{
+    var result = {{ enumeration_type }}.All.FirstOrDefault(x => x.Id == id);
+    if (result == default && throwOnNotFound)
+    {
+        throw new ArgumentOutOfRangeException(nameof(id), id, $"The id {id} is not a valid {{ enumeration_type }}.");
+    }
+
+    return result;
+}
+
+public static {{ enumeration_type }} FromName(string name) => FromName(name, throwOnNotFound: true);
+public static {{ enumeration_type }} FromName(string name, bool throwOnNotFound)
+{
+    var result = {{ enumeration_type }}.All.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+    if (result == default && throwOnNotFound)
+    {
+        throw new ArgumentOutOfRangeException(nameof(name), name, $"The name {name} is not a valid {{ enumeration_type }}.");
+    }
+
+    return result;
+}
+
+public static {{ enumeration_type }} FromDescription(string description) => FromDescription(description, throwOnNotFound: true);
+public static {{ enumeration_type }} FromDescription(string description, bool throwOnNotFound)
+{
+    var result = {{ enumeration_type }}.All.FirstOrDefault(x => x.Description.Equals(description, StringComparison.OrdinalIgnoreCase));
+    if (result == default && throwOnNotFound)
+    {
+        throw new ArgumentOutOfRangeException(nameof(description), description, $"The description {description} is not a valid {{ enumeration_type }}.");
+    }
+
+    return result;
+}
+
+public static {{ enumeration_type }} FromShortName(string shortName) => FromDescription(shortName, throwOnNotFound: true);
+public static {{ enumeration_type }} FromShortName(string shortName, bool throwOnNotFound)
+{
+    var result = {{ enumeration_type }}.All.FirstOrDefault(x => x.ShortName.Equals(shortName, StringComparison.OrdinalIgnoreCase));
+    if (result == default && throwOnNotFound)
+    {
+        throw new ArgumentOutOfRangeException(nameof(shortName), shortName, $"The ShortName {shortName} is not a valid {{ enumeration_type }}.");
+    }
+
+    return result;
+}
+
+public static bool TryFromShortName(string shortName, out {{ enumeration_type }} result) => TryFromShortName(shortName, out result, throwOnNotFound: false);
+public static bool TryFromShortName(string shortName, out {{ enumeration_type }} result, bool throwOnNotFound)
+{
+    result = {{ enumeration_type }}.All.FirstOrDefault(x => x.ShortName.Equals(shortName, StringComparison.OrdinalIgnoreCase));
+    if (result == default && throwOnNotFound)
+    {
+        throw new ArgumentOutOfRangeException(nameof(shortName), shortName, $"The ShortName {shortName} is not a valid {{ enumeration_type }}.");
+    }
+
+    return result != default;
+}
+
+public static bool TryFromValue({{ enum_type }} value, out {{ enumeration_type }} result) => TryFromValue(value, out result, throwOnNotFound: false);
+public static bool TryFromValue({{ enum_type }} value, out {{ enumeration_type }} result, bool throwOnNotFound)
+{
+    result = {{ enumeration_type }}.All.FirstOrDefault(x => x.Value.Equals(value));
+    if (result == default && throwOnNotFound)
+    {
+        throw new ArgumentOutOfRangeException(nameof(value), value, $"The value {value} is not a valid {{ enumeration_type }}.");
+    }
+
+    return result != default;
+}
+
+public static bool TryFromId(int id, out {{ enumeration_type }} result) => TryFromId(id, out result, throwOnNotFound: false);
+public static bool TryFromId(int id, out {{ enumeration_type }} result, bool throwOnNotFound)
+{
+    result = {{ enumeration_type }}.All.FirstOrDefault(x => x.Id == id);
+    if (result == default && throwOnNotFound)
+    {
+        throw new ArgumentOutOfRangeException(nameof(id), id, $"The id {id} is not a valid {{{{ enumeration_type }}}}.");
+    }
+
+    return result != default;
+}
+
+public static bool TryFromName(string name, out I{{ enumeration_type }} result) => TryFromName(name, out result, throwOnNotFound: false);
+public static bool TryFromName(string name, out I{{ enumeration_type }} result, bool throwOnNotFound)
+{
+    result = I{{ enumeration_type }}.All.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+    if (result == default && throwOnNotFound)
+    {
+        throw new ArgumentOutOfRangeException(nameof(name), name, $"The name {name} is not a valid {{ enumeration_type }}.");
+    }
+
+    return result != default;
+}
+
+public static bool TryFromDescription(string description, out I{{ enumeration_type }} result) => TryFromDescription(description, out result, throwOnNotFound: false);
+public static bool TryFromDescription(string description, out I{{ enumeration_type }} result, bool throwOnNotFound)
+{
+    result = I{{ enumeration_type }}.All.FirstOrDefault(x => x.Description.Equals(description, StringComparison.OrdinalIgnoreCase));
+    if (result == default && throwOnNotFound)
+    {
+        throw new ArgumentOutOfRangeException(nameof(description), description, $"The description {description} is not a valid {{ enumeration_type }}.");
+    }
+
+    return result != default;
+}
+
+public static IEnumerable<I{{ enumeration_type }}> GetAll() => {{ enumeration_type }}.All.OfType<I{{ enumeration_type }}>();
+
+public static IEnumerable<I{{ enumeration_type }}> GetAllExcept(params I{{ enumeration_type }}[] except) => {{ enumeration_type }}.All.Except(except);
+
+public static IEnumerable<I{{ enumeration_type }}> GetAllExcept(params I{{ enumeration_type }}[] except) => {{ enumeration_type }}.All.Except(except.Select(x => {{ enumeration_type }}.FromValue(x)));
+
+public static IEnumerable<I{{ enumeration_type }}> GetAllExcept(params int[] except) => {{ enumeration_type }}.All.Except(except.Select(x => {{ enumeration_type }}.FromId(x)));
+
+public static IEnumerable<I{{ enumeration_type }}> GetAllExcept(params string[] except) => {{ enumeration_type }}.All.Except(except.Select(x => {{ enumeration_type }}.FromName(x)));
+
+
+
+public
+{{ ovrerridable_member_modifiers }}
+int CompareTo(I{{ enumeration_type }} other) => Value.CompareTo(other.Value);
+public
+{{ ovrerridable_member_modifiers }}
+int CompareTo(object? other) => other is I{{ enumeration_type }} I{{ enumeration_type }} ? CompareTo(I{{ enumeration_type }}) : throw new ArgumentOutOfRangeException(nameof(other), other, $"The value provided was not of the correct type ({{~ {{ enumeration_type }} ~}})");
+public
+{{ ovrerridable_member_modifiers }}
+string ToString(string? format, IFormatProvider? formatProvider) => ToString();
+
+public static readonly I{{ enumeration_type }}[] All = new[]
+{
+            {{ for member in members }}
+            {{ enumeration_type }}.@{{ member.value.name }}.Instance,
+            {{ end }}
+        };
+
+#region IParsable
+public static I{{ enumeration_type }} Parse(string s, IFormatProvider? format = null)
+    => TryParse(s, out var result) ? result :
+        throw new ArgumentOutOfRangeException(nameof(s), s, $"The value {s} is not a valid {{ enumeration_type }}.");
+
+public static bool TryParse(string s, out I{{ enumeration_type }} result)
+    => (result =
+        TryFromName(s, out result) ? result :
+        TryFromDescription(s, out result) ? result :
+        TryFromShortName(s, out result) ? result : default) != default;
+
+public static bool TryParse(string? s, IFormatProvider? format, out I{{ enumeration_type }} result)
+    => (result =
+        TryFromName(s, out result) ? result :
+        TryFromDescription(s, out result) ? result :
+        TryFromShortName(s, out result) ? result : default) != default;
+#endregion
+
+public static readonly int Count = {{ enumeration_type }}.All.Length;
+
+public
+{{ ovrerridable_member_modifiers }}
+FieldInfo? FieldInfo => typeof({{ enum_type }}).GetRuntimeField(Name);
+
+public
+{{ ovrerridable_member_modifiers }}
+TAttribute? GetCustomAttribute<TAttribute>()
+    where TAttribute : Attribute
+    => FieldInfo.GetCustomAttribute<TAttribute>();
+
+public static bool operator <({{ enumeration_type }} left, I{{ enumeration_type }} right) => left.CompareTo(right) < 0;
+public static bool operator <=({{ enumeration_type }} left, I{{ enumeration_type }} right) => left.CompareTo(right) <= 0;
+public static bool operator >({{ enumeration_type }} left, I{{ enumeration_type }} right) => left.CompareTo(right) > 0;
+public static bool operator >=({{ enumeration_type }} left, I{{ enumeration_type }} right) => left.CompareTo(right) >= 0;
+
+public static bool operator <(I{{ enumeration_type }} left, {{ enumeration_type }} right) => left.CompareTo(right) < 0;
+public static bool operator <=(I{{ enumeration_type }} left, {{ enumeration_type }} right) => left.CompareTo(right) <= 0;
+public static bool operator >(I{{ enumeration_type }} left, {{ enumeration_type }} right) => left.CompareTo(right) > 0;
+public static bool operator >=(I{{ enumeration_type }} left, {{ enumeration_type }} right) => left.CompareTo(right) >= 0;
+public static bool operator >=(I{{ enumeration_type }} left, {{ enumeration_type }} right) => left.CompareTo(right) >= 0;
+
+// public static bool operator ==({{ enumeration_type }} left, I{{ enumeration_type }} right) => left.Equals(right);
+// public static bool operator !=({{ enumeration_type }} left, I{{ enumeration_type }} right) => !left.Equals(right);
+
+
+{{ for member in members }}
+{{ member.value.xml_doc }}
+[{{ generated_code_attribute }}]
+        public class
+        @{{ ~member.value.name }} : I{{ enumeration_type }}
+        {
+            public static readonly I{{ enumeration_type }} Instance = new {{ enumeration_type }}(({{ enum_type }})({{ member.value.value }}), {{ member.value.value }}, "{{ member.value.name }}")
+            {
+    {{ ~ for attribute in member.value.attributes ~}}
+    {{ ~ if attribute.value.type == "System.String" ~}}
+    {{ attribute.key }} = "{{ attribute.value.value ~}}",
+                    {{ ~ else ~}}
+    {{ attribute.key }} = {{ attribute.value.value ~}},
+                    {{ ~end ~}}
+    {{ ~end ~}}
+};
+
+public const {{ enum_type }} Value = ({{ enum_type }})({{ member.value.value }});
+
+{ { for attribute in member.value.attributes ~}}
+public const @{ { attribute.value.type } } @{{ attribute.key }} =
+                {{ ~ if attribute.value.type == "System.String" ~}}
+"{{~ attribute.value.value ~}}";
+{{ ~ else ~}}
+{{ ~attribute.value.value ~}};
+{{ ~end ~}}
+
+I{{ enumeration_type }}.{{ attribute.key }}
+{ get => @{{ attribute.key }}; set { } }
+{{ ~end ~}}
+
+/******* BEGIN OTHER STUFF *********/
+#region I{{ enumeration_type }} implementation
+public
+{{ ovrerridable_member_modifiers }}
+TypeCode GetTypeCode() => TypeCode.Object;
+public
+{{ ovrerridable_member_modifiers }}
+bool ToBoolean(IFormatProvider? provider) => this.Value != default;
+public
+{{ ovrerridable_member_modifiers }}
+byte ToByte(IFormatProvider? provider) => Convert.ToByte(this.Value);
+public
+{{ ovrerridable_member_modifiers }}
+char ToChar(IFormatProvider? provider) => Convert.ToChar(this.Value);
+public
+{{ ovrerridable_member_modifiers }}
+DateTime ToDateTime(IFormatProvider? provider) => Convert.ToDateTime(this.Value);
+public
+{{ ovrerridable_member_modifiers }}
+decimal ToDecimal(IFormatProvider? provider) => Convert.ToDecimal(this.Value);
+public
+{{ ovrerridable_member_modifiers }}
+double ToDouble(IFormatProvider? provider) => Convert.ToDouble(this.Value);
+public
+{{ ovrerridable_member_modifiers }}
+short ToInt16(IFormatProvider? provider) => Convert.ToInt16(this.Value);
+public
+{{ ovrerridable_member_modifiers }}
+int ToInt32(IFormatProvider? provider) => Convert.ToInt32(this.Value);
+public
+{{ ovrerridable_member_modifiers }}
+long ToInt64(IFormatProvider? provider) => Convert.ToInt64(this.Value);
+public
+{{ ovrerridable_member_modifiers }}
+sbyte ToSByte(IFormatProvider? provider) => Convert.ToSByte(this.Value);
+public
+{{ ovrerridable_member_modifiers }}
+float ToSingle(IFormatProvider? provider) => Convert.ToSingle(this.Value);
+public
+{{ ovrerridable_member_modifiers }}
+string ToString(IFormatProvider? provider) => DisplayName;
+public
+{{ ovrerridable_member_modifiers }}
+object ToType(type conversionType, IFormatProvider? provider) => Convert.ChangeType(this.Value, conversionType);
+public
+{{ ovrerridable_member_modifiers }}
+ushort ToUInt16(IFormatProvider? provider) => Convert.ToUInt16(this.Value);
+public
+{{ ovrerridable_member_modifiers }}
+uint ToUInt32(IFormatProvider? provider) => Convert.ToUInt32(this.Value);
+public
+{{ ovrerridable_member_modifiers }}
+ulong ToUInt64(IFormatProvider? provider) => Convert.ToUInt64(this.Value);
+public
+{{ ovrerridable_member_modifiers }}
+bool Equals({{ enumeration_type }} other) => this.Value == other.Value;
+public
+{{ ovrerridable_member_modifiers }}
+int CompareTo({{ enumeration_type }} other) => this.Value.CompareTo(other.Value);
+int IComparable.CompareTo (object? other) => other is {{ enumeration_type }} e ? CompareTo(e) : throw new ArgumentException("Object is not a {{ enumeration_type }}", nameof(other));
+string IFormattable.ToString(string s IFormatProvider ? provider) => ToString();
+bool IComparable<{{ enumeration_type }}>.CompareTo({{ enumeration_type }} other) => CompareTo(other);
+public
+{{ ovrerridable_member_modifiers }}
+Parse (string s, IFormatProvider? provider) => Parse(s);
+            #endregion
+    /******* END OTHER STUFF *********/
+        }
+        {{ end }}
+    }
+}

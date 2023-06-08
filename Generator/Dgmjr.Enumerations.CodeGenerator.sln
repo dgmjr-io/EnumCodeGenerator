@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1705.6
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dgmjr.Enumerations.CodeGenerator", "Dgmjr.Enumerations.CodeGenerator.csproj", "{614E2FF3-16D1-42BF-9160-4EC1E92C7C67}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Local|Any CPU = Local|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Staging|Any CPU = Staging|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Testing|Any CPU = Testing|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{614E2FF3-16D1-42BF-9160-4EC1E92C7C67}.Local|Any CPU.ActiveCfg = Local|Any CPU
+		{614E2FF3-16D1-42BF-9160-4EC1E92C7C67}.Local|Any CPU.Build.0 = Local|Any CPU
+		{614E2FF3-16D1-42BF-9160-4EC1E92C7C67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{614E2FF3-16D1-42BF-9160-4EC1E92C7C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{614E2FF3-16D1-42BF-9160-4EC1E92C7C67}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
+		{614E2FF3-16D1-42BF-9160-4EC1E92C7C67}.Staging|Any CPU.Build.0 = Staging|Any CPU
+		{614E2FF3-16D1-42BF-9160-4EC1E92C7C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{614E2FF3-16D1-42BF-9160-4EC1E92C7C67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{614E2FF3-16D1-42BF-9160-4EC1E92C7C67}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
+		{614E2FF3-16D1-42BF-9160-4EC1E92C7C67}.Testing|Any CPU.Build.0 = Testing|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {00344C7A-4DA7-44C7-96A9-8694535B7504}
+	EndGlobalSection
+EndGlobal
