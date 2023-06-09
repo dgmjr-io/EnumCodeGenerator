@@ -12,7 +12,7 @@
 
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net7.0</TargetFrameworks>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
@@ -29,18 +29,8 @@
         <PackageReference Include="Dgmjr.CodeGeneration.Constants" PrivateAssets="All" />
         <!-- <PackageReference Include="Scriban.Signed" Aliases="SSign" PrivateAssets="All"/> -->
         <PackageReference Include="Scriban.Signed" Aliases="SUn" PrivateAssets="All" />
-        <PackageReference Include="ThisAssembly.AssemblyInfo">
-          <GeneratePathProperty></GeneratePathProperty>
-          <CopyLocal></CopyLocal>
-          <IncludeAssets></IncludeAssets>
-          <ExcludeAssets></ExcludeAssets>
-        </PackageReference>
-        <PackageReference Include="ThisAssembly.Project">
-          <GeneratePathProperty></GeneratePathProperty>
-          <CopyLocal></CopyLocal>
-          <IncludeAssets></IncludeAssets>
-          <ExcludeAssets></ExcludeAssets>
-        </PackageReference>
+        <PackageReference Include="ThisAssembly.AssemblyInfo" />
+        <PackageReference Include="ThisAssembly.Project" />
         <PackageReference Include="Microsoft.CSharp" PrivateAssets="All" />
         <!-- <PackageReference Include="ThisAssembly.Resources" /> -->
         <!-- <PackageReference Include="System.Xml.XDocument" Aliases="XDoc" /> -->
@@ -60,13 +50,12 @@
     </ItemGroup>
 
     <PropertyGroup>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <IncludeBuildOutput>true</IncludeBuildOutput>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageFile Include="$(OutputPath)/**/*.*" Pack="true" PackagePath="analyzers/cs/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" />
-        <!-- <PackageFile Include="./Attributes/**/bin/$(Configuration)/*.dll" Exclude="**/System.Xml.XDocument.dll" Pack="true" PackagePath="lib/netstandard2.0/%(Filename)%(Extension)" /> -->
-        <!-- <None Remove="$(OutputPath)/**" /> -->
+        <Content Include="$(OutputPath)/$(TargetFramework)/**/*.*" Pack="true" PackagePath="analyzers/cs/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" />
+        <!-- <Content Include="$(OutputPath)/$(TargetFramework)/**/*.*" Pack="true" PackagePath="lib/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" /> -->
     </ItemGroup>
 
     <ItemGroup>
