@@ -155,16 +155,15 @@ internal static partial class Constants
     {
         if (template.HasErrors)
         {
-            var errors = template.MessageLogBag.Where(msg =>
-            msg.Type == ParserMessageType.Error ?
-            new ScriptRuntimeException(msg.Span, msg.Message) :
-            null).WhereNotNull();
+            var errors = template.Messages.Where(msg => msg.Type == ParserMessageType.Error)
+            .Select(msg =>
+                    new ScriptRuntimeException(msg.Span, msg.Message)).ToArray();
             if (errors.Any())
             {
-                throw new AggregateException("There was an error parsing the template", errors.OfType<Exception>().ToArray());
+                throw new AggregateException("There was an error parsing the template", errors);
             }
         }
-        return template
+        return template;
     }
 
     public static class DisplayAttribute
