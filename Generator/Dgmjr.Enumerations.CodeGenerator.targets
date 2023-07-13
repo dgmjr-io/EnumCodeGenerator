@@ -11,7 +11,15 @@
 -->
 
 <Project>
-    <ItemGroup>
-        <!-- <Reference Remove="System.Xml.XDocument" /> -->
-    </ItemGroup>
+    <PropertyGroup>
+        <PackDependsOn>
+            $(PackDependsOn);
+            RemoveMicrosoftCSharpDll
+        </PackDependsOn>
+    </PropertyGroup>
+    <Target Name="RemoveMicrosoftCSharpDll" BeforeTargets="Pack">
+        <ItemGroup>
+            <_PackageContent Remove="@(_PackageContent->WithMetadataValue('FullPath', '$(PkgDgmjr_CodeGeneration_Constants)/lib/$(TargetFramework)/Microsoft.CSharp.dll'))" />
+        </ItemGroup>
+    </Target>
 </Project>

@@ -19,42 +19,48 @@
         <Title>DGMJR Enums ➡️ Enumerations Generator</Title>
         <NoWarn>$(NoWarn);RS1035</NoWarn>
         <LangVersion>latest</LangVersion>
+        <IncludeInSolutionFile>true</IncludeInSolutionFile>
+        <SlnGenCustomProjectTypeGuid>9A19103F-16F7-4668-BE54-9A1E7A4F7556</SlnGenCustomProjectTypeGuid>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" />
+        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
         <PackageReference Include="Microsoft.CodeAnalysis.Common" />
         <!-- <PackageReference Include="System.ComponentModel.Annotations" /> -->
         <PackageReference Include="System.ComponentModel.Usings" IncludeAssets="Build" />
         <PackageReference Include="Dgmjr.CodeGeneration.Constants" PrivateAssets="All" />
         <!-- <PackageReference Include="Scriban.Signed" Aliases="SSign" PrivateAssets="All"/> -->
-        <PackageReference Include="Scriban.Signed" Aliases="SUn" PrivateAssets="All" />
+        <PackageReference Include="Scriban" Aliases="SUn" PrivateAssets="All" />
         <PackageReference Include="ThisAssembly.AssemblyInfo" />
         <PackageReference Include="ThisAssembly.Project" />
-        <PackageReference Include="Microsoft.CSharp" PrivateAssets="All" />
+        <!-- <PackageReference Include="Microsoft.CSharp" PrivateAssets="All" /> -->
         <!-- <PackageReference Include="ThisAssembly.Resources" /> -->
         <!-- <PackageReference Include="System.Xml.XDocument" Aliases="XDoc" /> -->
         <PackageReference Include="Dgmjr.ComponentModel" />
         <PackageReference Include="Dgmjr.System.Extensions" />
         <PackageReference Include="System.Text.Json.Usings" />
         <PackageReference Include="System.Threading.Tasks.Extensions" />
+        <PackageReference Include="Dgmjr.Enumerations.Abstractions" />
+        <PackageReference Include="System.Compat" />
         <!-- <ProjectReference Include="./Attributes/Dgmjr.Enumerations.CodeGenerator.Attributes.csproj" /> -->
     </ItemGroup>
 
     <ItemGroup>
         <Compile Remove="./Resources/*" />
         <Compile Remove="./Attributes/**/*.*" />
+        <Compile Include="./Resources/EnumerationRecordStruct.cs" />
+        <Compile Include="./Resources/YesNo.cs" />
         <EmbeddedResource Include="$(MSBuildThisFileDirectory)/Resources/**/*.cstemplate" LogicalName="%(Filename)%(Extension)" Kind="Text" />
         <InternalsVisibleTo Include="Dgmjr.Enumerations.CodeGenerator.Tests, PublicKey=00240000048000009400000006020000002400005253413100040000010001000d802c8a5e6d2d2a7487bf92dd89a0689f004d27d8eaef54cc62aed0afd643dc33222f020003d3fc79c76c0a791eb7ae56d0d17bac639122f17a8f7f246ae6481045146327ebc0eab8878dbdc79aa6ad1bc26b56bbe0ce5eb443c7450a3496d8bc181135c01b98e974ef825ea9b247bd4bc95023b9394e7073e278cde1ca0c94" />
         <InternalsVisibleTo Include="tests, PublicKey=00240000048000009400000006020000002400005253413100040000010001000d802c8a5e6d2d2a7487bf92dd89a0689f004d27d8eaef54cc62aed0afd643dc33222f020003d3fc79c76c0a791eb7ae56d0d17bac639122f17a8f7f246ae6481045146327ebc0eab8878dbdc79aa6ad1bc26b56bbe0ce5eb443c7450a3496d8bc181135c01b98e974ef825ea9b247bd4bc95023b9394e7073e278cde1ca0c94" />
     </ItemGroup>
 
     <PropertyGroup>
-        <IncludeBuildOutput>true</IncludeBuildOutput>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Include="$(OutputPath)/$(TargetFramework)/**/*.*" Pack="true" PackagePath="analyzers/cs/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" />
+        <PackageFile Include="$(OutputPath)/**/*.*" Pack="true" PackagePath="analyzers/cs/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" />
         <!-- <Content Include="$(OutputPath)/$(TargetFramework)/**/*.*" Pack="true" PackagePath="lib/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" /> -->
     </ItemGroup>
 

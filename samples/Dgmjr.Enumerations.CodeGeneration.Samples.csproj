@@ -11,8 +11,9 @@
 -->
 
 <Project Sdk="Microsoft.NET.Sdk">
+    <Import Sdk="DgmjrSdk" Project="Sdk.props" />
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <WarningsAsErrors>CS8784</WarningsAsErrors>
     <Configurations>Local;Debug;Staging;Release;Testing;Test</Configurations>
     <Platforms>AnyCPU</Platforms>
@@ -23,11 +24,11 @@
     <PackageReference Include="Dgmjr.Enumerations.Enumeration" />
     <PackageReference Include="Dgmjr.Abstractions" />
     <PackageReference Include="System.ComponentModel.Usings" />
-    <PackageReference Include="Dgmjr.CodeGeneration.Extensions.ITypeSymbolExtensions" PrivateAssets="All"/>
   </ItemGroup>
   <!-- <ItemGroup>
     <Reference Include="Dgmjr.Enumerations.CodeGenerator.dll">
       <HintPath>$(PkgDgmjr_Enumerations_CodeGenerator)/analyzers/cs/netstandard2.0/Dgmjr.Enumerations.CodeGenerator.dll</HintPath>
     </Reference>
   </ItemGroup> -->
+    <Import Sdk="DgmjrSdk" Project="Sdk.targets" />
 </Project>

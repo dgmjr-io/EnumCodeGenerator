@@ -35,7 +35,7 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
     private const string GuidPropertyName = "Guid";
     private const string GuidAttribute = nameof(GuidAttribute);
     private const string Prompt = nameof(Prompt);
-    private const string DefaultUrnPattern = "urn:{0}:{1}:{1}";
+    private const string DefaultUrnPattern = "urn:{0}:{1}:{2}";
     private const string Uri = nameof(Uri);
 
     private static bool Include(SyntaxNode node, CancellationToken cancellationToken) =>
@@ -108,23 +108,23 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
                     Type = typeof(string),
                     Value =
                         enumValue
-                            .GetDocumentationCommentXml()
+                            .GetDocumentationCommentXml(cancellationToken: cancellationToken)
                             .SelectXpath("//summary", false)
                             .FirstOrDefault()
                             ?.Value ?? enumValue.Name,
                     XmlDoc =
                         enumValue
-                            .GetDocumentationCommentXml()
+                            .GetDocumentationCommentXml(cancellationToken: cancellationToken)
                             .SelectXpath("//summary", false)
                             .FirstOrDefault()
                             ?.Value
                             + enumValue
-                                .GetDocumentationCommentXml()
+                                .GetDocumentationCommentXml(cancellationToken: cancellationToken)
                                 .SelectXpath("//remarks", false)
                                 .FirstOrDefault()
                                 ?.Value
                             + enumValue
-                                .GetDocumentationCommentXml()
+                                .GetDocumentationCommentXml(cancellationToken: cancellationToken)
                                 .SelectXpath("//value", false)
                                 .FirstOrDefault()
                                 ?.Value
@@ -189,7 +189,7 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
                     var description = attributeData.NamedArguments.FirstOrDefault(
                         namedArgument => namedArgument.Key == nameof(DisplayAttribute.Description)
                     );
-                    var descriptionString = name.Value.Value as string;
+                    var descriptionString = description.Value.Value as string ?? name.Value.Value as string;
                     attributesDictionary[nameof(DisplayAttribute.Description)] =
                         new EnumerationAttributeDeclaration
                         {
@@ -285,13 +285,6 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
                         Value = guidString ?? null
                     };
                 }
-
-                // attributesDictionary[Value] = new EnumerationAttributeDeclaration
-                // {
-                //     Name = Value,
-                //     Type = new NamedEnumType(enumTypeSymbol.ContainingNamespace.ToDisplayString(), enumTypeSymbol.Name),
-                //     Value = $"({enumTypeSymbol.ContainingNamespace.ToDisplayString()}.{enumTypeSymbol.Name}){enumValue.ConstantValue}"
-                // };
             }
 
             membersDictionary.Add(
@@ -302,8 +295,8 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
                     Value = (int?)enumValue.ConstantValue ?? 0,
                     Attributes = attributesDictionary,
                     XmlDoc = $"""
-                /// <summary>{(enumValue.GetDocumentationCommentXml().SelectXpath("//summary", false)?.FirstOrDefault()?.Value ?? attributesDictionary[nameof(DisplayAttribute.Name)].Value)?.ToString().Replace(Environment.NewLine, Environment.NewLine + "/// ")?.Trim()}</summary>
-                /// <remarks>{(enumValue.GetDocumentationCommentXml().SelectXpath("//remarks", false)?.FirstOrDefault()?.Value ?? attributesDictionary[nameof(DisplayAttribute.Description)].Value)?.ToString()?.Replace(Environment.NewLine, Environment.NewLine + "/// ")?.Trim()}</remarks>
+                /// <summary>{(enumValue.GetDocumentationCommentXml(cancellationToken: cancellationToken).SelectXpath("//summary", false)?.FirstOrDefault()?.Value ?? attributesDictionary[nameof(DisplayAttribute.Name)].Value)?.ToString().Replace(Environment.NewLine, Environment.NewLine + "/// ")?.Trim()}</summary>
+                /// <remarks>{(enumValue.GetDocumentationCommentXml(cancellationToken: cancellationToken).SelectXpath("//remarks", false)?.FirstOrDefault()?.Value ?? attributesDictionary[nameof(DisplayAttribute.Description)].Value)?.ToString()?.Replace(Environment.NewLine, Environment.NewLine + "/// ")?.Trim()}</remarks>
                 /// <seealso cref="global::{enumTypeSymbol.ContainingNamespace.ToDisplayString()}.@{enumTypeSymbol.Name}.@{enumValue.Name}">{enumTypeSymbol.Name}</seealso>
                 """
                 }
@@ -313,25 +306,25 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
         var xmlComment = "";
         try
         {
-            var doc = XD.Parse(enumTypeSymbol.GetDocumentationCommentXml());
+            var doc = XD.Parse(enumTypeSymbol.GetDocumentationCommentXml(cancellationToken: cancellationToken));
             xmlComment = Join(
                 Environment.NewLine,
                 doc.XPathSelectElements("//member/*").Select(xe => xe.ToString()).ToArray()
             );
         }
-        catch (Exception)
+        catch // (Exception)
         {
             // ignored
         }
 
         var enumerationTypeDeclarationSyntax = context.TargetNode.SyntaxTree
-            .GetCompilationUnitRoot()
+            .GetCompilationUnitRoot(cancellationToken: cancellationToken)
             .DescendantNodes()
             .OfType<BaseTypeDeclarationSyntax>()
             .FirstOrDefault(tds => tds.TryGetInferredMemberName() == enumerationTypeNameString);
         var enumerationTypeDeclarationSymbol =
             enumerationTypeDeclarationSyntax != null
-                ? context.SemanticModel.GetDeclaredSymbol(enumerationTypeDeclarationSyntax)
+                ? context.SemanticModel.GetDeclaredSymbol(enumerationTypeDeclarationSyntax, cancellationToken: cancellationToken)
                 : null;
 
         return new EnumerationTypeDeclaration
@@ -342,18 +335,18 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
             Namespace = namespaceString ?? enumTypeSymbol.ContainingNamespace.ToDisplayString(),
             EnumNamespace = enumTypeSymbol.ContainingNamespace.ToDisplayString(),
             Members = membersDictionary,
-            EnumerationTypeType =
+            EnumerationTypeType =/*
                 attribute.AttributeClass.Name == Constants.GenerateEnumerationClassAttribute
                     ? "class"
                     : attribute.AttributeClass.Name == Constants.GenerateEnumerationStructAttribute
                         ? "struct"
                         : attribute.AttributeClass.Name
                         == Constants.GenerateEnumerationRecordClassAttribute
-                            ? "record class"
+                            ? */"record class"/*
                             : attribute.AttributeClass.Name
                             == Constants.GenerateEnumerationRecordStructAttribute
                                 ? "record struct"
-                                : "class",
+                                : "class"*/,
             XmlDoc = $"""
                 /**
                 {xmlComment}
@@ -382,7 +375,7 @@ public class EnumerationTypeGenerator : IIncrementalGenerator
             var syntaxProvider = context.SyntaxProvider
                 .ForAttributeWithMetadataName(attributeName, Include, Transform)
                 .Collect();
-            context.RegisterImplementationSourceOutput(syntaxProvider, Generate);
+            context.RegisterSourceOutput(syntaxProvider, Generate);
         }
     }
 

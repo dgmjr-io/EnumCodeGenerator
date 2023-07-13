@@ -30,8 +30,6 @@ internal static partial class Constants
 
     private static readonly string Header = typeof(Constants).Assembly.ReadAssemblyResourceAllText(Header_cstemplate);
 
-    // public static readonly Template HeaderTemplate = Parse(Header);
-
     public static string[] GenerateEnumerationTypeAttributes =>
         new[]
         {
@@ -137,11 +135,11 @@ internal static partial class Constants
     ).ReadToEnd();
 
     public const string IConvertibleImplementationFullPath = "IConvertible.cs";
-    public static ParserOptions ParserOptions = new();
-    public static LexerOptions LexerOptions = new();
+    public static readonly ParserOptions ParserOptions = new();
+    public static readonly LexerOptions LexerOptions = new();
 
     public static Template IConvertibleImplementationTemplate =>
-        Parse(IConvertibleImplementation, IConvertible_cstemplate).CheckForErrors();
+        Parse(IConvertibleImplementation, IConvertible_cstemplate).CheckForErrors(nameof(IConvertibleImplementationTemplate));
 
     // ThisAssembly.Resources.IConvertible.
 
@@ -149,18 +147,18 @@ internal static partial class Constants
         "EnumerationTypeDeclaration.cstemplate";
 
     public static Template EnumerationTypeDeclarationTemplate =>
-        Parse(EnumerationTypeDeclaration, EnumerationTypeDeclaration_cstemplate).CheckForErrors();
+        Parse(EnumerationTypeDeclaration, EnumerationTypeDeclaration_cstemplate).CheckForErrors(nameof(EnumerationTypeDeclarationTemplate));
 
-    public static Template CheckForErrors(this Template template)
+    public static Template CheckForErrors(this Template template, string? templateName = null)
     {
         if (template.HasErrors)
         {
             var errors = template.Messages.Where(msg => msg.Type == ParserMessageType.Error)
             .Select(msg =>
-                    new ScriptRuntimeException(msg.Span, msg.Message)).ToArray();
-            if (errors.Any())
+                    new ScriptRuntimeException(msg.Span, $"{msg.Message} @ {templateName}({msg.Span.Start.Line}:{msg.Span.Start.Column})")).ToArray();
+            if (errors.Length > 0)
             {
-                throw new AggregateException("There was an error parsing the template", errors);
+                throw new AggregateException($"There was an error parsing the template {templateName}", errors);
             }
         }
         return template;
