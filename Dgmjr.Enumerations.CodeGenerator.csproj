@@ -1,0 +1,12 @@
+<Project>
+    <Sdk Name="MetaPackageSdk" />
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+        <IncludeInSolutionFile>false</IncludeInSolutionFile>
+        <SlnGenLaunchVisualStudio>false</SlnGenLaunchVisualStudio>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="./src/Dgmjr.Enumerations.CodeGenerator.csproj" />
+        <ProjectReference Include="./Samples/Dgmjr.Enumerations.CodeGenerator.Samples.csproj" />
+    </ItemGroup>
+</Project>

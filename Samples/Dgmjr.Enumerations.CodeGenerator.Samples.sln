@@ -1,6 +1,5 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# 
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B283EBC2-E01F-412D-9339-FD56EF114549}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B283EBC2-E01F-412D-9339-FD56EF114549}" 
 	ProjectSection(SolutionItems) = preProject
 		..\..\..\..\..\Packages\Versions.props = ..\..\..\..\..\Packages\Versions.props
 		..\..\..\..\..\Packages\Versions.Local.json = ..\..\..\..\..\Packages\Versions.Local.json
@@ -51,8 +50,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\..\..\..\..\Packages\Versions\PowerShell.props = ..\..\..\..\..\Packages\Versions\PowerShell.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dgmjr.Enumerations.CodeGenerator", "Dgmjr.Enumerations.CodeGenerator.csproj", "{F8DC9F1F-1A9A-49B5-9D06-D883AF081943}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Local|Any CPU = Local|Any CPU
@@ -63,23 +60,11 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F8DC9F1F-1A9A-49B5-9D06-D883AF081943}.Local|Any CPU.ActiveCfg = Local|Any CPU
-		{F8DC9F1F-1A9A-49B5-9D06-D883AF081943}.Local|Any CPU.Build.0 = Local|Any CPU
-		{F8DC9F1F-1A9A-49B5-9D06-D883AF081943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F8DC9F1F-1A9A-49B5-9D06-D883AF081943}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F8DC9F1F-1A9A-49B5-9D06-D883AF081943}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
-		{F8DC9F1F-1A9A-49B5-9D06-D883AF081943}.Testing|Any CPU.Build.0 = Testing|Any CPU
-		{F8DC9F1F-1A9A-49B5-9D06-D883AF081943}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{F8DC9F1F-1A9A-49B5-9D06-D883AF081943}.Staging|Any CPU.Build.0 = Staging|Any CPU
-		{F8DC9F1F-1A9A-49B5-9D06-D883AF081943}.Production|Any CPU.ActiveCfg = Local|Any CPU
-		{F8DC9F1F-1A9A-49B5-9D06-D883AF081943}.Production|Any CPU.Build.0 = Local|Any CPU
-		{F8DC9F1F-1A9A-49B5-9D06-D883AF081943}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F8DC9F1F-1A9A-49B5-9D06-D883AF081943}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {920E8598-A419-4176-890C-73256B446963}
+		SolutionGuid = {23FC6A4A-65F3-445D-B5B2-084158BF822D}
 	EndGlobalSection
 EndGlobal

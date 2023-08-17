@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup>
+        <SourceGenerator Include="Dgmjr.Enumerations.CodeGenerator" />
+        <PackageReference Include="Dgmjr.Enumerations.Enumeration" />
+        <PackageReference Include="Dgmjr.Enumerations.Abstractions" />
+    </ItemGroup>
+</Project>
