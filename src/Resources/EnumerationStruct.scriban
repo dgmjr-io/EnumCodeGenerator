@@ -1,269 +1,284 @@
-/*
- * Filename: {{ name }}.cs
- * Created: {{ timestamp }}
- */
+//
+// Enumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}.cs
+//
+//   Created: 2022-10-19-01:55:33
+//   Modified: 2022-11-03-12:28:37
+//
+//   Author: David G. Mooore, Jr. <david@dgmjr.io>
+//
+//   Copyright © 2022-2023 David G. Mooore, Jr., All Rights Reserved
+//      License: MIT (https://opensource.org/licenses/MIT)
+//
 
-
-namespace {{ namespace }};
+namespace {{ dto_namespace }};
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
+using Dgmjr.Enumerations.Abstractions;
 using static Dgmjr.Enumerations.Enumeration;
 
 /// <summary>
 /// An abstract base class for enumerations.
 /// </summary>
+/// <typeparam name="{{ enum_namespace }}.{{ enum_type }}">The type of the enumeration's value</typeparam>
+/// <typeparam name="{{ id_type }}">The type of the enumeration's id</typeparam>
+/// <typeparam name="{{ dto_type_name }}">The type of the enumeration (must be the name of the
+///     declared class)</typeparam>
 [Serializable]
 [DebuggerDisplay("{DisplayName} - {Value}")]
-[System.CodeDom.Compiler.GeneratedCode("{{ tool_name }}", "{{ tool_version }}")]
-public record struct {{ name }} : IEnumeration, IEnumeration<{{ name }}, {{ enum_underling_type }}>, IEquatable<{{ enum_type }}>, IComparable<{{ enum_type }}>, IHaveAValue<{{ enum_type }}>, IHaveAValue, IIdentifiable<{{ enum_underling_type }}>, IIdentifiable
+public struct {{ dto_type_name }} : I{{ dto_type_name }}
 {
-    public {{ name }}({{ enum_underling_type }} id, {{ enum_type }} value, string name)
-{
-    Id = id;
-    Value = value;
-    Name = name;
-}
+    protected {{ dto_type_name }}({{ id_type }} Id, {{ enum_namespace }}.{{ enum_type }} Value, string Name)
+    {
+        (I{{ dto_type_name }}this).Id = Id;
+        (I{{ dto_type_name }}this).Value = Value;
+        (I{{ dto_type_name }}this).Name = Name;
+    }
 
-/// <summary>
-/// Gets the underlying value of the enumeration.
-/// </summary>
-/// <returns>The underlying value of the enumeration.</returns>
-public {{ enum_type }} Value { get; init; }
-/// <summary>
-/// Gets the numeric ID of the enumeration.
-/// </summary>
-/// <returns>The numeric ID of the enumeration.</returns>
-public  {{ enum_underling_type }} Id { get; init; }
-object IIdentifiable.Id => Id;
-object IHaveAValue.Value => Value;
-/// <summary>
-/// Gets the field info of the backing type of the enumeration.
-/// </summary>
-/// <returns>The field info of the backing type of the enumeration.</returns>
-public  FieldInfo? FieldInfo => GetType().GetFieldInfo(Name);
-private Func<IEnumeration, string> ToStringDelegate { get; init; } = e => e.DisplayName;
-/// <summary>
-/// Gets the custom attribute of type <typeparamref name="TAttribute"/> from
-/// the enumeration's <see cref="FieldInfo"/>.
-/// </summary>
-public  TAttribute? GetCustomAttribute<TAttribute>() where TAttribute : Attribute
-    => FieldInfo.GetCustomAttribute<DisplayAttribute>() as TAttribute;
-/// <summary>
-/// Gets the <see cref="DisplayAttribute"/> of the
-/// enumeration'<see cref="FieldInfo"/>.
-/// </summary>
-public  DisplayAttribute? DisplayAttribute => GetCustomAttribute<DisplayAttribute>();
+    /// <summary>
+    /// Gets the underlying value of the enumeration.
+    /// </summary>
+    /// <returns>The underlying value of the enumeration.</returns>
+    public {{ enum_namespace }}.{{ enum_type }} Value { get; init; }
+    /// <summary>
+    /// Gets the numeric ID of the enumeration.
+    /// </summary>
+    /// <returns>The numeric ID of the enumeration.</returns>
+    public {{ id_type }} Id { get; init; }
+    object IIdentifiable.Id => Id;
+    object IHaveAValue.Value => Value;
+    /// <summary>
+    /// Gets the field info of the backing type of the enumeration.
+    /// </summary>
+    /// <returns>The field info of the backing type of the enumeration.</returns>
+    public FieldInfo? FieldInfo => GetType().GetFieldInfo(Name);
+    private Func<IEnumeration, string> ToStringDelegate { get; init; } = e => e.DisplayName;
+    /// <summary>
+    /// Gets the custom attribute of type <typeparamref name="TAttribute"/> from
+    /// the enumeration's <see cref="FieldInfo"/>.
+    /// </summary>
+    public TAttribute? GetCustomAttribute<TAttribute>() where TAttribute : Attribute
+        => FieldInfo.GetCustomAttribute<DisplayAttribute>() as TAttribute;
+    /// <summary>
+    /// Gets the <see cref="DisplayAttribute"/> of the
+    /// enumeration'<see cref="FieldInfo"/>.
+    /// </summary>
+    public DisplayAttribute? DisplayAttribute => GetCustomAttribute<DisplayAttribute>();
 
-/// <summary>
-/// Gets the short name of the enumeration as pulled from the
-/// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
-/// </summary>
-[FromString]
-public  string ShortName => DisplayAttribute?.ShortName ?? Name;
-/// <summary>
-/// Gets the description of the enumeration as pulled from the
-/// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
-/// </summary>
-public  string Description => DisplayAttribute?.Description ?? Name;
-/// <summary>
-/// Gets the display name of the enumeration as pulled from the
-/// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
-/// </summary>
-[FromString]
-public  string DisplayName => DisplayAttribute?.Name ?? Name;
-/// <summary>
-/// Gets the group name of the enumeration as pulled from the
-/// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
-/// </summary>
-public  string GroupName => DisplayAttribute?.GroupName ?? Enumeration.NoGroup;
-/// <summary>
-/// Gets the order of the enumeration as pulled from the
-/// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
-/// </summary>
-public  int Order => DisplayAttribute?.Order ?? Enumeration.DefaultOrder;
+    /// <summary>
+    /// Gets the short name of the enumeration as pulled from the
+    /// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
+    /// </summary>
+    [FromString]
+    public string ShortName => DisplayAttribute?.ShortName ?? Name;
+    /// <summary>
+    /// Gets the description of the enumeration as pulled from the
+    /// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
+    /// </summary>
+    public string Description => DisplayAttribute?.Description ?? Name;
+    /// <summary>
+    /// Gets the display name of the enumeration as pulled from the
+    /// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
+    /// </summary>
+    [FromString]
+    public string DisplayName => DisplayAttribute?.Name ?? Name;
+    /// <summary>
+    /// Gets the group name of the enumeration as pulled from the
+    /// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
+    /// </summary>
+    public string GroupName => DisplayAttribute?.GroupName ?? Enumeration.NoGroup;
+    /// <summary>
+    /// Gets the order of the enumeration as pulled from the
+    /// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
+    /// </summary>
+    public int Order => DisplayAttribute?.Order ?? Enumeration.DefaultOrder;
 
-/// <summary>
-/// Gets the name of the enumeration.
-/// </summary>
-public  string Name { get; init; }
+    /// <summary>
+    /// Gets the name of the enumeration.
+    /// </summary>
+    public string Name { get; init; }
 
-/// <summary>
-/// Gets the item's URI
-/// </summary>
-public  Uri Uri { get => _uri is null ? new Uri(GetType().FullName.Replace(".", ":")) : _uri; init => _uri = value; }
-private Uri? _uri = null;
-/// <summary>
-/// Gets the item's GUID
-/// </summary>
-public  guid Guid { get => (_guid = _guid is null ? new guid(MD5.ComputeHash(Uri.ToString().ToUTF8Bytes())) : _guid).Value; init => _guid = value; }
-private guid? _guid = null;
+    /// <summary>
+    /// Gets the item's URI
+    /// </summary>
+    public Uri Uri { get => _uri is null ? new Uri(GetType().FullName.Replace(".", ":")) : _uri; init => _uri = value; }
+    private Uri? _uri = null;
+    /// <summary>
+    /// Gets the item's GUID
+    /// </summary>
+    public guid Guid { get => (_guid = _guid is null ? new guid(MD5.ComputeHash(Uri.ToString().ToUTF8Bytes())) : _guid).Value; init => _guid = value; }
+    private guid? _guid = null;
 
-/// <summary>
-/// Gets the enumeration's value as a string.
-/// </summary>
-public override string ToString() => ToStringDelegate(this);
+    /// <summary>
+    /// Gets the enumeration's value as a string.
+    /// </summary>
+    public override string ToString() => ToStringDelegate(this);
 
-public  int CompareTo(object? other) => other is IEnumeration ? CompareTo((IEnumeration)other) : -1;
-public  int CompareTo(IEnumeration other) => Id.CompareTo(other.Id);
-// public override bool Equals(object other) => other is IEnumeration && CompareTo(other) == 0;
-public  bool Equals(IEnumeration? other) => GetHashCode() == other?.GetHashCode();
-public override int GetHashCode() => Id.GetHashCode();
+    public int CompareTo(object? other) => other is IEnumeration ? CompareTo((IEnumeration)other) : -1;
+    public int CompareTo(IEnumeration other) => Id.CompareTo(other.Id);
+    // public override bool Equals(object other) => other is IEnumeration && CompareTo(other) == 0;
+    public override int GetHashCode() => Id.GetHashCode();
 
-public  TypeCode GetTypeCode() => Convert.GetTypeCode(Value);
+    public TypeCode GetTypeCode() => Convert.GetTypeCode(Value);
 
-#region type conversions
-/// <summary>
-/// Converts the value of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent string representation.
-/// </summary>
-public  object ToType(Type conversionType, IFormatProvider? provider) => Convert.ChangeType(Value, conversionType);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="bool"/> representation (if it exists).
-/// </summary>
-public  bool ToBoolean(IFormatProvider? provider = null) => Convert.ToBoolean(Value, provider);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="byte"/> representation (if it exists).
-/// </summary>
-public  byte ToByte(IFormatProvider? provider = null) => Convert.ToByte(Value, provider);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="char"/> representation (if it exists).
-/// </summary>
-public  char ToChar(IFormatProvider? provider = null) => Convert.ToChar(Value, provider);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see cref="DateTime"/> representation (if it exists).
-/// </summary>
-public  DateTime ToDateTime(IFormatProvider? provider = null) => Convert.ToDateTime(Value, provider);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="decimal"/> representation (if it exists).
-/// </summary>
-public  decimal ToDecimal(IFormatProvider? provider = null) => Convert.ToDecimal(Value, provider);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="double"/> representation (if it exists).
-/// </summary>
-public  double ToDouble(IFormatProvider? provider = null) => Convert.ToDouble(Value, provider);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="short"/> representation (if it exists).
-/// </summary>
-public  short ToInt16(IFormatProvider? provider = null) => Convert.ToInt16(Value, provider);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="int"/> representation (if it exists).
-/// </summary>
-public  int ToInt32(IFormatProvider? provider = null) => Convert.ToInt32(Value, provider);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="long"/> representation (if it exists).
-/// </summary>
-public  long ToInt64(IFormatProvider? provider = null) => Convert.ToInt64(Value, provider);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="sbyte"/> representation (if it exists).
-/// </summary>
-public  sbyte ToSByte(IFormatProvider? provider = null) => Convert.ToSByte(Value, provider);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="float"/> representation (if it exists).
-/// </summary>
-public  float ToSingle(IFormatProvider? provider = null) => Convert.ToSingle(Value, provider);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="string"/> representation (if it exists).
-/// </summary>
-public  string ToString(IFormatProvider? provider = null) => ToString();
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="ushort"/> representation (if it exists).
-/// </summary>
-public  ushort ToUInt16(IFormatProvider? provider = null) => Convert.ToUInt16(Value, provider);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="uint"/> representation (if it exists).
-/// </summary>
-public  uint ToUInt32(IFormatProvider? provider = null) => Convert.ToUInt32(Value, provider);
-/// <summary>
-/// Converts the <see cref="Value"/> of the current
-/// <see cref="IEnumeration{TEnumeration, {{ enum_underling_type }}, {{ enum_type }}}"/> object to its
-/// equivalent <see langword="ulong"/> representation (if it exists).
-/// </summary>
-public  ulong ToUInt64(IFormatProvider? provider = null) => Convert.ToUInt64(Value, provider);
-#endregion
+    #region type conversions
+    /// <summary>
+    /// Converts the value of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent string representation.
+    /// </summary>
+    public object ToType(Type conversionType, IFormatProvider? provider) => Convert.ChangeType(Value, conversionType);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="bool"/> representation (if it exists).
+    /// </summary>
+    public bool ToBoolean(IFormatProvider? provider = null) => Convert.ToBoolean(Value, provider);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="byte"/> representation (if it exists).
+    /// </summary>
+    public byte ToByte(IFormatProvider? provider = null) => Convert.ToByte(Value, provider);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="char"/> representation (if it exists).
+    /// </summary>
+    public char ToChar(IFormatProvider? provider = null) => Convert.ToChar(Value, provider);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see cref="DateTime"/> representation (if it exists).
+    /// </summary>
+    public DateTime ToDateTime(IFormatProvider? provider = null) => Convert.ToDateTime(Value, provider);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="decimal"/> representation (if it exists).
+    /// </summary>
+    public decimal ToDecimal(IFormatProvider? provider = null) => Convert.ToDecimal(Value, provider);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="double"/> representation (if it exists).
+    /// </summary>
+    public double ToDouble(IFormatProvider? provider = null) => Convert.ToDouble(Value, provider);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="short"/> representation (if it exists).
+    /// </summary>
+    public short ToInt16(IFormatProvider? provider = null) => Convert.ToInt16(Value, provider);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="int"/> representation (if it exists).
+    /// </summary>
+    public int ToInt32(IFormatProvider? provider = null) => Convert.ToInt32(Value, provider);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="long"/> representation (if it exists).
+    /// </summary>
+    public long ToInt64(IFormatProvider? provider = null) => Convert.ToInt64(Value, provider);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="sbyte"/> representation (if it exists).
+    /// </summary>
+    public sbyte ToSByte(IFormatProvider? provider = null) => Convert.ToSByte(Value, provider);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="float"/> representation (if it exists).
+    /// </summary>
+    public float ToSingle(IFormatProvider? provider = null) => Convert.ToSingle(Value, provider);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="string"/> representation (if it exists).
+    /// </summary>
+    public string ToString(IFormatProvider? provider = null) => ToString();
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="ushort"/> representation (if it exists).
+    /// </summary>
+    public ushort ToUInt16(IFormatProvider? provider = null) => Convert.ToUInt16(Value, provider);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="uint"/> representation (if it exists).
+    /// </summary>
+    public uint ToUInt32(IFormatProvider? provider = null) => Convert.ToUInt32(Value, provider);
+    /// <summary>
+    /// Converts the <see cref="Value"/> of the current
+    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// equivalent <see langword="ulong"/> representation (if it exists).
+    /// </summary>
+    public ulong ToUInt64(IFormatProvider? provider = null) => Convert.ToUInt64(Value, provider);
+    #endregion
 
-// public static bool operator ==(Enumeration<{{ name }}, {{ enum_underling_type }}, {{ enum_type }}> e, Enumeration<{{ name }}, {{ enum_underling_type }}, {{ enum_type }}> o) => e.Equals(o);
-// public static bool operator !=(Enumeration<{{ name }}, {{ enum_underling_type }}, {{ enum_type }}> e, Enumeration<{{ name }}, {{ enum_underling_type }}, {{ enum_type }}> o) => !e.Equals(o);
+    public static bool operator ==({{ dto_type_name }} left, {{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> right) => left.Value.Equals(right.Value);
+    public static bool operator ==({{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> left, {{ dto_type_name }} right) => left.Value.Equals(right.Value);
+    public static bool operator ==({{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> left, IEnumeration<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> right) => left.Value.Equals(right.Value);
+    public static bool operator ==(IEnumeration<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> left, {{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> right) => left.Value.Equals(right.Value);
+    public static bool operator !=({{ dto_type_name }} left, {{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> right) => !left.Value.Equals(right.Value);
+    public static bool operator !=({{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> left, {{ dto_type_name }} right) => !left.Value.Equals(right.Value);
+    public static bool operator !=({{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> left, IEnumeration<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> right) => !left.Value.Equals(right.Value);
+    public static bool operator !=(IEnumeration<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> left, {{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> right) => !left.Value.Equals(right.Value);
 
-/// <summary>
-/// Converts the <paramref name="value"/> to an object of type
-/// <paramref name="t"/>.
-/// </summary>
-public static IEnumeration? FromValue(Type t, object value) => Enumeration.Parse<{{ name }}>(x => x.Value.Equals(value));
-/// <summary>
-/// Converts the <paramref name="value"/> to an object of type
-/// </summary>
-public static {{ name }}? FromValue(object value) => Enumeration.Parse(({{ name }} e) => e.Value?.Equals(value) ?? false);
-/// <summary>
-/// Retrieves a list of values that are members of the enumeration.
-/// </summary>
-public static IEnumeration[] Ge{{ enum_type }}s(Type t) => t.GetRuntimeFields().Select(f => f.Ge{{ enum_type }}(null)).OfType<IEnumeration>().ToArray();
-/// <summary>
-/// Retrieves a list of values that are members of the enumeration.
-/// </summary>
-public static TEnumeration[] Ge{{ enum_type }}s<TEnumeration>() => Ge{{ enum_type }}s(typeof(TEnumeration)).OfType<TEnumeration>().ToArray();
-/// <summary>
-/// Retrieves a list of <see cref="PropertyInfo"/>s that can be used to
-/// convert <see langword="string"/>s to the enumeration.
-/// </summary>
-private static IEnumerable<PropertyInfo> GetFromStringProperties(Type t)
-    => t.GetRuntimeProperties().Where(p => p.GetCustomAttribute<FromStringAttribute>() != null);
-/// <summary>
-/// Retrieves a list of <see cref="PropertyInfo"/>s that can be used to
-/// convert <see langword="string"/>s to the enumeration.
-/// </summary>
-private static IEnumerable<PropertyInfo> GetFromStringProperties<TEnumeration>()
-    => GetFromStringProperties(typeof(TEnumeration));
-/// <summary>
-/// Parses the <paramref name="value"/> to an object of type
-/// <see cref="IEnumeration"/>.
-/// </summary>
-public static IEnumeration? Parse(Type t, string value) => Parse(t, e => GetFromStringProperties(t).Any(p => p.Ge{{ enum_type }}(null) as string == value));
-/// <summary>
-/// Parses the <paramref name="value"/> to an object of type
-/// <typeparamref name="TEnumeration"/>.
-/// </summary>
-public static TEnumeration? Parse<TEnumeration>(string value) where TEnumeration : IEnumeration
-    => Parse<TEnumeration>(e => GetFromStringProperties<TEnumeration>().Any(p => p.Ge{{ enum_type }}(null) as string == value));
-public static TEnumeration? Parse<TEnumeration>(Func<TEnumeration, bool> matchPredicate) where TEnumeration : IEnumeration
-    => Ge{{ enum_type }}s<TEnumeration>().FirstOrDefault(matchPredicate);
-public static IEnumeration? Parse(Type t, Func<IEnumeration, bool> matchPredicate)
-    => Ge{{ enum_type }}s(t).FirstOrDefault(matchPredicate);
-public static bool TryParse<TEnumeration>(string s, out TEnumeration value) where TEnumeration : class, IEnumeration
-    => (value = Parse<TEnumeration>(s) as TEnumeration) != null;
+    // public static IEnumeration? FromValue(Type t, object value) => Enumeration.Parse<{{ dto_type_name }}>(x => x.Value.Equals(value));
+    /// <summary>
+    /// Converts the <paramref name="value"/> to an object of type
+    /// </summary>
+    public static {{ dto_type_name }}? FromValue({{ enum_namespace }}.{{ enum_type }} value) => Enumeration.Parse(({{ dto_type_name }} e) => e.Value?.Equals(value) ?? false);
+    /// <summary>
+    /// Converts the <paramref name="value"/> to an object of type <typeparamref name="{{ dto_type_name }}" />
+    /// </summary>
+    public static {{ dto_type_name }}? FromValue(object value) => Enumeration.Parse(({{ dto_type_name }} e) => e.Value?.Equals(value) ?? false);
 
-public  bool Equals(IEnumeration<{{ name }}> other) => Equals(other as IEnumeration);
-public  int CompareTo({{ enum_type }}? other) => Value.CompareTo(other);
-public  bool Equals({{ enum_type }}? other) => Value.Equals(other);
+    /// <summary>
+    /// Retrieves a list of values that are members of the enumeration.
+    /// </summary>
+    public static {{ enum_namespace }}.{{ enum_type }}[] Ge{{ enum_namespace }}.{{ enum_type }}s()
+        => Enumeration.Ge{{ enum_namespace }}.{{ enum_type }}s<{{ enum_namespace }}.{{ enum_type }}>();
+    /// <summary>
+    /// Retrieves a list of <see cref="PropertyInfo"/>s that can be used to
+    /// convert <see langword="string"/>s to the enumeration.
+    /// </summary>
+    private static IEnumerable<PropertyInfo> GetFromStringProperties(Type t)
+        => t.GetRuntimeProperties().Where(p => p.GetCustomAttribute<FromStringAttribute>() != null);
+    /// <summary>
+    /// Retrieves a list of <see cref="PropertyInfo"/>s that can be used to
+    /// convert <see langword="string"/>s to the enumeration.
+    /// </summary>
+    private static IEnumerable<PropertyInfo> GetFromStringProperties()
+        => GetFromStringProperties(typeof({{ dto_type_name }}));
 
-public static IEnumerable<{{ name }}> GetAll() => Ge{{ enum_type }}s<{{ name }}>();
+    /// <summary>
+    /// Parses the <paramref name="value"/> to an object of type
+    /// <typeparamref name="{{ dto_type_name }}"/>.
+    /// </summary>
+    public static {{ dto_type_name }}? Parse(string value)
+        => Enumeration.Parse<{{ dto_type_name }}>(value);
+    public static {{ dto_type_name }}? Parse(Func<{{ dto_type_name }}, bool> matchPredicate)
+        => Enumeration.Parse<{{ dto_type_name }}>(matchPredicate);
+    // public static IEnumeration? Parse(Type t, Func<IEnumeration, bool> matchPredicate)
+    //     => Ge{{ enum_namespace }}.{{ enum_type }}s(t).FirstOrDefault(matchPredicate);
+    public static bool TryParse(string s, out {{ dto_type_name }} value)
+        => (value = Enumeration.Parse<{{ dto_type_name }}>(s)) is not null;
+
+    public bool Equals(IEnumeration? other) => GetHashCode() == other?.GetHashCode();
+    public bool Equals(IEnumeration<{{ dto_type_name }}>? other) => Equals(other as IEnumeration);
+    public bool Equals({{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}>? other) => Equals(other as IEnumeration);
+    public bool Equals(IEnumeration<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}>? other) => Equals(other as IEnumeration);
+    public bool Equals({{ dto_type_name }}? other) => Equals(other as IEnumeration);
+    public int CompareTo({{ enum_namespace }}.{{ enum_type }}? other) => Value.CompareTo(other);
+    public bool Equals({{ enum_namespace }}.{{ enum_type }}? other) => Value.Equals(other);
+
+    public static IEnumerable<{{ dto_type_name }}> GetAll()
+        => Enumeration.GetAll<{{ dto_type_name }}>();
 }

@@ -1,0 +1,17 @@
+public partial class {{ field_name }}
+{
+    public const {{ underyling_type }} Id = {{ id }};
+    public const {{ enum_namespace }}.{{ enum_type }} Value = {{ enum_namespace }}.{{ enum_type }}.{{ field_name }};
+    public const string Name = "{{ field_name }}";
+    public const string DisplayName = "{{ display_name }}";
+    public const string Group = "{{ group_name }}";
+    public const int Order = {{ order }};
+    public const string ShortName = "{{ short_name }}";
+    public const string Descriptiom = "{{ descriptiom }}";
+    public const string GuidString = "{{ guid_string }}"
+    public const string UriString = "{{ uri_string }}";
+    private static readonly System.Uri Uri = new(UriString);
+    public static readonly guid Guid = new(GuidString);
+
+    public static readonly I{{ enumeration_name }} Instance = new {{ enumeration_name }}(Id, Value, Name);
+}
