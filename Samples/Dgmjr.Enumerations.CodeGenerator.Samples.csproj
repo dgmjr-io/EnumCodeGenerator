@@ -1,9 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <IncludeInSolutionFile>true</IncludeInSolutionFile>
+        <WarningsAsErrors>$(WarningsAsErrors);CS8785</WarningsAsErrors>
     </PropertyGroup>
     <ItemGroup>
-        <SourceGenerator Include="Dgmjr.Enumerations.CodeGenerator" />
+        <PackageReference Include="Dgmjr.Enumerations.CodeGenerator" PrivateAssets="Analyzers" />
         <PackageReference Include="Dgmjr.Enumerations.Enumeration" />
         <PackageReference Include="Dgmjr.Enumerations.Abstractions" />
     </ItemGroup>

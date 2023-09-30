@@ -20,6 +20,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging" />
         <PackageReference Include="Dgmjr.CodeGeneration.Logging" />
         <PackageReference Include="Dgmjr.System.Extensions" />
+        <ProjectReference Include="./Runtime/Dgmjr.Enumerations.CodeGenerator.Runtime.csproj" Targets="Restore;Build" />
     </ItemGroup>
 
     <ItemGroup>
@@ -41,7 +42,7 @@
       <PackageFile Include="./Runtime/bin/**/*.dll" PackagePath="lib/$(TargetFramework)/%(Filename)%(Extension)" Visible="false" />
     </ItemGroup>
 
-    <Target Name="BuildRuntime" BeforeTargets="Build">
+    <!-- <Target Name="BuildRuntime" BeforeTargets="Build">
       <MSBuild Projects="./Runtime/Dgmjr.Enumerations.CodeGenerator.Runtime.csproj" Properties="Configuration=$(Configuration);TargetFramework=$(TargetFramework)" Targets="Restore;Build" />
-    </Target>
+    </Target> -->
 </Project>

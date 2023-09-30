@@ -1,6 +1,6 @@
 public partial {{ data_structure_type }} {{ field_name }} : I{{ enumeration_name }}
 {
-    public const {{ underyling_type }} Id = {{ id }};
+    public const {{ enum_underyling_type }} Id = {{ id }};
     public const {{ enum_namespace }}.{{ enum_type }} Value = {{ enum_namespace }}.{{ enum_type }}.{{ field_name }};
     public const string Name = "{{ field_name }}";
     public const string DisplayName = "{{ display_name }}";
