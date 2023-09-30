@@ -11,17 +11,22 @@ using System.Reflection;
 using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Dgmjr.CodeGeneration.Logging;
 using Dgmjr.Enumerations.CodeGenerator;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
+
 using Scriban.Parsing;
+
 using static Dgmjr.Enumerations.CodeGenerator.Constants;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxKind;
+
 using IigInitCtx = IncrementalGeneratorInitializationContext;
 using SrcProdCtx = SourceProductionContext;
 
@@ -40,12 +45,15 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
             {GenerateEnumerationTypeAttributeDeclarations}
             """));
 
-        using (_logger = new SourceGeneratorLoggingProvider(context).CreateLogger<EnumDataStructureGenerator>() as SourceGeneratorLogger)
+        //var metadataProvider = context.AnalyzerConfigOptionsProvider.Select(opts => opts.GlobalOptions).Combine(context.MetadataReferencesProvider).Combine(context.ParseOptionsProvider);
+
+        using (_logger = (new SourceGeneratorLoggingProvider(context).CreateLogger<EnumDataStructureGenerator>() as SourceGeneratorLogger)!)
         {
             foreach (var attributeClass in AttributeClasses)
             {
                 Logger.LogInformation($"Checking for attribute class {attributeClass}...");
-                var valuesProvider = context.SyntaxProvider.ForAttributeWithMetadataName(attributeClass, Selector, Transformer).Collect();
+
+                var valuesProvider = context.SyntaxProvider.ForAttributeWithMetadataName(attributeClass, Selector, Transformer).Collect();//.Collect().Combine(context.MetadataReferencesProvider);
                 context.RegisterPostInitializationOutput(ctx => ctx.AddSource($"{GenerateEnumerationTypeAttributes}_{attributeClass}_Classes.g.cs", $"/* {valuesProvider} */"));
                 context.RegisterSourceOutput(valuesProvider, Generate);
             }
@@ -292,7 +300,7 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
             constNameDeclaration,
             constIdDeclaration,
             constDisplayNameDeclaration,
-            constNameDeclaration,
+            // constNameDeclaration,
             constDescriptionDeclaration,
             constShortNameDeclaration,
             constGroupNameDeclaration,
