@@ -1,14 +1,15 @@
-//
-// Enumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}.cs
-//
-//   Created: 2022-10-19-01:55:33
-//   Modified: 2022-11-03-12:28:37
-//
-//   Author: David G. Mooore, Jr. <david@dgmjr.io>
-//
-//   Copyright © 2022-2023 David G. Mooore, Jr., All Rights Reserved
-//      License: MIT (https://opensource.org/licenses/MIT)
-//
+/*
+ * {{ dto_type_name }}
+ *    Id type: {{ id_type }}
+ *    Enum type: {{ enum_type }}
+ *
+ *   Created: {{ timestamp }}
+ *
+ *   Author: {{ author }}
+ *
+ *   Copyright {{ copyright }}
+ *      License: {{ license_expression}} (https: *opensource.org/licenses/{{ license_expression }})
+ */
 
 namespace {{ dto_namespace }};
 using System;
@@ -21,141 +22,133 @@ using static Dgmjr.Enumerations.Enumeration;
 /// <summary>
 /// An abstract base class for enumerations.
 /// </summary>
-/// <typeparam name="{{ enum_namespace }}.{{ enum_type }}">The type of the enumeration's value</typeparam>
-/// <typeparam name="{{ id_type }}">The type of the enumeration's id</typeparam>
-/// <typeparam name="{{ dto_type_name }}">The type of the enumeration (must be the name of the
-///     declared class)</typeparam>
-[Serializable]
-[DebuggerDisplay("{DisplayName} - {Value}")]
-public struct {{ dto_type_name }} : I{{ dto_type_name }}
+public static class {{ dto_type_name }}
 {
-    protected {{ dto_type_name }}({{ id_type }} Id, {{ enum_namespace }}.{{ enum_type }} Value, string Name)
+    protected {{ dto_type_name }}()
     {
-        (I{{ dto_type_name }}this).Id = Id;
-        (I{{ dto_type_name }}this).Value = Value;
-        (I{{ dto_type_name }}this).Name = Name;
     }
 
     /// <summary>
-    /// Gets the underlying value of the enumeration.
+    /// Gets <inheritdoc cref="Value" path="/returns" />
     /// </summary>
-    /// <returns>The underlying value of the enumeration.</returns>
-    public {{ enum_namespace }}.{{ enum_type }} Value { get; init; }
-    /// <summary>
-    /// Gets the numeric ID of the enumeration.
-    /// </summary>
+    /// <returns>the underlying value of the enumeration.</returns>
+    /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ value }}" /></value>
+    public const {{ enum_namespace }}.{{ enum_type }} Value = {{ enum_namespace }}.{{ enum_type }}.{{ value }};
+
+    /// <inheritdoc cref="Value" />
+    {{ enum_namespace }}.{{ enum_type }} IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>.Value => Value;
+    /// <summary>Gets <inheritdoc cref="Id" path="/returns" /></summary>
     /// <returns>The numeric ID of the enumeration.</returns>
-    public {{ id_type }} Id { get; init; }
-    object IIdentifiable.Id => Id;
-    object IHaveAValue.Value => Value;
-    /// <summary>
-    /// Gets the field info of the backing type of the enumeration.
-    /// </summary>
-    /// <returns>The field info of the backing type of the enumeration.</returns>
-    public FieldInfo? FieldInfo => GetType().GetFieldInfo(Name);
+    public const {{ id_type }} Id = {{ id }};
+    /// <summary>Gets <inheritdoc cref="FieldInfo" path="/returns" /></summary>
+    /// <returns>the field info of the backing type of the enumeration.</returns>
+    public static readonly FieldInfo? FieldInfo => typeof({{ enum_namespace }}.{{ enum_type }}).GetFieldInfo(Name);
     private Func<IEnumeration, string> ToStringDelegate { get; init; } = e => e.DisplayName;
     /// <summary>
     /// Gets the custom attribute of type <typeparamref name="TAttribute"/> from
     /// the enumeration's <see cref="FieldInfo"/>.
     /// </summary>
-    public TAttribute? GetCustomAttribute<TAttribute>() where TAttribute : Attribute
+    public static readonly TAttribute? GetCustomAttribute<TAttribute>() where TAttribute : Attribute
         => FieldInfo.GetCustomAttribute<DisplayAttribute>() as TAttribute;
-    /// <summary>
-    /// Gets the <see cref="DisplayAttribute"/> of the
-    /// enumeration'<see cref="FieldInfo"/>.
-    /// </summary>
-    public DisplayAttribute? DisplayAttribute => GetCustomAttribute<DisplayAttribute>();
-
     /// <summary>
     /// Gets the short name of the enumeration as pulled from the
     /// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
     /// </summary>
-    [FromString]
-    public string ShortName => DisplayAttribute?.ShortName ?? Name;
+    /// <value>{{ short_name }}</value>
+    public const string ShortName = "{{ short_name }}";
     /// <summary>
     /// Gets the description of the enumeration as pulled from the
     /// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
     /// </summary>
-    public string Description => DisplayAttribute?.Description ?? Name;
+    /// <value>{{ description }}</value>
+    public const string Description = "{{ description }}";
     /// <summary>
     /// Gets the display name of the enumeration as pulled from the
     /// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
     /// </summary>
     [FromString]
-    public string DisplayName => DisplayAttribute?.Name ?? Name;
+    public const string DisplayName = "{{ display_name }}";
     /// <summary>
     /// Gets the group name of the enumeration as pulled from the
     /// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
     /// </summary>
-    public string GroupName => DisplayAttribute?.GroupName ?? Enumeration.NoGroup;
+    /// <value>{{ group_name }}</value>
+    public const string GroupName = "{{ group_name }}";
     /// <summary>
     /// Gets the order of the enumeration as pulled from the
     /// <see cref="System.ComponentModel.DataAnnotations.DisplayAttribute"/>.
     /// </summary>
-    public int Order => DisplayAttribute?.Order ?? Enumeration.DefaultOrder;
-
-    /// <summary>
-    /// Gets the name of the enumeration.
-    /// </summary>
-    public string Name { get; init; }
-
-    /// <summary>
-    /// Gets the item's URI
-    /// </summary>
-    public Uri Uri { get => _uri is null ? new Uri(GetType().FullName.Replace(".", ":")) : _uri; init => _uri = value; }
-    private Uri? _uri = null;
-    /// <summary>
-    /// Gets the item's GUID
-    /// </summary>
-    public guid Guid { get => (_guid = _guid is null ? new guid(MD5.ComputeHash(Uri.ToString().ToUTF8Bytes())) : _guid).Value; init => _guid = value; }
-    private guid? _guid = null;
+    /// <value>{{ order }}</value>
+    public const int Order = {{ order }};
+    /// <summary>Gets the enumeration's URI</summary>
+    /// <value>{{ uri_string }}</value>
+    public const string UriString = "{{ uri_string }}";
+    /// <summary>Gets the enumeration's GUID</summary>
+    /// <value>{{ guid_string }}</value>
+    public const string GuidString = "{{ guid_string }}";
+    /// <inheritdoc cref="UriString" />
+    public static readonly uri Uri = new(UriString);
+    /// <inheritdoc cref="GuidString" />
+    public static readonly guid Guid = new(GuidString);
+    /// <inheritdoc cref="Name" />
+    string IHaveAName.Name => Name;
+    /// <inheritdoc cref="Id" />
+    object IIdentifiable.Id => Id;
+    /// <inheritdoc cref="Value" />
+    object IHaveAValue.Value => Value;
+    /// <inheritdoc cref="UriString" />
+    uri IHaveAUri.Uri => Uri;
+    /// <inheritdoc cref="GuidString" />
+    guid IHaveAGuid.Guid => Guid;
+    /// <inheritdoc cref="ShortName" />
+    string IHaveAShortName.ShortName => ShortName;
+    /// <inheritdoc cref="Description" />
+    string IHaveADescription.Description => Description;
+    /// <inheritdoc cref="DisplayName" />
+    string IHaveADisplayName.DisplayName => DisplayName;
+    /// <inheritdoc cref="GroupName" />
+    string IEnumeration.GroupName => GroupName;
+    /// <inheritdoc cref="Order" />
+    int IEnumeration.Order => Order;
 
     /// <summary>
     /// Gets the enumeration's value as a string.
     /// </summary>
-    public override string ToString() => ToStringDelegate(this);
+    public override string ToString() => DisplayString;
 
-    public int CompareTo(object? other) => other is IEnumeration ? CompareTo((IEnumeration)other) : -1;
-    public int CompareTo(IEnumeration other) => Id.CompareTo(other.Id);
-    // public override bool Equals(object other) => other is IEnumeration && CompareTo(other) == 0;
+    public int CompareTo(object? other) => other is IEnumeration ie ? CompareTo(ie) : -1;
+    public int CompareTo(IEnumeration other) => Order.CompareTo(other.Order);
     public override int GetHashCode() => Id.GetHashCode();
 
     public TypeCode GetTypeCode() => Convert.GetTypeCode(Value);
 
     #region type conversions
     /// <summary>
-    /// Converts the value of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
-    /// equivalent string representation.
+    /// Converts the value of the current object to its equivalent string representation in another type.
     /// </summary>
     public object ToType(Type conversionType, IFormatProvider? provider) => Convert.ChangeType(Value, conversionType);
     /// <summary>
-    /// Converts the <see cref="Value"/> of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// Converts the <see cref="Value"/> of the current object to its
     /// equivalent <see langword="bool"/> representation (if it exists).
     /// </summary>
     public bool ToBoolean(IFormatProvider? provider = null) => Convert.ToBoolean(Value, provider);
     /// <summary>
-    /// Converts the <see cref="Value"/> of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// Converts the <see cref="Value"/> of the current object to its
     /// equivalent <see langword="byte"/> representation (if it exists).
     /// </summary>
     public byte ToByte(IFormatProvider? provider = null) => Convert.ToByte(Value, provider);
     /// <summary>
-    /// Converts the <see cref="Value"/> of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// Converts the <see cref="Value"/> of the current object to its
     /// equivalent <see langword="char"/> representation (if it exists).
     /// </summary>
     public char ToChar(IFormatProvider? provider = null) => Convert.ToChar(Value, provider);
     /// <summary>
-    /// Converts the <see cref="Value"/> of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// Converts the <see cref="Value"/> of the current object to its
     /// equivalent <see cref="DateTime"/> representation (if it exists).
     /// </summary>
     public DateTime ToDateTime(IFormatProvider? provider = null) => Convert.ToDateTime(Value, provider);
     /// <summary>
-    /// Converts the <see cref="Value"/> of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// Converts the <see cref="Value"/> of the current object to its
     /// equivalent <see langword="decimal"/> representation (if it exists).
     /// </summary>
     public decimal ToDecimal(IFormatProvider? provider = null) => Convert.ToDecimal(Value, provider);
@@ -166,38 +159,32 @@ public struct {{ dto_type_name }} : I{{ dto_type_name }}
     /// </summary>
     public double ToDouble(IFormatProvider? provider = null) => Convert.ToDouble(Value, provider);
     /// <summary>
-    /// Converts the <see cref="Value"/> of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// Converts the <see cref="Value"/> of the current object to its
     /// equivalent <see langword="short"/> representation (if it exists).
     /// </summary>
     public short ToInt16(IFormatProvider? provider = null) => Convert.ToInt16(Value, provider);
     /// <summary>
-    /// Converts the <see cref="Value"/> of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// Converts the <see cref="Value"/> of the current object to its
     /// equivalent <see langword="int"/> representation (if it exists).
     /// </summary>
     public int ToInt32(IFormatProvider? provider = null) => Convert.ToInt32(Value, provider);
     /// <summary>
-    /// Converts the <see cref="Value"/> of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// Converts the <see cref="Value"/> of the current object to its
     /// equivalent <see langword="long"/> representation (if it exists).
     /// </summary>
     public long ToInt64(IFormatProvider? provider = null) => Convert.ToInt64(Value, provider);
     /// <summary>
-    /// Converts the <see cref="Value"/> of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// Converts the <see cref="Value"/> of the current object to its
     /// equivalent <see langword="sbyte"/> representation (if it exists).
     /// </summary>
     public sbyte ToSByte(IFormatProvider? provider = null) => Convert.ToSByte(Value, provider);
     /// <summary>
-    /// Converts the <see cref="Value"/> of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// Converts the <see cref="Value"/> of the current object to its
     /// equivalent <see langword="float"/> representation (if it exists).
     /// </summary>
     public float ToSingle(IFormatProvider? provider = null) => Convert.ToSingle(Value, provider);
     /// <summary>
-    /// Converts the <see cref="Value"/> of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// Converts the <see cref="Value"/> of the current object to its
     /// equivalent <see langword="string"/> representation (if it exists).
     /// </summary>
     public string ToString(IFormatProvider? provider = null) => ToString();
@@ -208,37 +195,56 @@ public struct {{ dto_type_name }} : I{{ dto_type_name }}
     /// </summary>
     public ushort ToUInt16(IFormatProvider? provider = null) => Convert.ToUInt16(Value, provider);
     /// <summary>
-    /// Converts the <see cref="Value"/> of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// Converts the <see cref="Value"/> of the current object to its
     /// equivalent <see langword="uint"/> representation (if it exists).
     /// </summary>
     public uint ToUInt32(IFormatProvider? provider = null) => Convert.ToUInt32(Value, provider);
     /// <summary>
-    /// Converts the <see cref="Value"/> of the current
-    /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+    /// Converts the <see cref="Value"/> of the current object to its
     /// equivalent <see langword="ulong"/> representation (if it exists).
     /// </summary>
     public ulong ToUInt64(IFormatProvider? provider = null) => Convert.ToUInt64(Value, provider);
     #endregion
 
-    public static bool operator ==({{ dto_type_name }} left, {{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> right) => left.Value.Equals(right.Value);
-    public static bool operator ==({{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> left, {{ dto_type_name }} right) => left.Value.Equals(right.Value);
-    public static bool operator ==({{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> left, IEnumeration<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> right) => left.Value.Equals(right.Value);
-    public static bool operator ==(IEnumeration<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> left, {{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> right) => left.Value.Equals(right.Value);
-    public static bool operator !=({{ dto_type_name }} left, {{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> right) => !left.Value.Equals(right.Value);
-    public static bool operator !=({{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> left, {{ dto_type_name }} right) => !left.Value.Equals(right.Value);
-    public static bool operator !=({{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> left, IEnumeration<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> right) => !left.Value.Equals(right.Value);
-    public static bool operator !=(IEnumeration<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> left, {{ dto_type_name }}<{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}> right) => !left.Value.Equals(right.Value);
+    public static bool operator ==({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) == 0;
+    public static bool operator ==(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) == 0;
+    public static bool operator ==({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) == 0;
+    public static bool operator ==(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) == 0;
+
+    public static bool operator ==({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) != 0;
+    public static bool operator ==(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) != 0;
+    public static bool operator ==({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) != 0;
+    public static bool operator ==(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) != 0;
+
+    public static bool operator <({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) < 0;
+    public static bool operator <(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) < 0;
+    public static bool operator <({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) < 0;
+    public static bool operator <(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) < 0;
+
+    public static bool operator <=({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) <= 0;
+    public static bool operator <=(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) <= 0;
+    public static bool operator <=({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) <= 0;
+    public static bool operator <=(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) <= 0;
+
+    public static bool operator >({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) > 0;
+    public static bool operator >({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) > 0;
+    public static bool operator >({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) > 0;
+    public static bool operator >(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) > 0;
+
+    public static bool operator >=({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) >= 0;
+    public static bool operator >=(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) >= 0;
+    public static bool operator >=({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) >= 0;
+    public static bool operator >=(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) >= 0;
 
     // public static IEnumeration? FromValue(Type t, object value) => Enumeration.Parse<{{ dto_type_name }}>(x => x.Value.Equals(value));
     /// <summary>
     /// Converts the <paramref name="value"/> to an object of type
     /// </summary>
-    public static {{ dto_type_name }}? FromValue({{ enum_namespace }}.{{ enum_type }} value) => Enumeration.Parse(({{ dto_type_name }} e) => e.Value?.Equals(value) ?? false);
+    public static I{{ dto_type_name }}? FromValue({{ enum_namespace }}.{{ enum_type }} value) => Enumeration.Parse(({{ dto_type_name }} e) => e.Value?.Equals(value) ?? false);
     /// <summary>
     /// Converts the <paramref name="value"/> to an object of type <typeparamref name="{{ dto_type_name }}" />
     /// </summary>
-    public static {{ dto_type_name }}? FromValue(object value) => Enumeration.Parse(({{ dto_type_name }} e) => e.Value?.Equals(value) ?? false);
+    public static I{{ dto_type_name }}? FromValue(object value) => Enumeration.Parse(({{ dto_type_name }} e) => e.Value?.Equals(value) ?? false);
 
     /// <summary>
     /// Retrieves a list of values that are members of the enumeration.

@@ -1,14 +1,15 @@
-//
-// Enumeration{{{ dto_type_name }}, {{ enum_underlying_type }}, {{ enum_namespace }}.{{ enum_type_name }}}.cs
-//
-//   Created: 2022-10-19-01:55:33
-//   Modified: 2022-11-03-12:28:37
-//
-//   Author: David G. Mooore, Jr. <david@dgmjr.io>
-//
-//   Copyright © 2022-2023 David G. Mooore, Jr., All Rights Reserved
-//      License: MIT (https://opensource.org/licenses/MIT)
-//
+/*
+ * {{ dto_type_name }}
+ *    Id type: {{ id_type }}
+ *    Enum type: {{ enum_type }}
+ *
+ *   Created: {{ timestamp }}
+ *
+ *   Author: {{ author }}
+ *
+ *   Copyright {{ copyright }}
+ *      License: {{ license_expression}} (https: *opensource.org/licenses/{{ license_expression }})
+ */
 
 namespace {{ dto_namespace }};
 using System;
@@ -19,21 +20,14 @@ using Dgmjr.Enumerations.Abstractions;
 using static Dgmjr.Enumerations.Enumeration;
 
 /// <summary>
-/// An abstract base class for enumerations.
+/// A {{ data_structure_type }} for {{ dto_type_name }}.
 /// </summary>
-/// <typeparam name="{{ enum_namespace }}.{{ enum_type_name }}">The type of the enumeration's value</typeparam>
-/// <typeparam name="{{ enum_underlying_type }}">The type of the enumeration's id</typeparam>
-/// <typeparam name="{{ dto_type_name }}">The type of the enumeration (must be the name of the
-///     declared class)</typeparam>
 [Serializable]
 [DebuggerDisplay("{DisplayName} - {Value}")]
-public record struct {{ dto_type_name }} : I{{ dto_type_name }}
+public {{ data_structure_type }} {{ dto_type_name }} : I{{ dto_type_name }}
 {
-    protected {{ dto_type_name }}({{ enum_underlying_type }} Id, {{ enum_namespace }}.{{ enum_type_name }} Value, string Name)
+    protected {{ dto_type_name }}()
     {
-        (I{{ dto_type_name }}this).Id = Id;
-        (I{{ dto_type_name }}this).Value = Value;
-        (I{{ dto_type_name }}this).Name = Name;
     }
 
     /// <summary>
@@ -42,9 +36,9 @@ public record struct {{ dto_type_name }} : I{{ dto_type_name }}
     /// <returns>The underlying value of the enumeration.</returns>
     public {{ enum_namespace }}.{{ enum_type_name }} Value { get; init; }
     /// <summary>
-    /// Gets the numeric ID of the enumeration.
+    /// Gets <inheritdoc cref="Id" path="/value" />
     /// </summary>
-    /// <returns>The numeric ID of the enumeration.</returns>
+    /// <returns>the numeric ID of the enumeration.</returns>
     public {{ enum_underlying_type }} Id { get; init; }
     object IIdentifiable.Id => Id;
     object IHaveAValue.Value => Value;
@@ -238,7 +232,7 @@ public record struct {{ dto_type_name }} : I{{ dto_type_name }}
 
     // public static IEnumeration? FromValue(Type t, object value) => Enumeration.Parse<{{ dto_type_name }}>(x => x.Value.Equals(value));
     /// <summary>
-    /// Converts the <paramref name="value"/> to an object of type
+    /// Converts the <see cref="{{ enum_namespace }}.{{ enum_type_name }}" /> <paramref name="value"/> to an object of type {{ dto_type_name }}
     /// </summary>
     public static {{ dto_type_name }}? FromValue({{ enum_namespace }}.{{ enum_type_name }} value) => Enumeration.Parse(({{ dto_type_name }} e) => e.Value?.Equals(value) ?? false);
     /// <summary>
@@ -249,8 +243,8 @@ public record struct {{ dto_type_name }} : I{{ dto_type_name }}
     /// <summary>
     /// Retrieves a list of values that are members of the enumeration.
     /// </summary>
-    public static {{ enum_namespace }}.{{ enum_type_name }}[] Ge{{ enum_namespace }}.{{ enum_type_name }}s()
-        => Enumeration.Ge{{ enum_namespace }}.{{ enum_type_name }}s<{{ enum_namespace }}.{{ enum_type_name }}>();
+    public static {{ enum_namespace }}.{{ enum_type_name }}[] GetAll()
+        => Enumeration.GetAll<{{ enum_namespace }}.{{ enum_type_name }}>();
     /// <summary>
     /// Retrieves a list of <see cref="PropertyInfo"/>s that can be used to
     /// convert <see langword="string"/>s to the enumeration.
@@ -273,7 +267,7 @@ public record struct {{ dto_type_name }} : I{{ dto_type_name }}
     public static {{ dto_type_name }}? Parse(Func<{{ dto_type_name }}, bool> matchPredicate)
         => Enumeration.Parse<{{ dto_type_name }}>(matchPredicate);
     // public static IEnumeration? Parse(Type t, Func<IEnumeration, bool> matchPredicate)
-    //     => Ge{{ enum_namespace }}.{{ enum_type_name }}s(t).FirstOrDefault(matchPredicate);
+    //     => GetAll(t).FirstOrDefault(matchPredicate);
     public static bool TryParse(string s, out {{ dto_type_name }} value)
         => (value = Enumeration.Parse<{{ dto_type_name }}>(s)) is not null;
 

@@ -1,4 +1,4 @@
-public partial class {{ field_name }}
+public partial {{ data_structure_type }} {{ field_name }} : I{{ enumeration_name }}
 {
     public const {{ underyling_type }} Id = {{ id }};
     public const {{ enum_namespace }}.{{ enum_type }} Value = {{ enum_namespace }}.{{ enum_type }}.{{ field_name }};
@@ -10,8 +10,13 @@ public partial class {{ field_name }}
     public const string Descriptiom = "{{ descriptiom }}";
     public const string GuidString = "{{ guid_string }}"
     public const string UriString = "{{ uri_string }}";
-    private static readonly System.Uri Uri = new(UriString);
+    public static readonly System.Uri Uri = new(UriString);
     public static readonly guid Guid = new(GuidString);
 
-    public static readonly I{{ enumeration_name }} Instance = new {{ enumeration_name }}(Id, Value, Name);
+    string IHaveAName.Name => Name;
+    object IHaveAValue.Value => Value;
+    {{ enum_namespace }}.{{ enum_type }} IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>.Value => Value;
+    I{{ enumeration_name }} Value => Value;
+
+    public static readonly I{{ enumeration_name }} Instance = new {{ field_name }}();
 }
