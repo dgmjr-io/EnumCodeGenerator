@@ -37,8 +37,8 @@ namespace Dgmjr.Enumerations.CodeGenerator
         #nullable enable
         """;
 
-        public const string EnumerationRecordStruct = nameof(EnumerationRecordStruct);
-        public const string EnumerationStruct = nameof(EnumerationStruct);
+        public const string Enumeration = nameof(Enumeration);
+        public const string NestedEnumerationType = nameof(NestedEnumerationType);
 #pragma warning disable IDE1006
         public const string @record = nameof(@record);
         public const string @struct = nameof(@struct);
@@ -125,18 +125,21 @@ namespace Dgmjr.Enumerations.CodeGenerator
         public const string UriPattern = "urn:{0}:{1}:{2}";
         public const string DgmjrAbstractionsNamespace = "Dgmjr.Abstractions";
 
-        public static readonly string EnumerationRecordStructDeclaration =
+        public static readonly string EnumerationDeclaration =
+            typeof(Constants).Assembly.ReadAssemblyResourceAllText($"{Enumeration}.{scriban}");
+        public static readonly string IEnumerationDeclaration =
+            typeof(Constants).Assembly.ReadAssemblyResourceAllText($"I{Enumeration}.{scriban}");
+        public static readonly string NestedEnumerationTypeDeclaration =
             typeof(Constants).Assembly.ReadAssemblyResourceAllText(
-                $"{EnumerationRecordStruct}.{scriban}"
-            );
-        public static readonly string EnumerationStructDeclaration =
-            typeof(Constants).Assembly.ReadAssemblyResourceAllText(
-                $"{EnumerationStruct}.{scriban}"
+                $"{NestedEnumerationType}.{scriban}"
             );
 
-        public static readonly Scriban.Template EnumerationRecordStructDeclarationTemplate =
-            Scriban.Template.Parse(EnumerationRecordStructDeclaration);
-        public static readonly Scriban.Template EnumerationStructDeclarationTemplate =
-            Scriban.Template.Parse(EnumerationStructDeclaration);
+        public static readonly Scriban.Template EnumerationDeclarationTemplate =
+            Scriban.Template.Parse(EnumerationDeclaration);
+
+        public static readonly Scriban.Template IEnumerationDeclarationTemplate =
+            Scriban.Template.Parse(IEnumerationDeclaration);
+        public static readonly Scriban.Template NestedEnumerationTypeDeclarationTemplate =
+            Scriban.Template.Parse(NestedEnumerationTypeDeclaration);
     }
 }

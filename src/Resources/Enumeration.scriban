@@ -22,17 +22,19 @@ using static Dgmjr.Enumerations.Enumeration;
 /// <summary>
 /// An abstract base class for enumerations.
 /// </summary>
-public static class {{ dto_type_name }}
+public {{ data_structure_type }} {{ field_name }} : I{{ dto_type_name }}
 {
-    protected {{ dto_type_name }}()
+    protected {{ field_name }}()
     {
     }
+
+    public static readonly I{{ field_name }} Instance = new {{ field_name }}();
 
     /// <summary>
     /// Gets <inheritdoc cref="Value" path="/returns" />
     /// </summary>
     /// <returns>the underlying value of the enumeration.</returns>
-    /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ value }}" /></value>
+    /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" /></value>
     public const {{ enum_namespace }}.{{ enum_type }} Value = {{ enum_namespace }}.{{ enum_type }}.{{ value }};
 
     /// <inheritdoc cref="Value" />
