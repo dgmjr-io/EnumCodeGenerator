@@ -1,7 +1,9 @@
+extern alias Scrib;
 using System;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Security;
+using Template = Scrib::Scriban.Template;
 
 namespace Dgmjr.Enumerations.CodeGenerator
 {
@@ -134,12 +136,15 @@ namespace Dgmjr.Enumerations.CodeGenerator
                 $"{NestedEnumerationType}.{scriban}"
             );
 
-        public static readonly Scriban.Template EnumerationDeclarationTemplate =
-            Scriban.Template.Parse(EnumerationDeclaration);
+        public static readonly Template EnumerationDeclarationTemplate = Template.Parse(
+            EnumerationDeclaration
+        );
 
-        public static readonly Scriban.Template IEnumerationDeclarationTemplate =
-            Scriban.Template.Parse(IEnumerationDeclaration);
-        public static readonly Scriban.Template NestedEnumerationTypeDeclarationTemplate =
-            Scriban.Template.Parse(NestedEnumerationTypeDeclaration);
+        public static readonly Template IEnumerationDeclarationTemplate = Template.Parse(
+            IEnumerationDeclaration
+        );
+        public static readonly Template NestedEnumerationTypeDeclarationTemplate = Template.Parse(
+            NestedEnumerationTypeDeclaration
+        );
     }
 }
