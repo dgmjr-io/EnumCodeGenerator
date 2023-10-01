@@ -13,6 +13,7 @@ using Dgmjr.Enumerations.CodeGenerator;
 using Microsoft.Extensions.Options;
 
 namespace Dgmjr.Enumerations.CodeGenerator;
+
 using static Constants;
 
 public record struct EnumerationDto(
