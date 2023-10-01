@@ -51,6 +51,11 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
         //         )
         // );
 
+        if (!System.Diagnostics.Debugger.IsAttached)
+        {
+            System.Diagnostics.Debugger.Launch();
+        }
+
         using (
             _logger = (
                 new SourceGeneratorLoggingProvider(
