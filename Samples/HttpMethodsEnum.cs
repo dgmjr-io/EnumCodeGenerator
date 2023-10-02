@@ -1,12 +1,14 @@
 namespace Dgmjr.Enumerations.CodeGenerator.Samples.Enums;
 
 [GenerateEnumerationStructAttribute("HttpMethod", "System.Net.Http")]
-public enum HttpMethod
+public enum HttpMethod : byte
 {
-    Get,
-    Post,
-    Put,
-    Head,
-    Options,
-    Trace
+    None = 0,
+    Get = 1,
+    Post = 2,
+    Put = 4,
+    Head = 8,
+    Options = 16,
+    Trace = 32,
+    All = Get | Post | Put | Head | Options | Trace
 }
