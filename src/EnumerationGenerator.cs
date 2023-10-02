@@ -337,7 +337,8 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
                         enumSymbol.GetMembers(fieldName).OfType<IFieldSymbol>().FirstOrDefault(),
                         dataStructureType,
                         dtoTypeName,
-                        dtoNamespace
+                        dtoNamespace,
+                        enumSymbol.EnumUnderlyingType.ToDisplayString()
                     )
                 )
             )

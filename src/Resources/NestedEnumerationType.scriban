@@ -1,22 +1,32 @@
-public partial {{ data_structure_type }} {{ field_name }} : I{{ enumeration_name }}
+namespace {{ enumeration_namespace }};
+
+public partial static class {{ enumeration_name }}s
 {
-    public const {{ enum_underyling_type }} Id = {{ id }};
-    public const {{ enum_namespace }}.{{ enum_type }} Value = {{ enum_namespace }}.{{ enum_type }}.{{ field_name }};
-    public const string Name = "{{ field_name }}";
-    public const string DisplayName = "{{ display_name }}";
-    public const string Group = "{{ group_name }}";
-    public const int Order = {{ order }};
-    public const string ShortName = "{{ short_name }}";
-    public const string Descriptiom = "{{ descriptiom }}";
-    public const string GuidString = "{{ guid_string }}"
-    public const string UriString = "{{ uri_string }}";
-    public static readonly System.Uri Uri = new(UriString);
-    public static readonly guid Guid = new(GuidString);
+  public partial {{ data_structure_type }} {{ field_name }} : I{{ enumeration_name }}
+  {
+      public const {{ enum_namespace }}.{{ enum_type }} Value = {{ enum_namespace }}.{{ enum_type }}.{{ field_name }};
+      public const {{ enum_underyling_type }} Id = {{ id }};
+      public const int Order = {{ order }};
+      public const string Descriptiom = "{{ descriptiom }}";
+      public const string DisplayName = "{{ display_name }}";
+      public const string Group = "{{ group_name }}";
+      public const string GuidString = "{{ guid_string }}";
+      public const string Name = "{{ field_name }}";
+      public const string ShortName = "{{ short_name }}";
+      public const string UriString = "{{ uri_string }}";
+      public static readonly guid Guid = new(GuidString);
+      public static readonly System.Uri Uri = new(UriString);
 
-    string IHaveAName.Name => Name;
-    object IHaveAValue.Value => Value;
-    {{ enum_namespace }}.{{ enum_type }} IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>.Value => Value;
-    I{{ enumeration_name }} Value => Value;
+      {{ enum_namespace }}.{{ enum_type }} IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>.Value => Value;
+      guid IHaveAGuid.Guid => Guid;
+      int I{{ enumeration_name }}.DisplayName => Group;
+      object IHaveAValue.Value => Value;
+      string IHaveADescription.Description => Description;
+      string IHaveADisplayName.DisplayName => DisplayName;
+      string IHaveAName.Name => Name;
+      string IHaveAShortName.ShortName => ShortName;
+      Uri IHaveAUri.Uri => Uri;
 
-    public static readonly I{{ enumeration_name }} Instance = new {{ field_name }}();
+      public static readonly I{{ enumeration_name }} Instance = new {{ field_name }}();
+  }
 }

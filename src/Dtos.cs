@@ -1,16 +1,14 @@
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Diagnostics.Metrics;
-using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
-using Dgmjr.Enumerations.CodeGenerator;
-
 using Microsoft.Extensions.Options;
+
+using Dgmjr.Enumerations.CodeGenerator;
 
 namespace Dgmjr.Enumerations.CodeGenerator;
 
@@ -60,7 +58,8 @@ public record struct EnumerationDto(
                             fs,
                             @this.DataStructureType,
                             @this.DtoTypeName,
-                            @this.DtoNamespace
+                            @this.DtoNamespace,
+                            @this.EnumType.EnumUnderlyingType.ToDisplayString()
                         )
                 )
                 .ToArray();
@@ -73,11 +72,15 @@ public record struct EnumerationFieldDto(
     IFieldSymbol EnumSymbol,
     string DataStructureType,
     string DtoTypeName,
-    string DtoNamespace
+    string DtoNamespace,
+    string EnumUnderlyingType
 )
 {
     private static readonly MD5 MD5 = MD5.Create();
 
+    public readonly string EnumerationName => DtoTypeName;
+    public readonly string EnumType => EnumSymbol.Type.ToDisplayString();
+    public readonly string EnumNamespace => EnumSymbol.ContainingNamespace.ToDisplayString();
     public readonly object? Value => EnumSymbol.ConstantValue?.ToString();
     private readonly AttributeData? DisplayAttribute =>
         EnumSymbol
@@ -128,8 +131,13 @@ public record struct EnumerationFieldDto(
             : 0;
     public readonly string UriString =>
         UrlAttribute?.ConstructorArguments.FirstOrDefault().Value?.ToString()
-        ?? Format(UriPattern, DtoNamespace.Replace(".", ":"), DtoTypeName, FieldName).ToKebabCase();
+        ?? Format(
+            UriPattern,
+            Join("-", DtoNamespace.Split('.').Select(s => s.ToKebabCase())),
+            DtoTypeName.ToKebabCase(),
+            FieldName.ToKebabCase()
+        );
     public readonly string GuidString =>
-        GuidAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString()
+        GuidAttribute?.ConstructorArguments.FirstOrDefault().Value?.ToString()
         ?? MD5.ComputeHash(UriString.ToUTF8Bytes()).ToHexString();
 }
