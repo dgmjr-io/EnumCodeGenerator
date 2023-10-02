@@ -1,6 +1,6 @@
 namespace Dgmjr.Enumerations.CodeGenerator.Samples.Enums;
 
-[GenerateEnumerationStructAttribute("HttpMethod", "System.Net.Http")]
+[GenerateEnumerationRecordStructAttribute("HttpMethod", "System.Net.Http")]
 public enum HttpMethod : byte
 {
     None = 0,

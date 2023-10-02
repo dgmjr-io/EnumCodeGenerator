@@ -20,8 +20,8 @@ public record struct EnumerationDto(
     string DtoNamespace
 )
 {
-    public readonly string EnumNamespace => EnumType.ContainingNamespace.ToDisplayString();
-    public readonly string EnumUnderlyingType => EnumType.EnumUnderlyingType.Name;
+    public readonly string EnumNamespace => EnumType.ContainingNamespace.MetadataName;
+    public readonly string EnumUnderlyingType => EnumType.EnumUnderlyingType.MetadataName;
     public readonly DateTimeOffset Timestamp = DateTimeOffset.Now;
     public string Author { get; set; } = "Unattributed";
     public string LicenseExpression { get; set; } = "Unlicense";

@@ -1,4 +1,5 @@
 namespace {{ enumeration_namespace }};
+using {{ dto_namespace }}.Abstractions;
 
 public partial static class {{ enumeration_name }}s
 {
