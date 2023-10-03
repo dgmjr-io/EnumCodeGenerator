@@ -148,7 +148,7 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
                 ?? GetAttributeValue<string>(structAttribute, 1)
                 ?? GetAttributeValue<string>(recordClassAttribute, 1)
                 ?? GetAttributeValue<string>(classAttribute, 1)
-                ?? enumSymbol.ContainingNamespace.ToDisplayString();
+                ?? enumSymbol.ContainingNamespace.MetadataName;
 
             var dataStructureType =
                 recordStructAttribute != null
@@ -219,9 +219,9 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
 
             // Add the data structure to the compilation
             context.AddSource(
-                $"{dtoTypeName}.g.cs",
+                $"{dtoTypeName}s.g.cs",
                 $"""
-            {HeaderFilledIn($"{dtoTypeName}.g.cs")}
+            {HeaderFilledIn($"{dtoTypeName}s.g.cs")}
 
             {dataStructureDeclaration.NormalizeWhitespace().GetText()}
             """

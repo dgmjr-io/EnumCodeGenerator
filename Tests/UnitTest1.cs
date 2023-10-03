@@ -14,6 +14,7 @@ public abstract class CSharpSourceGeneratorVerifier<TSourceGenerator>
     where TSourceGenerator : IIncrementalGenerator, new()
 {
     const string HttpMethodsEnum_cs = "HttpMethodsEnum.cs";
+    const string ExitCodeEnum_cs = "ExitCodeEnum.cs";
 
     [Fact]
     public void SimpleGeneratorTest()
