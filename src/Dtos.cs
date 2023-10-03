@@ -1,3 +1,5 @@
+namespace Dgmjr.Enumerations.CodeGenerator;
+
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Diagnostics.Metrics;
@@ -8,11 +10,9 @@ using System.Text.Json;
 
 using Microsoft.Extensions.Options;
 
-using Dgmjr.Enumerations.CodeGenerator;
-
-namespace Dgmjr.Enumerations.CodeGenerator;
-
 using static Constants;
+
+using Dgmjr.Enumerations.CodeGenerator;
 
 public record struct EnumerationDto(
     INamedTypeSymbol EnumType,
@@ -59,7 +59,8 @@ public record struct EnumerationDto(
                             @this.DataStructureType,
                             @this.DtoTypeName,
                             @this.DtoNamespace,
-                            @this.EnumType.EnumUnderlyingType.ToDisplayString()
+                            @this.EnumType.EnumUnderlyingType.MetadataName,
+                            @this.EnumType.MetadataName
                         )
                 )
                 .ToArray();
@@ -73,13 +74,13 @@ public record struct EnumerationFieldDto(
     string DataStructureType,
     string DtoTypeName,
     string DtoNamespace,
-    string EnumUnderlyingType
+    string EnumUnderlyingType,
+    string EnumType
 )
 {
     private static readonly MD5 MD5 = MD5.Create();
 
     public readonly string EnumerationName => DtoTypeName;
-    public readonly string EnumType => EnumSymbol.Type.ToDisplayString();
     public readonly string EnumNamespace => EnumSymbol.ContainingNamespace.ToDisplayString();
     public readonly object? Value => EnumSymbol.ConstantValue?.ToString();
     private readonly AttributeData? DisplayAttribute =>
