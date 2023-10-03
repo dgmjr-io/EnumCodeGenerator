@@ -360,15 +360,16 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
     {
         Logger?.LogInformation($"Generating nested class for {enumSymbol.Name}.{fieldValue}");
 
-        var nestedTypeDeclaration = ParseCompilationUnit(
-            NestedEnumerationTypeDeclarationTemplate.Render(
-                new EnumerationFieldDto(
-                    enumSymbol.GetMembers(fieldName).OfType<IFieldSymbol>().FirstOrDefault(),
-                    dataStructureType,
-                    dtoTypeName,
-                    dtoNamespace,
-                    enumSymbol.EnumUnderlyingType.ToDisplayString(),
-                    enumSymbol.MetadataName
+        var nestedTypeDeclaration = ParseSyntaxTree(
+                NestedEnumerationTypeDeclarationTemplate.Render(
+                    new EnumerationFieldDto(
+                        enumSymbol.GetMembers(fieldName).OfType<IFieldSymbol>().FirstOrDefault(),
+                        dataStructureType,
+                        dtoTypeName,
+                        dtoNamespace,
+                        enumSymbol.EnumUnderlyingType.ToDisplayString(),
+                        enumSymbol.MetadataName
+                    )
                 )
             )
         );
