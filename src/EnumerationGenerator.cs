@@ -205,9 +205,9 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
             fileName = $"{dtoTypeName}.g.cs";
             // Add the data structure to the compilation
             context.AddSource(
-                fileName,
+                $"{dtoTypeName}s.g.cs",
                 $"""
-            {HeaderFilledIn(fileName)}
+            {HeaderFilledIn($"{dtoTypeName}s.g.cs")}
 
             {dataStructureDeclaration.NormalizeWhitespace().GetText()}
             """

@@ -119,6 +119,10 @@ public {{ if base_type != "" && base_type != null  }} static {{ base_type }}{{ e
       /// <summary>The {{ enumeration_name }}'s URI</summary>
       /// <value>{{ uri_string }}</value>
       Uri IHaveAUri.Uri => Uri;
+
+      /// <summary>The order in which the {{ enumeration_name }} should appear</summary>
+      /// <value>{{ order }}</value>
+      /// <default>0</default>
       int I{{ enumeration_name }}.Order => Order;
 
       /// <summary>The {{ enumeration_name }}'s URI</summary>
