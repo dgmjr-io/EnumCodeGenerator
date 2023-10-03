@@ -1,7 +1,7 @@
 namespace {{ enumeration_namespace }}.Abstractions;
 using {{ enumeration_namespace }};
 
-public interface I{{ enumeration_name }} : IEnumeration<{{ enumeration_name }}, {{ underlying_type }}, {{ enum_namespace }}.{{ enum_name }}>
+public interface I{{ enumeration_name }} : IEnumeration<{{ enumeration_name }}, {{ underlying_type }}, {{ enum_namespace }}.{{ enum_name }}>, IHAveAUri
 {
-
+  int Order { get; }
 }

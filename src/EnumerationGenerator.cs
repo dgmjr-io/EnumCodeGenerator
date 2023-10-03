@@ -338,7 +338,8 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
                         dataStructureType,
                         dtoTypeName,
                         dtoNamespace,
-                        enumSymbol.EnumUnderlyingType.ToDisplayString()
+                        enumSymbol.EnumUnderlyingType.ToDisplayString(),
+                        enumSymbol.MetadataName
                     )
                 )
             )
