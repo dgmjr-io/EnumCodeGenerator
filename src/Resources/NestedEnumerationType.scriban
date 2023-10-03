@@ -1,33 +1,97 @@
 namespace {{ enumeration_namespace }};
 using {{ dto_namespace }}.Abstractions;
 
-public partial static class {{ enumeration_name }}s
+public static partial class {{ enumeration_name }}s
 {
   public partial {{ data_structure_type }} {{ field_name }} : I{{ enumeration_name }}
   {
+      /// <summary>The {{ enumeration_name }}'s value</summary>
+      /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" />
       public const {{ enum_namespace }}.{{ enum_type }} Value = {{ enum_namespace }}.{{ enum_type }}.{{ field_name }};
+
+      /// <summary>The underlying ordinal value of the {{ enumeration_name }}</summary>
+      /// <value>{{ id }}</value>
       public const {{ enum_underyling_type }} Id = {{ id }};
+
+      /// <summary>The order in which the {{ enumeration_name }} should appear</summary>
+      /// <value>{{ order }}</value>
+      /// <default>0</default>
       public const int Order = {{ order }};
+
+      /// <summary>A short description of the {{ enumeration_name }}</summary>
+      /// <value>{{ descriptiom }}</value>
       public const string Descriptiom = "{{ descriptiom }}";
+
+      /// <summary>The {{ enumeration_name }}'s display name</summary>
+      /// <value>{{ display_name }}</value>
       public const string DisplayName = "{{ display_name }}";
+
+      /// <summary>The {{ enumeration_name }}'s group's name</summary>
+      /// <value>{{ group_name }}</value>
       public const string Group = "{{ group_name }}";
+
+      /// <summary>The {{ enumeration_name }}'s GUID string</summary>
+      /// <value>{{ guid_string }}</value>
       public const string GuidString = "{{ guid_string }}";
+
+      /// <summary>The {{ enumeration_name }}'s name</summary>
+      /// <value>{{ field_name }}</value>
       public const string Name = "{{ field_name }}";
+
+      /// <summary>The {{ enumeration_name }}'s short name</summary>
+      /// <value>{{ short_name }}</value>
       public const string ShortName = "{{ short_name }}";
+
+      /// <summary>The {{ enumeration_name }}'s URI string</summary>
+      /// <value>{{ uri_string }}</value>
       public const string UriString = "{{ uri_string }}";
+
+      /// <summary>The {{ enumeration_name }}'s GUID</summary>
+      /// <value>{{ guid_string }}</value>
       public static readonly guid Guid = new(GuidString);
+
+      /// <summary>The {{ enumeration_name }}'s URI</summary>
+      /// <value>{{ uri_string }}</value>
       public static readonly System.Uri Uri = new(UriString);
 
+      /// <summary>The {{ enumeration_name }}'s value</summary>
+      /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" />
       {{ enum_namespace }}.{{ enum_type }} IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>.Value => Value;
+
+      /// <summary>The {{ enumeration_name }}'s GUID</summary>
+      /// <value>{{ guid_string }}</value>
       guid IHaveAGuid.Guid => Guid;
+
+      /// <summary>The {{ enumeration_name }}'s display name</summary>
+      /// <value>{{ display_name }}</value>
       string IHaveADisplayName.DisplayName => DisplayName;
+
+      /// <summary>The {{ enumeration_name }}'s value</summary>
+      /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" />
       object IHaveAValue.Value => Value;
+
+      /// <summary>A short description of the {{ enumeration_name }}</summary>
+      /// <value>{{ descriptiom }}</value>
       string IHaveADescription.Description => Description;
+
+      /// <summary>The {{ enumeration_name }}'s name</summary>
+      /// <value>{{ field_name }}</value>
       string IHaveAName.Name => Name;
+
+      /// <summary>The {{ enumeration_name }}'s short name</summary>
+      /// <value>{{ short_name }}</value>
       string IHaveAShortName.ShortName => ShortName;
+
+      /// <summary>The {{ enumeration_name }}'s URI</summary>
+      /// <value>{{ uri_string }}</value>
       Uri IHaveAUri.Uri => Uri;
+
+      /// <summary>The order in which the {{ enumeration_name }} should appear</summary>
+      /// <value>{{ order }}</value>
+      /// <default>0</default>
       int I{{ enumeration_name }}.Order => Order;
 
+      /// <summary>An instance of the {{ enumeration_name }} as an I{{ enumeration_name }}</summary>
       public static readonly I{{ enumeration_name }} Instance = new {{ field_name }}();
   }
 }
