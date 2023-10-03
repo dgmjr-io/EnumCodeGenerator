@@ -18,6 +18,7 @@
     <PackageReference Include="FluentAssertions.Usings"  />
     <PackageReference Include="Dgmjr.CodeGeneration.Testing" />
     <PackageReference Include="Dgmjr.CodeGeneration.Extensions.DiagnosticsExtensions" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.XUnit" />
     <ProjectReference Include="../src/Dgmjr.Enumerations.CodeGenerator.csproj" Targets="Restore;Build" />
     <ProjectReference Include="../src/Runtime/Dgmjr.Enumerations.CodeGenerator.Runtime.csproj" Targets="Restore;Build" />
   </ItemGroup>
