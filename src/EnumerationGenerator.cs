@@ -129,16 +129,20 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
             // Check if the enum has any of the specified attributes
             var attributes = enumSymbol.GetAttributes();
             var recordStructAttribute = attributes.FirstOrDefault(
-                a => a.AttributeClass?.MetadataName == GenerateEnumerationRecordStructAttribute
+                a =>
+                    a.AttributeClass?.MetadataName
+                    == Constants.GenerateEnumerationRecordStructAttribute
             );
             var structAttribute = attributes.FirstOrDefault(
-                a => a.AttributeClass?.MetadataName == GenerateEnumerationStructAttribute
+                a => a.AttributeClass?.MetadataName == Constants.GenerateEnumerationStructAttribute
             );
             var recordClassAttribute = attributes.FirstOrDefault(
-                a => a.AttributeClass?.MetadataName == GenerateEnumerationRecordClassAttribute
+                a =>
+                    a.AttributeClass?.MetadataName
+                    == Constants.GenerateEnumerationRecordClassAttribute
             );
             var classAttribute = attributes.FirstOrDefault(
-                a => a.AttributeClass?.MetadataName == GenerateEnumerationClassAttribute
+                a => a.AttributeClass?.MetadataName == Constants.GenerateEnumerationClassAttribute
             );
 
             // Determine the DTO class name and namespace
@@ -201,13 +205,10 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
                 dataStructureType,
                 baseType
             );
-
-            fileName = $"{dtoTypeName}.g.cs";
-            // Add the data structure to the compilation
             context.AddSource(
-                $"{dtoTypeName}s.g.cs",
+                fileName,
                 $"""
-            {HeaderFilledIn($"{dtoTypeName}s.g.cs")}
+            {HeaderFilledIn(fileName)}
 
             {dataStructureDeclaration.NormalizeWhitespace().GetText()}
             """
