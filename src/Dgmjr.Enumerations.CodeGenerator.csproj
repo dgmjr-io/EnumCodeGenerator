@@ -1,49 +1,49 @@
-
-
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-        <Description>This package contains a source generator, which generates enumeration data structures from enum types.</Description>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" />
-        <PackageReference Include="System.Text.Json" />
-        <PackageReference Include="Scriban.Signed" Aliases="Scrib" />
-        <PackageReference Include="ThisAssembly.AssemblyInfo" />
-        <PackageReference Include="ThisAssembly.Project" />
-        <PackageReference Include="Dgmjr.Abstractions" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" />
-        <PackageReference Include="Microsoft.Extensions.Logging" />
-        <PackageReference Include="Dgmjr.CodeGeneration.Logging" />
-        <PackageReference Include="Dgmjr.System.Extensions" />
-        <ProjectReference Include="./Runtime/Dgmjr.Enumerations.CodeGenerator.Runtime.csproj" Targets="Restore;Build" />
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <Description>This package contains a source generator, which generates enumeration data structures from enum types.</Description>
+    <IsRoslynComponent>true</IsRoslynComponent>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" />
+    <PackageReference Include="System.Text.Json" />
+    <PackageReference Include="Scriban.Signed" Aliases="Scrib" />
+    <PackageReference Include="ThisAssembly.AssemblyInfo" />
+    <PackageReference Include="ThisAssembly.Project" />
+    <PackageReference Include="Dgmjr.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Dgmjr.CodeGeneration.Logging" />
+    <PackageReference Include="Dgmjr.System.Extensions" />
+    <!-- <ProjectReference Include="./Runtime/Dgmjr.Enumerations.CodeGenerator.Runtime.csproj" Targets="Restore;Build" /> -->
+  </ItemGroup>
 
-    <ItemGroup>
-        <Compile Remove="./Resources/*" />
-        <Compile Remove="./Samples/**/*" />
-        <EmbeddedResource Include="./Resources/**/*" LogicalName="%(Filename)%(Extension)" />
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="./Resources/*" />
+    <Compile Remove="./Samples/**/*" />
+    <EmbeddedResource Include="./Resources/**/*" LogicalName="%(Filename)%(Extension)" />
+    <EmbeddedResource Include="./Runtime/**/*.cs" LogicalName="%(Filename)%(Extension)" />
+  </ItemGroup>
 
-    <PropertyGroup>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
-    </PropertyGroup>
+  <PropertyGroup>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <Compile Remove="./Runtime/**/*.*" />
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="./Runtime/**/*.*" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageFile Include="$(OutputPath)\*.dll" PackagePath="analyzers/dotnet/cs/%(Filename)%(Extension)" Visible="false" />
-      <PackageFile Include="./Runtime/bin/**/*.dll" PackagePath="lib/$(TargetFramework)/%(Filename)%(Extension)" Visible="false" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageFile Include="$(OutputPath)\*.dll" PackagePath="analyzers/dotnet/cs/%(Filename)%(Extension)" Visible="false" />
+    <!-- <PackageFile Include="./Runtime/bin/**/*.dll" PackagePath="lib/$(TargetFramework)/%(Filename)%(Extension)" Visible="false" /> -->
+  </ItemGroup>
 
-    <!-- <Target Name="BuildRuntime" BeforeTargets="Build">
+  <!-- <Target Name="BuildRuntime" BeforeTargets="Build">
       <MSBuild Projects="./Runtime/Dgmjr.Enumerations.CodeGenerator.Runtime.csproj" Properties="Configuration=$(Configuration);TargetFramework=$(TargetFramework)" Targets="Restore;Build" />
     </Target> -->
 </Project>
