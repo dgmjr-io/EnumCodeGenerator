@@ -1,19 +1,35 @@
+namespace System;
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
+public class GenerateEnumerationTypeAttribute(
+    string? typeName = default,
+    string? @namespace = default
+) : Attribute
+{
+    public string? Namespace { get; } = @namespace;
+    public string? TypeName { get; } = typeName;
+}
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
 public sealed class GenerateEnumerationRecordStructAttribute(
-    string? TypeName = null,
-    string? Namespace = null
-) : Attribute { }
+    string? typeName = default,
+    string? @namespace = default
+) : GenerateEnumerationTypeAttribute(typeName, @namespace) { }
 
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
 public sealed class GenerateEnumerationStructAttribute(
-    string? TypeName = null,
-    string? Namespace = null
-) : Attribute { }
+    string? typeName = default,
+    string? @namespace = default
+) : GenerateEnumerationTypeAttribute(typeName, @namespace) { }
 
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
 public sealed class GenerateEnumerationRecordClassAttribute(
-    string? TypeName = null,
-    string? Namespace = null
-) : Attribute { }
+    string? typeName = default,
+    string? @namespace = default
+) : GenerateEnumerationTypeAttribute(typeName, @namespace) { }
 
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
 public sealed class GenerateEnumerationClassAttribute(
-    string? TypeName = null,
-    string? Namespace = null
-) : Attribute { }
+    string? typeName = default,
+    string? @namespace = default
+) : GenerateEnumerationTypeAttribute(typeName, @namespace) { }
