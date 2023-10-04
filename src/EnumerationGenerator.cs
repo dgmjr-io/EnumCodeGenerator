@@ -1,8 +1,6 @@
-using System.Reflection.Emit;
-using System.Xml.Linq;
-
 namespace Dgmjr.Enumerations.CodeGenerator;
 
+extern alias Scrib;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -27,7 +25,7 @@ using static Dgmjr.Enumerations.CodeGenerator.Constants;
 
 using IigInitCtx = IncrementalGeneratorInitializationContext;
 
-using Scriban.Parsing;
+using Scrib::Scriban.Parsing;
 
 using SrcProdCtx = SourceProductionContext;
 
@@ -39,17 +37,17 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
 
     public void Initialize(IigInitCtx context)
     {
-        // context.RegisterPostInitializationOutput(
-        //     ctx =>
-        //         ctx.AddSource(
-        //             $"{GenerateEnumerationTypeAttributes}.g.cs",
-        //             $"""
-        //     {HeaderFilledIn($"{GenerateEnumerationTypeAttributes}.g.cs")}
+        context.RegisterPostInitializationOutput(
+            ctx =>
+                ctx.AddSource(
+                    $"{GenerateEnumerationTypeAttributes}.g.cs",
+                    $"""
+                    {HeaderFilledIn($"{GenerateEnumerationTypeAttributes}.g.cs")}
 
-        //     {GenerateEnumerationTypeAttributeDeclarations}
-        //     """
-        //         )
-        // );
+                    {GenerateEnumerationTypeAttributeDeclarations}
+                    """
+                )
+        );
 
         if (!Debugger.IsAttached)
         {

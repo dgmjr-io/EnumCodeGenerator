@@ -3,6 +3,10 @@ using System;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Security;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+
+using Microsoft.CodeAnalysis.CSharp;
+
 using Template = Scrib::Scriban.Template;
 
 namespace Dgmjr.Enumerations.CodeGenerator
@@ -49,19 +53,20 @@ namespace Dgmjr.Enumerations.CodeGenerator
         public const string scriban = nameof(scriban);
         public const string @global = nameof(@global);
         public const string global__ = $"{@global}::";
+        public const string System = nameof(System);
 #pragma warning restore
 
         public const string AttributeName = "Enumeration";
         public const string AttributeNamespace = "Dgmjr.Enumerations";
         public const string AttributeFullName = AttributeNamespace + "." + AttributeName;
         public const string GenerateEnumerationRecordStructAttribute =
-            global__ + nameof(GenerateEnumerationRecordStructAttribute);
+            System + "." + nameof(GenerateEnumerationRecordStructAttribute);
         public const string GenerateEnumerationRecordClassAttribute =
-            global__ + nameof(GenerateEnumerationRecordClassAttribute);
+            System + "." + nameof(GenerateEnumerationRecordClassAttribute);
         public const string GenerateEnumerationStructAttribute =
-            global__ + nameof(GenerateEnumerationStructAttribute);
+            System + "." + nameof(GenerateEnumerationStructAttribute);
         public const string GenerateEnumerationClassAttribute =
-            global__ + nameof(GenerateEnumerationClassAttribute);
+            System + "." + nameof(GenerateEnumerationClassAttribute);
 
         public static readonly string[] AttributeClasses = new[]
         {
@@ -75,7 +80,7 @@ namespace Dgmjr.Enumerations.CodeGenerator
             GenerateEnumerationTypeAttributes
         );
 
-        public static readonly Scriban.Template HeaderTemplate = Scriban.Template.Parse(Header);
+        public static readonly Template HeaderTemplate = Template.Parse(Header);
 
         public static string HeaderFilledIn(string filename) =>
             HeaderTemplate.Render(
@@ -88,27 +93,17 @@ namespace Dgmjr.Enumerations.CodeGenerator
                 }
             );
 
-        public const string GenerateEnumerationTypeAttributeDeclarations = $$$"""
-        public sealed class {{{GenerateEnumerationRecordStructAttribute}}} : Attribute
-        {
-            public {{{GenerateEnumerationRecordStructAttribute}}}(string? typeName = null, string? @namespace = null) { }
-        }
-
-        public sealed class {{{GenerateEnumerationStructAttribute}}} : Attribute
-        {
-            public {{{GenerateEnumerationStructAttribute}}}(string? typeName = null, string? @namespace = null) { }
-        }
-
-        public sealed class {{{GenerateEnumerationRecordClassAttribute}}} : Attribute
-        {
-            public {{{GenerateEnumerationRecordClassAttribute}}}(string? typeName = null, string? @namespace = null) { }
-        }
-
-        public sealed class {{{GenerateEnumerationClassAttribute}}} : Attribute
-        {
-            public {{{GenerateEnumerationClassAttribute}}}(string? typeName = null, string? @namespace = null) { }
-        }
-        """;
+        public static readonly string GenerateEnumerationTypeAttributeDeclarations =
+            ParseCompilationUnit(
+                    typeof(Constants).Assembly
+                        .GetManifestResourceStream(
+                            nameof(GenerateEnumerationTypeAttributeDeclarations) + ".cs"
+                        )
+                        .ReadToEnd()
+                )
+                .NormalizeWhitespace()
+                .GetText()
+                .ToString();
 
         public const string AssemblyName = ThisAssembly.Project.AssemblyName;
         public const string AssemblyVersion = ThisAssembly.Info.Version;

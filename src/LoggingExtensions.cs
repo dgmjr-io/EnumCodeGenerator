@@ -30,7 +30,7 @@ public static partial class LoggingExtensions
         string attributeClass
     );
 
-    [LoggerMessage(LogCheckingAttributeClassId, Information, "Checking node {Node}...")]
+    [LoggerMessage(LogCheckingNodeId, Information, "Checking node {Node}...")]
     public static partial void LogCheckingNode(this ILogger logger, SyntaxNode node);
 
     public static void LogIsEnumDeclarationSyntax(this ILogger logger, SyntaxNode node) =>
