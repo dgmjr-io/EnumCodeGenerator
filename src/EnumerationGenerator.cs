@@ -13,22 +13,22 @@ using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Dgmjr.CodeGeneration.Logging;
-using Dgmjr.Enumerations.CodeGenerator;
-
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 
-using Scriban.Parsing;
-
+using Dgmjr.CodeGeneration.Logging;
+using Dgmjr.Enumerations.CodeGenerator;
 using static Dgmjr.Enumerations.CodeGenerator.Constants;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 
 using IigInitCtx = IncrementalGeneratorInitializationContext;
+
+using Scriban.Parsing;
+
 using SrcProdCtx = SourceProductionContext;
 
 [Generator]
@@ -51,9 +51,9 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
         //         )
         // );
 
-        if (!System.Diagnostics.Debugger.IsAttached)
+        if (!Debugger.IsAttached)
         {
-            System.Diagnostics.Debugger.Launch();
+            Debugger.Launch();
         }
 
         using (
@@ -66,7 +66,7 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
         {
             foreach (var attributeClass in AttributeClasses)
             {
-                Logger.LogInformation($"Checking for attribute class {attributeClass}...");
+                Logger.LogCheckingAttributeClass(attributeClass);
 
                 var valuesProvider = context.SyntaxProvider
                     .ForAttributeWithMetadataName(attributeClass, Selector, Transformer)
@@ -80,15 +80,15 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
                 // );
                 context.RegisterSourceOutput(valuesProvider, Generate);
             }
+
+            Logger.EndLog();
         }
     }
 
     private bool Selector(SyntaxNode node, CancellationToken _)
     {
-        Logger.LogInformation($"Checking {node}...");
-        Logger.LogInformation(
-            $"node is EnumDeclarationSyntax enumDeclarationSyntax: {node is EnumDeclarationSyntax}..."
-        );
+        Logger.LogCheckingNode(node);
+        Logger.LogIsEnumDeclarationSyntax(node);
         return node is EnumDeclarationSyntax enumDeclarationSyntax
             && AttributeClasses
                 .Intersect(
@@ -118,21 +118,26 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
                 .WhereNotNull()
         )
         {
-            context.AddSource($"{enumSymbol}_Selected.g.cs", "");
+            var fileName = $"{enumSymbol}_Selected.g.cs";
+            context.AddSource(fileName, "");
 
             // Check if the enum has any of the specified attributes
             var attributes = enumSymbol.GetAttributes();
             var recordStructAttribute = attributes.FirstOrDefault(
-                a => a.AttributeClass?.MetadataName == GenerateEnumerationRecordStructAttribute
+                a =>
+                    a.AttributeClass?.MetadataName
+                    == Constants.GenerateEnumerationRecordStructAttribute
             );
             var structAttribute = attributes.FirstOrDefault(
-                a => a.AttributeClass?.MetadataName == GenerateEnumerationStructAttribute
+                a => a.AttributeClass?.MetadataName == Constants.GenerateEnumerationStructAttribute
             );
             var recordClassAttribute = attributes.FirstOrDefault(
-                a => a.AttributeClass?.MetadataName == GenerateEnumerationRecordClassAttribute
+                a =>
+                    a.AttributeClass?.MetadataName
+                    == Constants.GenerateEnumerationRecordClassAttribute
             );
             var classAttribute = attributes.FirstOrDefault(
-                a => a.AttributeClass?.MetadataName == GenerateEnumerationClassAttribute
+                a => a.AttributeClass?.MetadataName == Constants.GenerateEnumerationClassAttribute
             );
 
             // Determine the DTO class name and namespace
@@ -161,23 +166,24 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
                                 ? @class
                                 : "invalid";
 
-            Logger.LogInformation($"Generating interface declaration for I${dtoTypeName}...");
+            Logger.LogGeneratingInterfaceDeclaration(dtoTypeName);
             // Generate the interface for the enum
             var interfaceDeclaration = GenerateInterfaceDeclaration(
                 enumSymbol,
                 dtoTypeName,
                 dtoNamespace
             );
+            fileName = $"I{dtoTypeName}.g.cs";
             context.AddSource(
-                $"I{dtoTypeName}.g.cs",
+                fileName,
                 $"""
-            {HeaderFilledIn($"I{dtoTypeName}.g.cs")}
+            {HeaderFilledIn(fileName)}
 
             {interfaceDeclaration.NormalizeWhitespace().GetText()}
             """
             );
 
-            Logger.LogInformation($"Generating data structute declaration for ${dtoTypeName}...");
+            Logger.LogGeneratingDtoDeclaration(dtoTypeName);
             // Generate the data structure for the enum
             var dataStructureDeclaration = GenerateDataStructureDeclaration(
                 enumSymbol,
@@ -186,46 +192,45 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
                 dataStructureType
             );
 
-            // Generate nested classes for each enum field
-            dataStructureDeclaration = dataStructureDeclaration.WithMembers(
-                List(
-                    enumSymbol
-                        .GetMembers()
-                        .OfType<IFieldSymbol>()
-                        .Select(fieldSymbol =>
-                        {
-                            // Get the field name and value
-                            var fieldName = fieldSymbol.Name;
-                            var fieldValue = fieldSymbol.ConstantValue;
-
-                            Logger.LogInformation(
-                                $"Generating nested data structute declaration for ${fieldName}..."
-                            );
-
-                            // Generate the nested class declaration
-                            var nestedClassDeclaration = GenerateNestedClassDeclaration(
-                                enumSymbol,
-                                dtoTypeName,
-                                fieldName,
-                                fieldValue,
-                                dataStructureType,
-                                dtoNamespace
-                            );
-                            return nestedClassDeclaration as MemberDeclarationSyntax;
-                        })
-                        .ToArray()
-                )
-            );
-
+            fileName = $"{dtoTypeName}.g.cs";
             // Add the data structure to the compilation
             context.AddSource(
-                $"{dtoTypeName}s.g.cs",
+                fileName,
                 $"""
-            {HeaderFilledIn($"{dtoTypeName}s.g.cs")}
+            {HeaderFilledIn(fileName)}
 
             {dataStructureDeclaration.NormalizeWhitespace().GetText()}
             """
             );
+
+            // Generate nested classes for each enum field
+            foreach (var fieldSymbol in enumSymbol.GetMembers().OfType<IFieldSymbol>())
+            {
+                // Get the field name and value
+                var fieldName = fieldSymbol.Name;
+                var fieldValue = fieldSymbol.ConstantValue;
+
+                Logger.LogGeneratingNestedDataStructureDeclaration(dtoTypeName, fieldName);
+
+                // Generate the nested class declaration
+                var nestedClassDeclaration = GenerateNestedClassDeclaration(
+                    enumSymbol,
+                    dtoTypeName,
+                    fieldName,
+                    fieldValue,
+                    dataStructureType,
+                    dtoNamespace
+                );
+
+                fileName = $"{dtoTypeName}.{fieldName}.g.cs";
+                context.AddSource(
+                    fileName,
+                    $"""
+                    {HeaderFilledIn(fileName)}
+                    {nestedClassDeclaration.NormalizeWhitespace().GetText()}
+                    """
+                );
+            }
         }
     }
 
@@ -235,32 +240,38 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
         string dtoNamespace
     )
     {
-        // Create the base type for the interface
-        var baseType = ParseTypeName(
-            $"IEnumeration<{dtoNamespace}.I{dtoTypeName}, {enumSymbol.EnumUnderlyingType}, {enumSymbol.ContainingNamespace.ToDisplayString()}.{enumSymbol.Name}>"
+        return ParseCompilationUnit(
+            IEnumerationDeclarationTemplate.Render(
+                new EnumerationDto(enumSymbol, dtoTypeName, dtoNamespace)
+            )
         );
 
-        // Create the interface declaration
-        var interfaceDeclaration = InterfaceDeclaration($"I{dtoTypeName}")
-            .AddModifiers(Token(PublicKeyword))
-            .AddBaseListTypes(SimpleBaseType(baseType));
+        //     // Create the base type for the interface
+        //     var baseType = ParseTypeName(
+        //         $"IEnumeration<{dtoNamespace}.I{dtoTypeName}, {enumSymbol.EnumUnderlyingType}, {enumSymbol.ContainingNamespace.ToDisplayString()}.{enumSymbol.Name}>"
+        //     );
 
-        var namespaceDeclaration = NamespaceDeclaration(ParseName(dtoNamespace))
-            .AddMembers(interfaceDeclaration);
+        //     // Create the interface declaration
+        //     var interfaceDeclaration = InterfaceDeclaration($"I{dtoTypeName}")
+        //         .AddModifiers(Token(PublicKeyword))
+        //         .AddBaseListTypes(SimpleBaseType(baseType));
 
-        return CompilationUnit()
-            .AddUsings(
-                UsingDirective(ParseName("System")),
-                UsingDirective(ParseName("System.Reflection")),
-                UsingDirective(ParseName("Dgmjr.Enumerations.Abstractions")),
-                UsingDirective(
-                    AliasQualifiedName(
-                        IdentifierName(enumSymbol.ToDisplayString()),
-                        IdentifierName("TheEnum")
-                    )
-                )
-            )
-            .AddMembers(namespaceDeclaration);
+        //     var namespaceDeclaration = NamespaceDeclaration(ParseName(dtoNamespace))
+        //         .AddMembers(interfaceDeclaration);
+
+        //     return CompilationUnit()
+        //         .AddUsings(
+        //             UsingDirective(ParseName("System")),
+        //             UsingDirective(ParseName("System.Reflection")),
+        //             UsingDirective(ParseName("Dgmjr.Enumerations.Abstractions")),
+        //             UsingDirective(
+        //                 AliasQualifiedName(
+        //                     IdentifierName(enumSymbol.ToDisplayString()),
+        //                     IdentifierName("TheEnum")
+        //                 )
+        //             )
+        //         )
+        //         .AddMembers(namespaceDeclaration);
     }
 
     private CompilationUnitSyntax GenerateDataStructureDeclaration(
@@ -271,53 +282,59 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
     )
     {
         Logger.LogInformation($"Generating DTO type {dtoTypeName}...");
-        // Create the base type for the data structure
-        var baseType = ParseTypeName(dtoTypeName);
 
-        // Create the data structure declaration
-        var dataStructureDeclaration = ClassDeclaration(dtoTypeName)
-            .AddModifiers(Token(PublicKeyword))
-            .AddBaseListTypes(SimpleBaseType(baseType));
-
-        // Create the non-public parameterless constructor
-        var constructorDeclaration = ConstructorDeclaration(dtoTypeName)
-            .AddModifiers(Token(PrivateKeyword))
-            .WithBody(Block());
-
-        // Add the constructor to the data structure
-        dataStructureDeclaration = dataStructureDeclaration.AddMembers(constructorDeclaration);
-
-        dataStructureDeclaration = dataStructureDeclaration.AddMembers(
-            enumSymbol
-                .GetMembers()
-                .OfType<IFieldSymbol>()
-                .Select(
-                    fieldSymbol =>
-                        GenerateNestedClassDeclaration(
-                            enumSymbol,
-                            dtoTypeName,
-                            fieldSymbol.Name,
-                            fieldSymbol.ConstantValue,
-                            dataStructureType,
-                            dtoNamespace
-                        )
-                )
-                .OfType<MemberDeclarationSyntax>()
-                .ToArray()
-        );
-
-        var namespaceDeclaration = NamespaceDeclaration(ParseName(dtoNamespace))
-            .AddMembers(dataStructureDeclaration);
-
-        var compilationUnit = CompilationUnit()
-            .AddUsings(
-                UsingDirective(ParseName("System")),
-                UsingDirective(ParseName("System.Reflection")),
-                UsingDirective(ParseName("Dgmjr.Enumerations.Abstractions"))
+        return ParseCompilationUnit(
+            EnumerationDeclarationTemplate.Render(
+                new EnumerationDto(enumSymbol, dtoTypeName, dtoNamespace)
             )
-            .AddMembers(namespaceDeclaration);
+        );
+        //     // Create the base type for the data structure
+        //     var baseType = ParseTypeName(dtoTypeName);
 
-        return compilationUnit;
+        //     // Create the data structure declaration
+        //     var dataStructureDeclaration = ClassDeclaration(dtoTypeName)
+        //         .AddModifiers(Token(PublicKeyword))
+        //         .AddBaseListTypes(SimpleBaseType(baseType));
+
+        //     // Create the non-public parameterless constructor
+        //     var constructorDeclaration = ConstructorDeclaration(dtoTypeName)
+        //         .AddModifiers(Token(PrivateKeyword))
+        //         .WithBody(Block());
+
+        //     // Add the constructor to the data structure
+        //     dataStructureDeclaration = dataStructureDeclaration.AddMembers(constructorDeclaration);
+
+        //     dataStructureDeclaration = dataStructureDeclaration.AddMembers(
+        //         enumSymbol
+        //             .GetMembers()
+        //             .OfType<IFieldSymbol>()
+        //             .Select(
+        //                 fieldSymbol =>
+        //                     GenerateNestedClassDeclaration(
+        //                         enumSymbol,
+        //                         dtoTypeName,
+        //                         fieldSymbol.Name,
+        //                         fieldSymbol.ConstantValue,
+        //                         dataStructureType,
+        //                         dtoNamespace
+        //                     )
+        //             )
+        //             .OfType<MemberDeclarationSyntax>()
+        //             .ToArray()
+        //     );
+
+        //     var namespaceDeclaration = NamespaceDeclaration(ParseName(dtoNamespace))
+        //         .AddMembers(dataStructureDeclaration);
+
+        //     var compilationUnit = CompilationUnit()
+        //         .AddUsings(
+        //             UsingDirective(ParseName("System")),
+        //             UsingDirective(ParseName("System.Reflection")),
+        //             UsingDirective(ParseName("Dgmjr.Enumerations.Abstractions"))
+        //         )
+        //         .AddMembers(namespaceDeclaration);
+
+        //     return compilationUnit;
     }
 
     private TypeDeclarationSyntax GenerateNestedClassDeclaration(

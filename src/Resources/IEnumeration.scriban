@@ -1,7 +1,19 @@
 namespace {{ enumeration_namespace }}.Abstractions;
 using {{ enumeration_namespace }};
 
-public interface I{{ enumeration_name }} : IEnumeration<{{ enumeration_name }}, {{ underlying_type }}, {{ enum_namespace }}.{{ enum_name }}>, IHAveAUri
-{
-  int Order { get; }
-}
+public interface I{{ enumeration_name }} :
+  IHaveAName,
+    IHaveAValue<{{ enum_underlying_type }}>,
+    IHaveADescription,
+    IHaveAUri,
+    IHaveSynonyms,
+    IHaveAShortName,
+    IHaveAGuid,
+    IHaveADisplayName,
+    IIdentifiable,
+    IConvertible,
+    IEquatable<{{ enum_underlying_type }}>,
+    IEquatable<I{{ dto_type_name }}>
+  {
+    int Order { get; }
+  }
