@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\..\..\..\..\Packages\Versions.Local.props = ..\..\..\..\..\Packages\Versions.Local.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dgmjr.Enumerations.CodeGenerator", "Dgmjr.Enumerations.CodeGenerator.csproj", "{A821CB48-0C67-4634-85A5-3AB30A4A1F4A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dgmjr.Enumerations.CodeGenerator", "Dgmjr.Enumerations.CodeGenerator.csproj", "{AC845DE2-CF87-49D2-A8A3-2019389FF879}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,18 +20,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A821CB48-0C67-4634-85A5-3AB30A4A1F4A}.Local|Any CPU.ActiveCfg = Local|Any CPU
-		{A821CB48-0C67-4634-85A5-3AB30A4A1F4A}.Local|Any CPU.Build.0 = Local|Any CPU
-		{A821CB48-0C67-4634-85A5-3AB30A4A1F4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A821CB48-0C67-4634-85A5-3AB30A4A1F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A821CB48-0C67-4634-85A5-3AB30A4A1F4A}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
-		{A821CB48-0C67-4634-85A5-3AB30A4A1F4A}.Testing|Any CPU.Build.0 = Testing|Any CPU
-		{A821CB48-0C67-4634-85A5-3AB30A4A1F4A}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{A821CB48-0C67-4634-85A5-3AB30A4A1F4A}.Staging|Any CPU.Build.0 = Staging|Any CPU
-		{A821CB48-0C67-4634-85A5-3AB30A4A1F4A}.Production|Any CPU.ActiveCfg = Local|Any CPU
-		{A821CB48-0C67-4634-85A5-3AB30A4A1F4A}.Production|Any CPU.Build.0 = Local|Any CPU
-		{A821CB48-0C67-4634-85A5-3AB30A4A1F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A821CB48-0C67-4634-85A5-3AB30A4A1F4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC845DE2-CF87-49D2-A8A3-2019389FF879}.Local|Any CPU.ActiveCfg = Local|Any CPU
+		{AC845DE2-CF87-49D2-A8A3-2019389FF879}.Local|Any CPU.Build.0 = Local|Any CPU
+		{AC845DE2-CF87-49D2-A8A3-2019389FF879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC845DE2-CF87-49D2-A8A3-2019389FF879}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC845DE2-CF87-49D2-A8A3-2019389FF879}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
+		{AC845DE2-CF87-49D2-A8A3-2019389FF879}.Testing|Any CPU.Build.0 = Testing|Any CPU
+		{AC845DE2-CF87-49D2-A8A3-2019389FF879}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
+		{AC845DE2-CF87-49D2-A8A3-2019389FF879}.Staging|Any CPU.Build.0 = Staging|Any CPU
+		{AC845DE2-CF87-49D2-A8A3-2019389FF879}.Production|Any CPU.ActiveCfg = Local|Any CPU
+		{AC845DE2-CF87-49D2-A8A3-2019389FF879}.Production|Any CPU.Build.0 = Local|Any CPU
+		{AC845DE2-CF87-49D2-A8A3-2019389FF879}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC845DE2-CF87-49D2-A8A3-2019389FF879}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

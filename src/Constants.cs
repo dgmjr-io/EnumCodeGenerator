@@ -63,13 +63,13 @@ namespace Dgmjr.Enumerations.CodeGenerator
         public const string AttributeNamespace = "Dgmjr.Enumerations";
         public const string AttributeFullName = AttributeNamespace + "." + AttributeName;
         public const string GenerateEnumerationRecordStructAttribute =
-            global__ + nameof(GenerateEnumerationRecordStructAttribute);
+            System + "." + nameof(GenerateEnumerationRecordStructAttribute);
         public const string GenerateEnumerationRecordClassAttribute =
-            global__ + nameof(GenerateEnumerationRecordClassAttribute);
+            System + "." + nameof(GenerateEnumerationRecordClassAttribute);
         public const string GenerateEnumerationStructAttribute =
-            global__ + nameof(GenerateEnumerationStructAttribute);
+            System + "." + nameof(GenerateEnumerationStructAttribute);
         public const string GenerateEnumerationClassAttribute =
-            global__ + nameof(GenerateEnumerationClassAttribute);
+            System + "." + nameof(GenerateEnumerationClassAttribute);
 
         public static readonly string[] AttributeClasses = new[]
         {
