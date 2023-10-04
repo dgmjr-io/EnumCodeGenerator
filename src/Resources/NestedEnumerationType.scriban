@@ -6,7 +6,7 @@ public static partial class {{ enumeration_name }}s
   public partial {{ data_structure_type }} {{ field_name }} : I{{ enumeration_name }}
   {
       /// <summary>The {{ enumeration_name }}'s value</summary>
-      /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" />
+      /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" /></value>
       public const {{ enum_namespace }}.{{ enum_type }} Value = {{ enum_namespace }}.{{ enum_type }}.{{ field_name }};
 
       /// <summary>The underlying ordinal value of the {{ enumeration_name }}</summary>
@@ -55,7 +55,7 @@ public static partial class {{ enumeration_name }}s
       public static readonly System.Uri Uri = new(UriString);
 
       /// <summary>The {{ enumeration_name }}'s value</summary>
-      /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" />
+      /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" /></value>
       {{ enum_namespace }}.{{ enum_type }} IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>.Value => Value;
 
       /// <summary>The {{ enumeration_name }}'s GUID</summary>
@@ -90,6 +90,126 @@ public static partial class {{ enumeration_name }}s
       /// <value>{{ order }}</value>
       /// <default>0</default>
       int I{{ enumeration_name }}.Order => Order;
+
+      public int CompareTo(object? other) => other is IEnumeration ie ? CompareTo(ie) : -1;
+      public int CompareTo(IEnumeration other) => Order.CompareTo(other.Order);
+      public override int GetHashCode() => Id.GetHashCode();
+
+      public TypeCode GetTypeCode() => Convert.GetTypeCode(Value);
+
+      #region type conversions
+      /// <summary>
+      /// Converts the value of the current object to its equivalent string representation in another type.
+      /// </summary>
+      public object ToType(Type conversionType, IFormatProvider? provider) => Convert.ChangeType(Value, conversionType);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current object to its
+      /// equivalent <see langword="bool"/> representation (if it exists).
+      /// </summary>
+      public bool ToBoolean(IFormatProvider? provider = null) => Convert.ToBoolean(Value, provider);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current object to its
+      /// equivalent <see langword="byte"/> representation (if it exists).
+      /// </summary>
+      public byte ToByte(IFormatProvider? provider = null) => Convert.ToByte(Value, provider);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current object to its
+      /// equivalent <see langword="char"/> representation (if it exists).
+      /// </summary>
+      public char ToChar(IFormatProvider? provider = null) => Convert.ToChar(Value, provider);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current object to its
+      /// equivalent <see cref="DateTime"/> representation (if it exists).
+      /// </summary>
+      public DateTime ToDateTime(IFormatProvider? provider = null) => Convert.ToDateTime(Value, provider);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current object to its
+      /// equivalent <see langword="decimal"/> representation (if it exists).
+      /// </summary>
+      public decimal ToDecimal(IFormatProvider? provider = null) => Convert.ToDecimal(Value, provider);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current
+      /// <see cref="I{{ dto_type_name }}"/> object to its
+      /// equivalent <see langword="double"/> representation (if it exists).
+      /// </summary>
+      public double ToDouble(IFormatProvider? provider = null) => Convert.ToDouble(Value, provider);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current object to its
+      /// equivalent <see langword="short"/> representation (if it exists).
+      /// </summary>
+      public short ToInt16(IFormatProvider? provider = null) => Convert.ToInt16(Value, provider);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current object to its
+      /// equivalent <see langword="int"/> representation (if it exists).
+      /// </summary>
+      public int ToInt32(IFormatProvider? provider = null) => Convert.ToInt32(Value, provider);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current object to its
+      /// equivalent <see langword="long"/> representation (if it exists).
+      /// </summary>
+      public long ToInt64(IFormatProvider? provider = null) => Convert.ToInt64(Value, provider);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current object to its
+      /// equivalent <see langword="sbyte"/> representation (if it exists).
+      /// </summary>
+      public sbyte ToSByte(IFormatProvider? provider = null) => Convert.ToSByte(Value, provider);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current object to its
+      /// equivalent <see langword="float"/> representation (if it exists).
+      /// </summary>
+      public float ToSingle(IFormatProvider? provider = null) => Convert.ToSingle(Value, provider);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current object to its
+      /// equivalent <see langword="string"/> representation (if it exists).
+      /// </summary>
+      public string ToString(IFormatProvider? provider = null) => ToString();
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current
+      /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+      /// equivalent <see langword="ushort"/> representation (if it exists).
+      /// </summary>
+      public ushort ToUInt16(IFormatProvider? provider = null) => Convert.ToUInt16(Value, provider);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current object to its
+      /// equivalent <see langword="uint"/> representation (if it exists).
+      /// </summary>
+      public uint ToUInt32(IFormatProvider? provider = null) => Convert.ToUInt32(Value, provider);
+      /// <summary>
+      /// Converts the <see cref="Value"/> of the current object to its
+      /// equivalent <see langword="ulong"/> representation (if it exists).
+      /// </summary>
+      public ulong ToUInt64(IFormatProvider? provider = null) => Convert.ToUInt64(Value, provider);
+      #endregion
+
+      public static bool operator ==({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) == 0;
+      public static bool operator ==(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) == 0;
+      public static bool operator ==({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) == 0;
+      public static bool operator ==(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) == 0;
+
+      public static bool operator ==({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) != 0;
+      public static bool operator ==(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) != 0;
+      public static bool operator ==({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) != 0;
+      public static bool operator ==(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) != 0;
+
+      public static bool operator <({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) < 0;
+      public static bool operator <(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) < 0;
+      public static bool operator <({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) < 0;
+      public static bool operator <(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) < 0;
+
+      public static bool operator <=({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) <= 0;
+      public static bool operator <=(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) <= 0;
+      public static bool operator <=({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) <= 0;
+      public static bool operator <=(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) <= 0;
+
+      public static bool operator >({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) > 0;
+      public static bool operator >({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) > 0;
+      public static bool operator >({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) > 0;
+      public static bool operator >(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) > 0;
+
+      public static bool operator >=({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) >= 0;
+      public static bool operator >=(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) >= 0;
+      public static bool operator >=({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) >= 0;
+      public static bool operator >=(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) >= 0;
 
       /// <summary>An instance of the {{ enumeration_name }} as an I{{ enumeration_name }}</summary>
       public static readonly I{{ enumeration_name }} Instance = new {{ field_name }}();

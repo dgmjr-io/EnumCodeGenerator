@@ -20,6 +20,7 @@ public record struct EnumerationDto(
     string DtoNamespace
 )
 {
+    public readonly string EnumTypeName => EnumType.MetadataName;
     public readonly string EnumNamespace => EnumType.ContainingNamespace.MetadataName;
     public readonly string EnumUnderlyingType => EnumType.EnumUnderlyingType.MetadataName;
     public readonly DateTimeOffset Timestamp = DateTimeOffset.Now;
@@ -134,11 +135,14 @@ public record struct EnumerationFieldDto(
         UrlAttribute?.ConstructorArguments.FirstOrDefault().Value?.ToString()
         ?? Format(
             UriPattern,
-            Join("-", DtoNamespace.Split('.').Select(s => s.ToKebabCase())),
-            DtoTypeName.ToKebabCase(),
-            FieldName.ToKebabCase()
+            Join("-", DtoNamespace.Split('.').Select(s => s.ToSnakeCase())),
+            DtoTypeName.ToSnakeCase(),
+            FieldName.ToSnakeCase()
         );
     public readonly string GuidString =>
         GuidAttribute?.ConstructorArguments.FirstOrDefault().Value?.ToString()
-        ?? MD5.ComputeHash(UriString.ToUTF8Bytes()).ToHexString();
+        ?? ComputeMD5Hash(UriString);
+
+    private static string ComputeMD5Hash(string s) =>
+        MD5.ComputeHash(s.ToUTF8Bytes()).ToHexString();
 }
