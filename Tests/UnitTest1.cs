@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.Testing.Verifiers;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using System;
+using System.Reflection;
 
 public abstract class CSharpSourceGeneratorVerifier<TSourceGenerator>
     where TSourceGenerator : IIncrementalGenerator, new()
@@ -30,7 +31,7 @@ public abstract class CSharpSourceGeneratorVerifier<TSourceGenerator>
         var generator = new TSourceGenerator();
 
         // Create the driver that will control the generation, passing in our generator
-        GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
+        GeneratorDriver driver = CSharpGeneratorDriver.Create(generator.AsSourceGenerator());
 
         // Run the generation pass
         // (Note: the generator driver itself is immutable, and all calls return an updated version of the driver that you should use for subsequent calls)
@@ -68,7 +69,7 @@ public abstract class CSharpSourceGeneratorVerifier<TSourceGenerator>
             {
                 MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location)
             },
-            new CSharpCompilationOptions(OutputKind.ConsoleApplication)
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
         );
 }
 

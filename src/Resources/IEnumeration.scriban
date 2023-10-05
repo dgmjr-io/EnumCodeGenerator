@@ -1,9 +1,11 @@
-namespace {{ enumeration_namespace }}.Abstractions;
-using {{ enumeration_namespace }};
+namespace {{ dto_namespace }}.Abstractions;
+using {{ dto_namespace }};
 
-public interface I{{ enumeration_name }} :
+public interface I{{ dto_type_name }} :
   IHaveAName,
+    IHaveAValue,
     IHaveAValue<{{ enum_underlying_type }}>,
+    IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>,
     IHaveADescription,
     IHaveAUri,
     IHaveSynonyms,
@@ -11,9 +13,11 @@ public interface I{{ enumeration_name }} :
     IHaveAGuid,
     IHaveADisplayName,
     IIdentifiable,
+    IIdentifiable<{{ enum_underlying_type }}>,
     IConvertible,
     IEquatable<{{ enum_underlying_type }}>,
     IEquatable<I{{ dto_type_name }}>
   {
+    uri Uri { get; }
     int Order { get; }
   }

@@ -1,5 +1,3 @@
-namespace System;
-
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
 public abstract class GenerateEnumerationTypeAttribute(
     string? typeName = default,

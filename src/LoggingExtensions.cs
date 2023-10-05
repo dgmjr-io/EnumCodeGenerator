@@ -49,10 +49,22 @@ public static partial class LoggingExtensions
     public static void LogTargetEnums(
         this ILogger logger,
         ImmutableArray<GeneratorAttributeSyntaxContext> values
-    ) => logger.LogTargetEnums(Join(",", values.Select(value => value.TargetSymbol.MetadataName)));
+    ) =>
+        logger.LogTargetEnums(
+            values.Length,
+            Join(",", values.Select(value => value.TargetSymbol.MetadataName))
+        );
 
-    [LoggerMessage(LogTargetEnumsId, Information, "Target enums: {ValuesString}")]
-    private static partial void LogTargetEnums(this ILogger logger, string valuesString);
+    [LoggerMessage(
+        LogTargetEnumsId,
+        Information,
+        "Target enums: {ValuesString}; length: {ValuesLength}"
+    )]
+    private static partial void LogTargetEnums(
+        this ILogger logger,
+        int valuesLength,
+        string valuesString
+    );
 
     [LoggerMessage(
         LogGeneratingInterfaceDeclarationId,
@@ -82,6 +94,14 @@ public static partial class LoggingExtensions
         string fieldName
     );
 
+    public static void LogValuesProvider(
+        this ILogger logger,
+        IncrementalValueProvider<ImmutableArray<GeneratorAttributeSyntaxContext>> valuesProvider
+    ) => logger.LogValuesProvider(Join(", ", valuesProvider.Select((_, __) => _.Length)));
+
+    [LoggerMessage(LogValuesProviderId, Information, "Values: {Count}")]
+    private static partial void LogValuesProvider(this ILogger logger, string count);
+
     [LoggerMessage(EndOfLogId, Information, "--- END OF LOG --")]
     public static partial void EndLog(this ILogger logger);
 }
@@ -95,5 +115,6 @@ public static class EventIds
     public const int LogGeneratingInterfaceDeclarationId = 5;
     public const int LogGeneratingDtoDeclarationId = 6;
     public const int LogGeneratingNestedDataStructureDeclarationId = 7;
+    public const int LogValuesProviderId = 8;
     public const int EndOfLogId = int.MaxValue;
 }

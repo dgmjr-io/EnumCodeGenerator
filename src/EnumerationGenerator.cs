@@ -69,13 +69,14 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
                 var valuesProvider = context.SyntaxProvider
                     .ForAttributeWithMetadataName(attributeClass, Selector, Transformer)
                     .Collect();
-                // context.RegisterPostInitializationOutput(
-                //     ctx =>
-                //         ctx.AddSource(
-                //             $"{GenerateEnumerationTypeAttributes}_{attributeClass}_Classes.g.cs",
-                //             $"/* {valuesProvider} */"
-                //         )
-                // );
+                context.RegisterPostInitializationOutput(
+                    ctx =>
+                        ctx.AddSource(
+                            $"{GenerateEnumerationTypeAttributes}_{attributeClass}_Classes.g.cs",
+                            $"/* {valuesProvider} */"
+                        )
+                );
+                Logger.LogValuesProvider(valuesProvider);
                 context.RegisterSourceOutput(valuesProvider, Generate);
             }
 
@@ -107,9 +108,7 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
         ImmutableArray<GeneratorAttributeSyntaxContext> values
     )
     {
-        Logger.LogInformation(
-            $"Target enums: {Join(", ", values.Select(value => value.TargetSymbol.MetadataName))}"
-        );
+        Logger.LogTargetEnums(values);
         foreach (
             var enumSymbol in values
                 .Select(v => v.TargetSymbol is INamedTypeSymbol ints ? ints : null)
@@ -335,7 +334,7 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
         //     return compilationUnit;
     }
 
-    private TypeDeclarationSyntax GenerateNestedClassDeclaration(
+    private CompilationUnitSyntax GenerateNestedClassDeclaration(
         INamedTypeSymbol enumSymbol,
         string dtoTypeName,
         string fieldName,
@@ -346,23 +345,20 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
     {
         Logger.LogInformation($"Generating nested class for {enumSymbol.Name}.{fieldValue}");
 
-        var nestedTypeDeclaration = ParseSyntaxTree(
-                NestedEnumerationTypeDeclarationTemplate.Render(
-                    new EnumerationFieldDto(
-                        enumSymbol.GetMembers(fieldName).OfType<IFieldSymbol>().FirstOrDefault(),
-                        dataStructureType,
-                        dtoTypeName,
-                        dtoNamespace,
-                        enumSymbol.EnumUnderlyingType.ToDisplayString(),
-                        enumSymbol.MetadataName
-                    )
+        var nestedTypeDeclaration = ParseCompilationUnit(
+            NestedEnumerationTypeDeclarationTemplate.Render(
+                new EnumerationFieldDto(
+                    enumSymbol.GetMembers(fieldName).OfType<IFieldSymbol>().FirstOrDefault(),
+                    dataStructureType,
+                    dtoTypeName,
+                    dtoNamespace,
+                    enumSymbol.EnumUnderlyingType.ToDisplayString(),
+                    enumSymbol.MetadataName
                 )
             )
-            .GetCompilationUnitRoot()
-            .DescendantNodesAndSelf(_ => true)
-            .First(n => n is TypeDeclarationSyntax);
+        );
 
-        return (nestedTypeDeclaration as TypeDeclarationSyntax)!;
+        return nestedTypeDeclaration;
     }
 
     private static T? GetAttributeValue<T>(AttributeData? attributeData, int index)
