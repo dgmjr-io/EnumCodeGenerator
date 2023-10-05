@@ -62,14 +62,18 @@ namespace Dgmjr.Enumerations.CodeGenerator
         public const string AttributeName = "Enumeration";
         public const string AttributeNamespace = "Dgmjr.Enumerations";
         public const string AttributeFullName = AttributeNamespace + "." + AttributeName;
-        public const string GenerateEnumerationRecordStructAttribute =
-            System + "." + nameof(GenerateEnumerationRecordStructAttribute);
-        public const string GenerateEnumerationRecordClassAttribute =
-            System + "." + nameof(GenerateEnumerationRecordClassAttribute);
-        public const string GenerateEnumerationStructAttribute =
-            System + "." + nameof(GenerateEnumerationStructAttribute);
-        public const string GenerateEnumerationClassAttribute =
-            System + "." + nameof(GenerateEnumerationClassAttribute);
+        public const string GenerateEnumerationRecordStructAttribute = nameof(
+            GenerateEnumerationRecordStructAttribute
+        );
+        public const string GenerateEnumerationRecordClassAttribute = nameof(
+            GenerateEnumerationRecordClassAttribute
+        );
+        public const string GenerateEnumerationStructAttribute = nameof(
+            GenerateEnumerationStructAttribute
+        );
+        public const string GenerateEnumerationClassAttribute = nameof(
+            GenerateEnumerationClassAttribute
+        );
 
         public static readonly string[] AttributeClasses = new[]
         {
