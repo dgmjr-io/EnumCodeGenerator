@@ -13,7 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\..\..\..\..\Packages\Packages\AzureFunctions.pkgs = ..\..\..\..\..\Packages\Packages\AzureFunctions.pkgs
 		..\..\..\..\..\Packages\Packages\DDD.pkgs = ..\..\..\..\..\Packages\Packages\DDD.pkgs
 		..\..\..\..\..\Packages\Packages\GlobalBuild.pkgs = ..\..\..\..\..\Packages\Packages\GlobalBuild.pkgs
-		..\..\..\..\..\Packages\Packages\GlobalCodeGenerators.pkgs = ..\..\..\..\..\Packages\Packages\GlobalCodeGenerators.pkgs
 		..\..\..\..\..\Packages\Packages\Images.pkgs = ..\..\..\..\..\Packages\Packages\Images.pkgs
 		..\..\..\..\..\Packages\Packages\McMaster.CommandLineUtils.pkgs = ..\..\..\..\..\Packages\Packages\McMaster.CommandLineUtils.pkgs
 		..\..\..\..\..\Packages\Packages\MediatR.pkgs = ..\..\..\..\..\Packages\Packages\MediatR.pkgs
@@ -37,6 +36,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\..\..\..\..\Packages\Packages\Telegram.pkgs = ..\..\..\..\..\Packages\Packages\Telegram.pkgs
 		..\..\..\..\..\Packages\Packages\Testing.EfCore.pkgs = ..\..\..\..\..\Packages\Packages\Testing.EfCore.pkgs
 		..\..\..\..\..\Packages\Packages\Testing.pkgs = ..\..\..\..\..\Packages\Packages\Testing.pkgs
+		..\..\..\..\..\Packages\Packages\ThisAssembly.pkgs = ..\..\..\..\..\Packages\Packages\ThisAssembly.pkgs
 		..\..\..\..\..\Packages\Packages\Validation.pkgs = ..\..\..\..\..\Packages\Packages\Validation.pkgs
 		..\..\..\..\..\Packages\Packages\XmlDocMd.pkgs = ..\..\..\..\..\Packages\Packages\XmlDocMd.pkgs
 		..\..\..\..\..\Packages\Versions\AspNetCoreIdentity.props = ..\..\..\..\..\Packages\Versions\AspNetCoreIdentity.props
@@ -51,7 +51,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\..\..\..\..\Packages\Versions\PowerShell.props = ..\..\..\..\..\Packages\Versions\PowerShell.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dgmjr.Enumerations.CodeGenerator", "Dgmjr.Enumerations.CodeGenerator.csproj", "{E4BF8599-D1CE-4B40-B83F-3A3D64B9FFE1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dgmjr.Enumerations.CodeGenerator", "Dgmjr.Enumerations.CodeGenerator.csproj", "{93AC50D8-0FFE-4009-AAB9-6A47D2445C6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,18 +63,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E4BF8599-D1CE-4B40-B83F-3A3D64B9FFE1}.Local|Any CPU.ActiveCfg = Local|Any CPU
-		{E4BF8599-D1CE-4B40-B83F-3A3D64B9FFE1}.Local|Any CPU.Build.0 = Local|Any CPU
-		{E4BF8599-D1CE-4B40-B83F-3A3D64B9FFE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E4BF8599-D1CE-4B40-B83F-3A3D64B9FFE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E4BF8599-D1CE-4B40-B83F-3A3D64B9FFE1}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
-		{E4BF8599-D1CE-4B40-B83F-3A3D64B9FFE1}.Testing|Any CPU.Build.0 = Testing|Any CPU
-		{E4BF8599-D1CE-4B40-B83F-3A3D64B9FFE1}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{E4BF8599-D1CE-4B40-B83F-3A3D64B9FFE1}.Staging|Any CPU.Build.0 = Staging|Any CPU
-		{E4BF8599-D1CE-4B40-B83F-3A3D64B9FFE1}.Production|Any CPU.ActiveCfg = Local|Any CPU
-		{E4BF8599-D1CE-4B40-B83F-3A3D64B9FFE1}.Production|Any CPU.Build.0 = Local|Any CPU
-		{E4BF8599-D1CE-4B40-B83F-3A3D64B9FFE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E4BF8599-D1CE-4B40-B83F-3A3D64B9FFE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93AC50D8-0FFE-4009-AAB9-6A47D2445C6F}.Local|Any CPU.ActiveCfg = Local|Any CPU
+		{93AC50D8-0FFE-4009-AAB9-6A47D2445C6F}.Local|Any CPU.Build.0 = Local|Any CPU
+		{93AC50D8-0FFE-4009-AAB9-6A47D2445C6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93AC50D8-0FFE-4009-AAB9-6A47D2445C6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93AC50D8-0FFE-4009-AAB9-6A47D2445C6F}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
+		{93AC50D8-0FFE-4009-AAB9-6A47D2445C6F}.Testing|Any CPU.Build.0 = Testing|Any CPU
+		{93AC50D8-0FFE-4009-AAB9-6A47D2445C6F}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
+		{93AC50D8-0FFE-4009-AAB9-6A47D2445C6F}.Staging|Any CPU.Build.0 = Staging|Any CPU
+		{93AC50D8-0FFE-4009-AAB9-6A47D2445C6F}.Production|Any CPU.ActiveCfg = Local|Any CPU
+		{93AC50D8-0FFE-4009-AAB9-6A47D2445C6F}.Production|Any CPU.Build.0 = Local|Any CPU
+		{93AC50D8-0FFE-4009-AAB9-6A47D2445C6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93AC50D8-0FFE-4009-AAB9-6A47D2445C6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,25 @@
-namespace {{ enumeration_namespace }};
+namespace {{ dto_namespace }};
 using {{ dto_namespace }}.Abstractions;
 
-public static partial class {{ enumeration_name }}s
+public static partial class {{ enumeration_name }}
 {
-  public partial {{ data_structure_type }} {{ field_name }} : I{{ enumeration_name }}
+  public partial {{ data_structure_type }} {{ field_name }} :
+    I{{ enumeration_name }},
+      IHaveAName,
+      IHaveAValue,
+      IHaveAValue<{{ enum_underlying_type }}>,
+      IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>,
+      IHaveADescription,
+      IHaveAUri,
+      IHaveSynonyms,
+      IHaveAShortName,
+      IHaveAGuid,
+      IHaveADisplayName,
+      IIdentifiable,
+      IIdentifiable<{{ enum_underlying_type }}>,
+      IConvertible,
+      IEquatable<{{ enum_underlying_type }}>,
+      IEquatable<I{{ dto_type_name }}>
   {
       /// <summary>The {{ enumeration_name }}'s value</summary>
       /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" /></value>
@@ -11,7 +27,7 @@ public static partial class {{ enumeration_name }}s
 
       /// <summary>The underlying ordinal value of the {{ enumeration_name }}</summary>
       /// <value>{{ id }}</value>
-      public const {{ enum_underyling_type }} Id = {{ id }};
+      public const {{ enum_underlying_type }} Id = {{ id }};
 
       /// <summary>The order in which the {{ enumeration_name }} should appear</summary>
       /// <value>{{ order }}</value>
@@ -54,9 +70,19 @@ public static partial class {{ enumeration_name }}s
       /// <value>{{ uri_string }}</value>
       public static readonly System.Uri Uri = new(UriString);
 
+      /// <summary>The {{ enumeration_name }}'s synonyms</summary>
+      /// <value>{{ synonyms }}</value>
+      public static readonly string[] Synonyms = new[] {
+        {{ synonyms }}
+      };
+
       /// <summary>The {{ enumeration_name }}'s value</summary>
       /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" /></value>
       {{ enum_namespace }}.{{ enum_type }} IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>.Value => Value;
+
+      /// <summary>The {{ enumeration_name }}'s value as a(n) <see langword="{{ enum_underlying_type }}" /></summary>
+      /// <value>{{ id }}</value>
+      {{ enum_underlying_type }} IHaveAValue<{{ enum_underlying_type }}>.Value => Id;
 
       /// <summary>The {{ enumeration_name }}'s GUID</summary>
       /// <value>{{ guid_string }}</value>
@@ -67,7 +93,7 @@ public static partial class {{ enumeration_name }}s
       string IHaveADisplayName.DisplayName => DisplayName;
 
       /// <summary>The {{ enumeration_name }}'s value</summary>
-      /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" />
+      /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" /><value>
       object IHaveAValue.Value => Value;
 
       /// <summary>A short description of the {{ enumeration_name }}</summary>
@@ -86,10 +112,32 @@ public static partial class {{ enumeration_name }}s
       /// <value>{{ uri_string }}</value>
       Uri IHaveAUri.Uri => Uri;
 
+      /// <summary>The {{ enumeration_name }}'s URI</summary>
+      /// <value>{{ uri_string }}</value>
+      uri I{{ dto_type_name }}.Uri => Uri;
+
       /// <summary>The order in which the {{ enumeration_name }} should appear</summary>
       /// <value>{{ order }}</value>
       /// <default>0</default>
       int I{{ enumeration_name }}.Order => Order;
+
+      /// <summary>The {{ enumeration_name }}'s Id as an <see langword="object" /></summary>
+      /// <value>{{ id }}</value>
+      object IIdentifiable.Id => Id;
+
+      /// <summary>The {{ enumeration_name }}'s Id as a(n) <see langword="{{ enum_underlying_type }}" /></summary>
+      /// <value>{{ id }}</value>
+      {{ enum_underlying_type }} IIdentifiable<{{ enum_underlying_type }}>.Id => Id;
+
+      /// <summary>The {{ enumeration_name }}'s synonyms</summary>
+      /// <value>{{ synonyms }}</value>
+      string[]  IHaveSynonyms.Synonyms { get => Synonyms; init { } }
+
+      bool IEquatable<I{{ enumeration_name }}>.Equals(I{{ enumeration_name }} value)
+        => this == value;
+
+        bool IEquatable<{{ enum_underlying_type }}>.Equals({{ enum_underlying_type }} value)
+          => Convert.ChangeType(value, typeof({{ enum_namespace }}.{{ enum_type }})) == Value;
 
       public int CompareTo(object? other) => other is IEnumeration ie ? CompareTo(ie) : -1;
       public int CompareTo(IEnumeration other) => Order.CompareTo(other.Order);
@@ -164,8 +212,7 @@ public static partial class {{ enumeration_name }}s
       /// </summary>
       public string ToString(IFormatProvider? provider = null) => ToString();
       /// <summary>
-      /// Converts the <see cref="Value"/> of the current
-      /// <see cref="IEnumeration{{{ dto_type_name }}, {{ id_type }}, {{ enum_namespace }}.{{ enum_type }}}"/> object to its
+      /// Converts the <see cref="Value"/> of the current object to its
       /// equivalent <see langword="ushort"/> representation (if it exists).
       /// </summary>
       public ushort ToUInt16(IFormatProvider? provider = null) => Convert.ToUInt16(Value, provider);
@@ -181,35 +228,23 @@ public static partial class {{ enumeration_name }}s
       public ulong ToUInt64(IFormatProvider? provider = null) => Convert.ToUInt64(Value, provider);
       #endregion
 
-      public static bool operator ==({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) == 0;
-      public static bool operator ==(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) == 0;
-      public static bool operator ==({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) == 0;
-      public static bool operator ==(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) == 0;
+      public static bool operator ==({{ field_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) == 0;
+      public static bool operator ==(I{{ dto_type_name }} left, {{ field_name }} right) => left.Value.CompareTo(right.Value) == 0;
 
-      public static bool operator ==({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) != 0;
-      public static bool operator ==(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) != 0;
-      public static bool operator ==({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) != 0;
-      public static bool operator ==(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) != 0;
+      public static bool operator !=({{ field_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) != 0;
+      public static bool operator !=(I{{ dto_type_name }} left, {{ field_name }} right) => left.Value.CompareTo(right.Value) != 0;
 
-      public static bool operator <({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) < 0;
-      public static bool operator <(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) < 0;
-      public static bool operator <({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) < 0;
-      public static bool operator <(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) < 0;
+      public static bool operator <({{ field_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) < 0;
+      public static bool operator <(I{{ dto_type_name }} left, {{ field_name }} right) => left.Value.CompareTo(right.Value) < 0;
 
-      public static bool operator <=({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) <= 0;
-      public static bool operator <=(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) <= 0;
-      public static bool operator <=({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) <= 0;
-      public static bool operator <=(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) <= 0;
+      public static bool operator >({{ field_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) > 0;
+      public static bool operator >(I{{ dto_type_name }} left, {{ field_name }} right) => left.Value.CompareTo(right.Value) > 0;
 
-      public static bool operator >({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) > 0;
-      public static bool operator >({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) > 0;
-      public static bool operator >({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) > 0;
-      public static bool operator >(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) > 0;
+      public static bool operator <=({{ field_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) <= 0;
+      public static bool operator <=(I{{ dto_type_name }} left, {{ field_name }} right) => left.Value.CompareTo(right.Value) <= 0;
 
-      public static bool operator >=({{ dto_type_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) >= 0;
-      public static bool operator >=(I{{ dto_type_name }} left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) >= 0;
-      public static bool operator >=({{ dto_type_name }} left, IEnumeration right) => left.Value.CompareTo(right.Value) >= 0;
-      public static bool operator >=(IEnumeration left, {{ dto_type_name }} right) => left.Value.CompareTo(right.Value) >= 0;
+      public static bool operator >=({{ field_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) >= 0;
+      public static bool operator >=(I{{ dto_type_name }} left, {{ field_name }} right) => left.Value.CompareTo(right.Value) >= 0;
 
       /// <summary>An instance of the {{ enumeration_name }} as an I{{ enumeration_name }}</summary>
       public static readonly I{{ enumeration_name }} Instance = new {{ field_name }}();
