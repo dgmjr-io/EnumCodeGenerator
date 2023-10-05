@@ -5,6 +5,7 @@
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <Description>This package contains a source generator, which generates enumeration data structures from enum types.</Description>
     <IsRoslynComponent>true</IsRoslynComponent>
+    <NoWarn>$(NoWarn(;S3903;RCS1110</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
@@ -33,10 +34,6 @@
   <PropertyGroup>
     <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="./Runtime/**/*.*" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageFile Include="$(OutputPath)\*.dll" PackagePath="analyzers/dotnet/cs/%(Filename)%(Extension)" Visible="false" />

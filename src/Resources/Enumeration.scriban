@@ -1,58 +1,35 @@
 namespace {{ dto_namespace }};
-using {{ enumeration_namespace }}.Abstractions;
+using {{ dto_namespace }}.Abstractions;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-public {{ data_structure_type }} {{ field_name }} : I{{ dto_type_name }}
+public static partial class {{ dto_type_name }}
 {
-    protected {{ field_name }}()
-    {
-    }
+    /// <summary>Converts the <paramref name="value"/> to an object of type</summary>
+    public static I{{ dto_type_name }}? FromValue({{ enum_namespace }}.{{ enum_type }} value) => Parse(({{ dto_type_name }} e) => e.Value?.Equals(value) ?? false);
 
-    public static readonly I{{ field_name }} Instance = new {{ field_name }}();
+    /// <summary>Converts the <paramref name="value"/> to an object of type <typeparamref name="{{ dto_type_name }}" /></summary>
+    public static I{{ dto_type_name }}? FromValue(object value) => Parse(({{ dto_type_name }} e) => e.Value?.Equals(value) ?? false);
 
-    /// <summary>
-    /// Gets <inheritdoc cref="Value" path="/returns" />
-    /// </summary>
-    /// <returns>the underlying value of the enumeration.</returns>
-    /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" /></value>
-    public const {{ enum_namespace }}.{{ enum_type }} Value = {{ enum_namespace }}.{{ enum_type }}.{{ value }};
+    /// <summary>Retrieves a list of values that are members of the enumeration.</summary>
+    public static {{ enum_namespace }}.{{ enum_type }}[] GetAllValues() =>
+      new[] {
+        {{ for field in fields ~}}
+          {{ dto_type_name }}.{{ field.field_name }}.Value {{ if !for.last }}, {{ end }}
+        {{~ end }}
+      };
 
-    /// <inheritdoc cref="Value" />
-    {{ enum_namespace }}.{{ enum_type }} IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>.Value => Value;
-    /// <summary>Gets <inheritdoc cref="Id" path="/returns" /></summary>
-    /// <returns>The numeric ID of the enumeration.</returns>
-    public const {{ id_type }} Id = {{ id }};
-    // public static IEnumeration? FromValue(Type t, object value) => Enumeration.Parse<{{ dto_type_name }}>(x => x.Value.Equals(value));
-    /// <summary>
-    /// Converts the <paramref name="value"/> to an object of type
-    /// </summary>
-    public static I{{ dto_type_name }}? FromValue({{ enum_namespace }}.{{ enum_type }} value) => Enumeration.Parse(({{ dto_type_name }} e) => e.Value?.Equals(value) ?? false);
-    /// <summary>
-    /// Converts the <paramref name="value"/> to an object of type <typeparamref name="{{ dto_type_name }}" />
-    /// </summary>
-    public static I{{ dto_type_name }}? FromValue(object value) => Enumeration.Parse(({{ dto_type_name }} e) => e.Value?.Equals(value) ?? false);
-
-    /// <summary>
-    /// Retrieves a list of values that are members of the enumeration.
-    /// </summary>
-    public static {{ enum_namespace }}.{{ enum_type }}[] Ge{{ enum_namespace }}.{{ enum_type }}s()
-        => Enumeration.Ge{{ enum_namespace }}.{{ enum_type }}s<{{ enum_namespace }}.{{ enum_type }}>();
-
-    /// <summary>
-    /// Parses the <paramref name="value"/> to an object of type
-    /// <typeparamref name="{{ dto_type_name }}"/>.
-    /// </summary>
+    /// <summary>Parses the <paramref name="value"/> to an object of type <see cref="I{{ dto_type_name }}"/>.</summary>
+    /// <exception cref="InvalidCastException">if no matching item was found</exception>
     public static I{{ dto_type_name }}? Parse(string value)
-        => Enumeration.Parse<I{{ dto_type_name }}>(value);
+        => Parse(value);
 
+    /// <summary>Uses the predicate the <paramref name="matchPredicate"/> to find an object of type <see cref="I{{ dto_type_name }}"/>.</summary>
+    /// <exception cref="InvalidCastException">if no matching item was found</exception>
     public static I{{ dto_type_name }}? Parse(Func<I{{ dto_type_name }}, bool> matchPredicate)
-        => Enumeration.Parse<{{ dto_type_name }}>(matchPredicate);
-
-    public static I{{ dto_type_name}} Parse(Func<I{{ dto_type_name }}, bool> matchPredicate)
-        => Parse()
+        => Parse(matchPredicate, true);
 
     private static I{{ dto_type_name}} Parse(Func<I{{ dto_type_name }}, bool> matchPredicate, bool throwOnNotFound)
         => GetAll().Where(matchPredicate).SingleOrDefault() ??
@@ -60,24 +37,35 @@ public {{ data_structure_type }} {{ field_name }} : I{{ dto_type_name }}
             throw new InvalidCastException($"There was no matching {{ dto_type_name }} found.") :
             default;
 
+    /// <summary>Attempts to parse the <paramref name="s"/> to an object of type <see cref="I{{ dto_type_name }}"/> and returns <see langword="true" /> if it's successful; returns <see langword="false" /> and sets <paramref name="value" /> = <see langword="null" /> if it's not found.</summary>
+    /// <returns><see langword="true" />if the parse was successful, <see langword="false" /> otherwise</returns>
     public static bool TryParse(string s, out I{{ dto_type_name }} value)
-        => try
+        =>
         {
-          return (value = Parse(GetAll().Where(e => e.Name.Equals(s, OrdinalCultureIgnoreCase) ||
-                    e.DisplayName.Equals(s, OrdinalCultureIgnoreCase) ||
-                    e.GuidString.Equals(s, OrdinalCultureIgnoreCase) ||
-                    e.UriString.Equals(s, OrdinalCultureIgnoreCase) ||
-                    e.ShortNameEquals(s, OrdinalCultureIgnoreCase)), false)) is not null;
-        }
-        catch
-        {
-          return false;
+          try
+          {
+            return (value = Parse(e => e.Name.Equals(s, OrdinalCultureIgnoreCase) ||
+                      e.DisplayName.Equals(s, OrdinalCultureIgnoreCase) ||
+                      e.GuidString.Equals(s, OrdinalCultureIgnoreCase) ||
+                      e.UriString.Equals(s, OrdinalCultureIgnoreCase) ||
+                      e.ShortNameEquals(s, OrdinalCultureIgnoreCase)), false) is not null;
+          }
+          catch
+          {
+            return false;
+          }
         }
 
+    {{func select_field(field)
+        ret dto_type_name + "." + field.field_name
+      end}}
+
+    /// <summary>Retrieves <inheritdoc cref="GetAll" path="/returns" /></summary>
+    /// <returns>all <see cref="I{{ dto_type_name }}" />s</returns>
     public static IEnumerable<I{{ dto_type_name }}> GetAll()
-        => new[] {
-        {{ for field in fields  ~}}
-            {{ dto_type_name }}.{{ field.field_name }}
-        {{ end }}
-        }
+      new[] {
+        {{ for field in fields ~}}
+          {{ dto_type_name }}.{{ field.field_name }}.Instance {{ if !for.last }}, {{ end }}
+        {{~ end }}
+      };
 }
