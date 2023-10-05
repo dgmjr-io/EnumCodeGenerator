@@ -6,9 +6,9 @@
     <WarningsAsErrors>$(WarningsAsErrors);CS8785</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <!-- <CodeGenerator Include="Dgmjr.Enumerations.CodeGenerator" /> -->
-    <PackageReference Include="Dgmjr.Enumerations.CodeGenerator" IncludeAssets="Analyzers;Build" ExcludeAssets="Native;BuildTransitive;ContentFiles" PrivateAssets="All" />
-    <!-- <ProjectReference Include="../src/Dgmjr.Enumerations.CodeGenerator.csproj" OutpzutItemType="Analyzer" Targets="Restore;Build;Pack" ReferenceOutputAssembly="false" /> -->
+    <SourceGeneratorPackageReference Include="Dgmjr.Enumerations.CodeGenerator" />
+    <!-- <PackageReference Include="Dgmjr.Enumerations.CodeGenerator" IncludeAssets="Analyzers;Build" ExcludeAssets="Native;BuildTransitive;ContentFiles" PrivateAssets="All" /> -->
+    <!-- <ProjectReference Include="../src/Dgmjr.Enumerations.CodeGenerator.csproj" OutputItemType="Analyzer" Targets="Restore;Build;Pack" ReferenceOutputAssembly="false" /> -->
     <PackageReference Include="Dgmjr.Enumerations.Enumeration" />
     <PackageReference Include="Dgmjr.Enumerations.Abstractions" />
     <PackageReference Include="Dgmjr.Primitives" />
