@@ -1,4 +1,4 @@
-namespace Dgmjr.Enumerations.CodeGenerator.Samples.Enums;
+namespace System.Net.Http.Enums;
 
 [GenerateEnumerationRecordStructAttribute("HttpMethod", "System.Net.Http"), Flags]
 public enum HttpMethod : byte
