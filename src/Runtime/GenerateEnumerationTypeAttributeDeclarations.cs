@@ -1,3 +1,5 @@
+using System;
+
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
 public abstract class GenerateEnumerationTypeAttribute(
     string? typeName = default,
@@ -23,11 +25,19 @@ public sealed class GenerateEnumerationStructAttribute(
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
 public sealed class GenerateEnumerationRecordClassAttribute(
     string? typeName = default,
-    string? @namespace = default
-) : GenerateEnumerationTypeAttribute(typeName, @namespace) { }
+    string? @namespace = default,
+    type? baseType = default
+) : GenerateEnumerationTypeAttribute(typeName, @namespace)
+{
+    public type? BaseType { get; } = baseType;
+}
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
 public sealed class GenerateEnumerationClassAttribute(
     string? typeName = default,
-    string? @namespace = default
-) : GenerateEnumerationTypeAttribute(typeName, @namespace) { }
+    string? @namespace = default,
+    type? baseType = default
+) : GenerateEnumerationTypeAttribute(typeName, @namespace)
+{
+    public type? BaseType { get; } = baseType;
+}

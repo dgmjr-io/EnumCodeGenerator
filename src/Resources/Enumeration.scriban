@@ -6,7 +6,8 @@ using System.Linq;
 using System.Text;
 using static System.StringComparison;
 
-public static partial class {{ dto_type_name }}
+{{ compiler_generated_attributes }}
+public {{ if base_type != "" && base_type != null  }} static {{ base_type }}{{ end }} partial {{ data_structure_type }} {{ dto_type_name }} {{ if base_type != "" && base_type != null }} : {{ base_type }}{{ end }}
 {
     /// <summary>Converts the <paramref name="value"/> to an object of type</summary>
     public static I{{ dto_type_name }}? FromValue({{ enum_type }} value) => Parse(e => ((IHaveAValue<{{ enum_type }}>)e).Value.Equals(value));
