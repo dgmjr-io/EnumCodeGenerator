@@ -92,7 +92,14 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
             && AttributeClasses
                 .Intersect(
                     enumDeclarationSyntax.AttributeLists.SelectMany(
-                        al => al.Attributes.Select(a => a.Name.ToFullString())
+                        al =>
+                            al.Attributes
+                                .Select(a => a.Name.ToFullString())
+                                .Concat(
+                                    al.Attributes.Select(
+                                        a => a.Name.ToFullString() + nameof(Attribute)
+                                    )
+                                )
                     )
                 )
                 .Any();

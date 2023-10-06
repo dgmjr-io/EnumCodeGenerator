@@ -11,9 +11,11 @@ public static partial class {{ enumeration_name }}
       IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>,
       IHaveADescription,
       IHaveAUri,
+      IHaveAUriString,
       IHaveSynonyms,
       IHaveAShortName,
       IHaveAGuid,
+      IHaveAGuidString,
       IHaveADisplayName,
       IIdentifiable,
       IIdentifiable<{{ enum_underlying_type }}>,
@@ -35,8 +37,8 @@ public static partial class {{ enumeration_name }}
       public const int Order = {{ order }};
 
       /// <summary>A short description of the {{ enumeration_name }}</summary>
-      /// <value>{{ descriptiom }}</value>
-      public const string Descriptiom = "{{ descriptiom }}";
+      /// <value>{{ description }}</value>
+      public const string Description = "{{ description }}";
 
       /// <summary>The {{ enumeration_name }}'s display name</summary>
       /// <value>{{ display_name }}</value>
@@ -72,7 +74,7 @@ public static partial class {{ enumeration_name }}
 
       /// <summary>The {{ enumeration_name }}'s synonyms</summary>
       /// <value>{{ synonyms }}</value>
-      public static readonly string[] Synonyms = new[] {
+      public static readonly string[] Synonyms = new string[] {
         {{ synonyms }}
       };
 
@@ -88,6 +90,10 @@ public static partial class {{ enumeration_name }}
       /// <value>{{ guid_string }}</value>
       guid IHaveAGuid.Guid => Guid;
 
+      /// <summary>The {{ enumeration_name }}'s GUID</summary>
+      /// <value>{{ guid_string }}</value>
+      string IHaveAGuidString.GuidString => GuidString;
+
       /// <summary>The {{ enumeration_name }}'s display name</summary>
       /// <value>{{ display_name }}</value>
       string IHaveADisplayName.DisplayName => DisplayName;
@@ -97,7 +103,7 @@ public static partial class {{ enumeration_name }}
       object IHaveAValue.Value => Value;
 
       /// <summary>A short description of the {{ enumeration_name }}</summary>
-      /// <value>{{ descriptiom }}</value>
+      /// <value>{{ description }}</value>
       string IHaveADescription.Description => Description;
 
       /// <summary>The {{ enumeration_name }}'s name</summary>
@@ -114,7 +120,11 @@ public static partial class {{ enumeration_name }}
 
       /// <summary>The {{ enumeration_name }}'s URI</summary>
       /// <value>{{ uri_string }}</value>
-      uri I{{ dto_type_name }}.Uri => Uri;
+      string IHaveAUriString.UriString => UriString;
+
+      /// <summary>The {{ enumeration_name }}'s URI</summary>
+      /// <value>{{ uri_string }}</value>
+      uri I{{ dto_type_name }}.Uri => uri.From(Uri.ToString());
 
       /// <summary>The order in which the {{ enumeration_name }} should appear</summary>
       /// <value>{{ order }}</value>
@@ -137,7 +147,7 @@ public static partial class {{ enumeration_name }}
         => this == value;
 
         bool IEquatable<{{ enum_underlying_type }}>.Equals({{ enum_underlying_type }} value)
-          => Convert.ChangeType(value, typeof({{ enum_namespace }}.{{ enum_type }})) == Value;
+          => (({{ enum_namespace }}.{{ enum_type }})Convert.ChangeType(value, typeof({{ enum_namespace }}.{{ enum_type }}))) == Value;
 
       public int CompareTo(object? other) => other is IEnumeration ie ? CompareTo(ie) : -1;
       public int CompareTo(IEnumeration other) => Order.CompareTo(other.Order);
@@ -228,23 +238,23 @@ public static partial class {{ enumeration_name }}
       public ulong ToUInt64(IFormatProvider? provider = null) => Convert.ToUInt64(Value, provider);
       #endregion
 
-      public static bool operator ==({{ field_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) == 0;
-      public static bool operator ==(I{{ dto_type_name }} left, {{ field_name }} right) => left.Value.CompareTo(right.Value) == 0;
+      public static bool operator ==({{ field_name }} left, IHaveAValue<{{ enum_namespace }}.{{ enum_type }}> right) => ((IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>)left).Value.CompareTo(right.Value) == 0;
+      public static bool operator ==(IHaveAValue<{{ enum_namespace }}.{{ enum_type }}> left, {{ field_name }} right) => left.Value.CompareTo(((IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>)right).Value) == 0;
 
-      public static bool operator !=({{ field_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) != 0;
-      public static bool operator !=(I{{ dto_type_name }} left, {{ field_name }} right) => left.Value.CompareTo(right.Value) != 0;
+      public static bool operator !=({{ field_name }} left, IHaveAValue<{{ enum_namespace }}.{{ enum_type }}> right) => ((IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>)left).Value.CompareTo(right.Value) != 0;
+      public static bool operator !=(IHaveAValue<{{ enum_namespace }}.{{ enum_type }}> left, {{ field_name }} right) => left.Value.CompareTo(((IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>)right).Value) != 0;
 
-      public static bool operator <({{ field_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) < 0;
-      public static bool operator <(I{{ dto_type_name }} left, {{ field_name }} right) => left.Value.CompareTo(right.Value) < 0;
+      public static bool operator <({{ field_name }} left, IHaveAValue<{{ enum_namespace }}.{{ enum_type }}> right) => ((IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>)left).Value.CompareTo(right.Value) < 0;
+      public static bool operator <(IHaveAValue<{{ enum_namespace }}.{{ enum_type }}> left, {{ field_name }} right) => left.Value.CompareTo(((IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>)right).Value) < 0;
 
-      public static bool operator >({{ field_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) > 0;
-      public static bool operator >(I{{ dto_type_name }} left, {{ field_name }} right) => left.Value.CompareTo(right.Value) > 0;
+      public static bool operator >({{ field_name }} left, IHaveAValue<{{ enum_namespace }}.{{ enum_type }}> right) => ((IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>)left).Value.CompareTo(right.Value) > 0;
+      public static bool operator >(IHaveAValue<{{ enum_namespace }}.{{ enum_type }}> left, {{ field_name }} right) => left.Value.CompareTo(((IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>)right).Value) > 0;
 
-      public static bool operator <=({{ field_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) <= 0;
-      public static bool operator <=(I{{ dto_type_name }} left, {{ field_name }} right) => left.Value.CompareTo(right.Value) <= 0;
+      public static bool operator <=({{ field_name }} left, IHaveAValue<{{ enum_namespace }}.{{ enum_type }}> right) => ((IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>)left).Value.CompareTo(right.Value) <= 0;
+      public static bool operator <=(IHaveAValue<{{ enum_namespace }}.{{ enum_type }}> left, {{ field_name }} right) => left.Value.CompareTo(((IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>)right).Value) <= 0;
 
-      public static bool operator >=({{ field_name }} left, I{{ dto_type_name }} right) => left.Value.CompareTo(right.Value) >= 0;
-      public static bool operator >=(I{{ dto_type_name }} left, {{ field_name }} right) => left.Value.CompareTo(right.Value) >= 0;
+      public static bool operator >=({{ field_name }} left, IHaveAValue<{{ enum_namespace }}.{{ enum_type }}> right) => ((IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>)left).Value.CompareTo(right.Value) >= 0;
+      public static bool operator >=(IHaveAValue<{{ enum_namespace }}.{{ enum_type }}> left, {{ field_name }} right) => left.Value.CompareTo(((IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>)right).Value) >= 0;
 
       /// <summary>An instance of the {{ enumeration_name }} as an I{{ enumeration_name }}</summary>
       public static readonly I{{ enumeration_name }} Instance = new {{ field_name }}();
