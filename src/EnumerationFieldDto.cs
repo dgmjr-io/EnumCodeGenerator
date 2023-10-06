@@ -12,7 +12,8 @@ public record struct EnumerationFieldDto(
     string DtoTypeName,
     string DtoNamespace,
     string EnumUnderlyingType,
-    string EnumType
+    string EnumType,
+    string? BaseType = default
 )
 {
     private static readonly MD5 MD5 = MD5.Create();

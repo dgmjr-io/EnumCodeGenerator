@@ -129,20 +129,16 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
             // Check if the enum has any of the specified attributes
             var attributes = enumSymbol.GetAttributes();
             var recordStructAttribute = attributes.FirstOrDefault(
-                a =>
-                    a.AttributeClass?.MetadataName
-                    == Constants.GenerateEnumerationRecordStructAttribute
+                a => a.AttributeClass?.MetadataName == GenerateEnumerationRecordStructAttribute
             );
             var structAttribute = attributes.FirstOrDefault(
-                a => a.AttributeClass?.MetadataName == Constants.GenerateEnumerationStructAttribute
+                a => a.AttributeClass?.MetadataName == GenerateEnumerationStructAttribute
             );
             var recordClassAttribute = attributes.FirstOrDefault(
-                a =>
-                    a.AttributeClass?.MetadataName
-                    == Constants.GenerateEnumerationRecordClassAttribute
+                a => a.AttributeClass?.MetadataName == GenerateEnumerationRecordClassAttribute
             );
             var classAttribute = attributes.FirstOrDefault(
-                a => a.AttributeClass?.MetadataName == Constants.GenerateEnumerationClassAttribute
+                a => a.AttributeClass?.MetadataName == GenerateEnumerationClassAttribute
             );
 
             // Determine the DTO class name and namespace
