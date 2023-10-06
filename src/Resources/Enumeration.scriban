@@ -4,17 +4,18 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using static System.StringComparison;
 
 public static partial class {{ dto_type_name }}
 {
     /// <summary>Converts the <paramref name="value"/> to an object of type</summary>
-    public static I{{ dto_type_name }}? FromValue({{ enum_namespace }}.{{ enum_type }} value) => Parse(({{ dto_type_name }} e) => e.Value?.Equals(value) ?? false);
+    public static I{{ dto_type_name }}? FromValue({{ enum_type }} value) => Parse(e => ((IHaveAValue<{{ enum_type }}>)e).Value.Equals(value));
 
-    /// <summary>Converts the <paramref name="value"/> to an object of type <typeparamref name="{{ dto_type_name }}" /></summary>
-    public static I{{ dto_type_name }}? FromValue(object value) => Parse(({{ dto_type_name }} e) => e.Value?.Equals(value) ?? false);
+    /// <summary>Converts the <paramref name="value"/> to an object of type <see cref="{{ dto_type_name }}" /></summary>
+    public static I{{ dto_type_name }}? FromValue(object value) => Parse(e => ((IHaveAValue<{{ enum_type }}>)e).Value.Equals(value));
 
     /// <summary>Retrieves a list of values that are members of the enumeration.</summary>
-    public static {{ enum_namespace }}.{{ enum_type }}[] GetAllValues() =>
+    public static {{ enum_type }}[] GetAllValues() =>
       new[] {
         {{ for field in fields ~}}
           {{ dto_type_name }}.{{ field.field_name }}.Value {{ if !for.last }}, {{ end }}
@@ -33,36 +34,32 @@ public static partial class {{ dto_type_name }}
 
     private static I{{ dto_type_name}} Parse(Func<I{{ dto_type_name }}, bool> matchPredicate, bool throwOnNotFound)
         => GetAll().Where(matchPredicate).SingleOrDefault() ??
-            throwOnNotFound ?
-            throw new InvalidCastException($"There was no matching {{ dto_type_name }} found.") :
-            default;
+            (!throwOnNotFound ? default :
+            throw new InvalidCastException($"There was no matching {{ dto_type_name }} found."));
 
     /// <summary>Attempts to parse the <paramref name="s"/> to an object of type <see cref="I{{ dto_type_name }}"/> and returns <see langword="true" /> if it's successful; returns <see langword="false" /> and sets <paramref name="value" /> = <see langword="null" /> if it's not found.</summary>
     /// <returns><see langword="true" />if the parse was successful, <see langword="false" /> otherwise</returns>
-    public static bool TryParse(string s, out I{{ dto_type_name }} value)
-        =>
+    public static bool TryParse(string s, out I{{ dto_type_name }}? value)
         {
           try
           {
-            return (value = Parse(e => e.Name.Equals(s, OrdinalCultureIgnoreCase) ||
-                      e.DisplayName.Equals(s, OrdinalCultureIgnoreCase) ||
-                      e.GuidString.Equals(s, OrdinalCultureIgnoreCase) ||
-                      e.UriString.Equals(s, OrdinalCultureIgnoreCase) ||
-                      e.ShortNameEquals(s, OrdinalCultureIgnoreCase)), false) is not null;
+            value = Parse(e => e.Name.Equals(s, OrdinalIgnoreCase) ||
+                      e.DisplayName.Equals(s, OrdinalIgnoreCase) ||
+                      e.GuidString.Equals(s, OrdinalIgnoreCase) ||
+                      e.UriString.Equals(s, OrdinalIgnoreCase) ||
+                      e.ShortName.Equals(s, OrdinalIgnoreCase));
+            return value is not null;
           }
           catch
           {
+            value = default;
             return false;
           }
         }
 
-    {{func select_field(field)
-        ret dto_type_name + "." + field.field_name
-      end}}
-
     /// <summary>Retrieves <inheritdoc cref="GetAll" path="/returns" /></summary>
     /// <returns>all <see cref="I{{ dto_type_name }}" />s</returns>
-    public static IEnumerable<I{{ dto_type_name }}> GetAll()
+    public static IEnumerable<I{{ dto_type_name }}> GetAll() =>
       new[] {
         {{ for field in fields ~}}
           {{ dto_type_name }}.{{ field.field_name }}.Instance {{ if !for.last }}, {{ end }}
