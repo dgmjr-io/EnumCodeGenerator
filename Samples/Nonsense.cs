@@ -1,4 +1,16 @@
 /*
+ * Nonsense.cs
+ *
+ *   Created: 2023-49-18T06:49:53-04:00
+ *   Modified: 2023-49-18T06:49:56-04:00
+ *
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
+ *
+ *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
+ *      License: MIT (https://opensource.org/licenses/MIT)
+ */
+
+/*
  * Bool.cs
  *
  *   Created: 2023-10-05-12:34:29
@@ -12,7 +24,7 @@
 
 namespace System.Enums;
 
-[GenerateEnumerationRecordClass("NonsenseWord", "System", typeof(NonsenseWordBase))]
+[GenerateEnumerationRecordStruct("NonsenseWord", "System")]
 public enum Nonsense
 {
     [Display(

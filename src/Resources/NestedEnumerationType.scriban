@@ -122,7 +122,11 @@ public {{ if base_type != "" && base_type != null  }} static {{ base_type }}{{ e
 
       /// <summary>The {{ enumeration_name }}'s URI</summary>
       /// <value>{{ uri_string }}</value>
-      uri I{{ dto_type_name }}.Uri => Uri;
+      string IHaveAUriString.UriString => UriString;
+
+      /// <summary>The {{ enumeration_name }}'s URI</summary>
+      /// <value>{{ uri_string }}</value>
+      uri I{{ dto_type_name }}.Uri => uri.From(Uri.ToString());
 
       /// <summary>The order in which the {{ enumeration_name }} should appear</summary>
       /// <value>{{ order }}</value>
