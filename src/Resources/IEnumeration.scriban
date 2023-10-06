@@ -1,16 +1,18 @@
 namespace {{ dto_namespace }}.Abstractions;
 using {{ dto_namespace }};
 
-public interface I{{ dto_type_name }} :
+public partial interface I{{ dto_type_name }} :
   IHaveAName,
     IHaveAValue,
     IHaveAValue<{{ enum_underlying_type }}>,
-    IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>,
+    IHaveAValue<{{ enum_type }}>,
     IHaveADescription,
     IHaveAUri,
+    IHaveAUriString,
     IHaveSynonyms,
     IHaveAShortName,
     IHaveAGuid,
+    IHaveAGuidString,
     IHaveADisplayName,
     IIdentifiable,
     IIdentifiable<{{ enum_underlying_type }}>,
@@ -18,6 +20,6 @@ public interface I{{ dto_type_name }} :
     IEquatable<{{ enum_underlying_type }}>,
     IEquatable<I{{ dto_type_name }}>
   {
-    uri Uri { get; }
+    new uri Uri { get; }
     int Order { get; }
   }
