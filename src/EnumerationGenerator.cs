@@ -18,8 +18,9 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Options;
 
-using Dgmjr.CodeGeneration.Logging;
+// using Dgmjr.CodeGeneration.Logging;
 using Dgmjr.Enumerations.CodeGenerator;
 using static Dgmjr.Enumerations.CodeGenerator.Constants;
 
@@ -33,7 +34,8 @@ using SrcProdCtx = SourceProductionContext;
 public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
 {
     public ILogger Logger => _logger;
-    private SourceGeneratorLogger _logger;
+
+    private ILogger _logger;
 
     public void Initialize(IigInitCtx context)
     {
@@ -54,17 +56,17 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
             Debugger.Launch();
         }
 
-        using (
-            _logger = (
-                new SourceGeneratorLoggingProvider(
-                    context
-                ).CreateLogger<EnumDataStructureGenerator>() as SourceGeneratorLogger
-            )!
-        )
+        // using (
+        //     _logger = (
+        //         new FileLogg(
+        //             Options.Create(new ConsoleLoggerOptions())
+        //         ).CreateLogger<EnumDataStructureGenerator>()
+        //     )!
+        // )
         {
             foreach (var attributeClass in AttributeClasses)
             {
-                Logger.LogCheckingAttributeClass(attributeClass);
+                Logger?.LogCheckingAttributeClass(attributeClass);
 
                 var valuesProvider = context.SyntaxProvider
                     .ForAttributeWithMetadataName(attributeClass, Selector, Transformer)
@@ -76,18 +78,18 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
                             $"/* {valuesProvider} */"
                         )
                 );
-                Logger.LogValuesProvider(valuesProvider);
+                Logger?.LogValuesProvider(valuesProvider);
                 context.RegisterSourceOutput(valuesProvider, Generate);
             }
 
-            Logger.EndLog();
+            Logger?.EndLog();
         }
     }
 
     private bool Selector(SyntaxNode node, CancellationToken _)
     {
-        Logger.LogCheckingNode(node);
-        Logger.LogIsEnumDeclarationSyntax(node);
+        Logger?.LogCheckingNode(node);
+        Logger?.LogIsEnumDeclarationSyntax(node);
         return node is EnumDeclarationSyntax enumDeclarationSyntax
             && AttributeClasses
                 .Intersect(
@@ -115,7 +117,7 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
         ImmutableArray<GeneratorAttributeSyntaxContext> values
     )
     {
-        Logger.LogTargetEnums(values);
+        Logger?.LogTargetEnums(values);
         foreach (
             var enumSymbol in values
                 .Select(v => v.TargetSymbol is INamedTypeSymbol ints ? ints : null)
@@ -128,20 +130,16 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
             // Check if the enum has any of the specified attributes
             var attributes = enumSymbol.GetAttributes();
             var recordStructAttribute = attributes.FirstOrDefault(
-                a =>
-                    a.AttributeClass?.MetadataName
-                    == Constants.GenerateEnumerationRecordStructAttribute
+                a => a.AttributeClass?.MetadataName == GenerateEnumerationRecordStructAttribute
             );
             var structAttribute = attributes.FirstOrDefault(
-                a => a.AttributeClass?.MetadataName == Constants.GenerateEnumerationStructAttribute
+                a => a.AttributeClass?.MetadataName == GenerateEnumerationStructAttribute
             );
             var recordClassAttribute = attributes.FirstOrDefault(
-                a =>
-                    a.AttributeClass?.MetadataName
-                    == Constants.GenerateEnumerationRecordClassAttribute
+                a => a.AttributeClass?.MetadataName == GenerateEnumerationRecordClassAttribute
             );
             var classAttribute = attributes.FirstOrDefault(
-                a => a.AttributeClass?.MetadataName == Constants.GenerateEnumerationClassAttribute
+                a => a.AttributeClass?.MetadataName == GenerateEnumerationClassAttribute
             );
 
             // Determine the DTO class name and namespace
@@ -159,6 +157,13 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
                 ?? GetAttributeValue<string>(classAttribute, 1)
                 ?? enumSymbol.ContainingNamespace.MetadataName;
 
+            var baseType =
+                GetAttributeValue<type>(recordStructAttribute, 2)
+                ?? GetAttributeValue<type>(structAttribute, 2)
+                ?? GetAttributeValue<type>(recordClassAttribute, 2)
+                ?? GetAttributeValue<type>(classAttribute, 2)
+                ?? null;
+
             var dataStructureType =
                 recordStructAttribute != null
                     ? record_struct
@@ -170,7 +175,7 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
                                 ? @class
                                 : "invalid";
 
-            Logger.LogGeneratingInterfaceDeclaration(dtoTypeName);
+            Logger?.LogGeneratingInterfaceDeclaration(dtoTypeName);
             // Generate the interface for the enum
             var interfaceDeclaration = GenerateInterfaceDeclaration(
                 enumSymbol,
@@ -187,13 +192,14 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
             """
             );
 
-            Logger.LogGeneratingDtoDeclaration(dtoTypeName);
+            Logger?.LogGeneratingDtoDeclaration(dtoTypeName);
             // Generate the data structure for the enum
             var dataStructureDeclaration = GenerateDataStructureDeclaration(
                 enumSymbol,
                 dtoTypeName,
                 dtoNamespace,
-                dataStructureType
+                dataStructureType,
+                baseType
             );
 
             fileName = $"{dtoTypeName}.g.cs";
@@ -214,7 +220,7 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
                 var fieldName = fieldSymbol.Name;
                 var fieldValue = fieldSymbol.ConstantValue;
 
-                Logger.LogGeneratingNestedDataStructureDeclaration(dtoTypeName, fieldName);
+                Logger?.LogGeneratingNestedDataStructureDeclaration(dtoTypeName, fieldName);
 
                 // Generate the nested class declaration
                 var nestedClassDeclaration = GenerateNestedClassDeclaration(
@@ -282,14 +288,15 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
         INamedTypeSymbol enumSymbol,
         string dtoTypeName,
         string dtoNamespace,
-        string dataStructureType
+        string dataStructureType,
+        type baseType
     )
     {
-        Logger.LogInformation($"Generating DTO type {dtoTypeName}...");
+        Logger?.LogInformation($"Generating DTO type {dtoTypeName}...");
 
         return ParseCompilationUnit(
             EnumerationDeclarationTemplate.Render(
-                new EnumerationDto(enumSymbol, dtoTypeName, dtoNamespace)
+                new EnumerationDto(enumSymbol, dtoTypeName, dtoNamespace, baseType)
             )
         );
         //     // Create the base type for the data structure
@@ -350,7 +357,7 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
         string dtoNamespace
     )
     {
-        Logger.LogInformation($"Generating nested class for {enumSymbol.Name}.{fieldValue}");
+        Logger?.LogInformation($"Generating nested class for {enumSymbol.Name}.{fieldValue}");
 
         var nestedTypeDeclaration = ParseCompilationUnit(
             NestedEnumerationTypeDeclarationTemplate.Render(

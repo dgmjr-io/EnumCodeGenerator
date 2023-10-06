@@ -17,15 +17,19 @@ using Dgmjr.Enumerations.CodeGenerator;
 public record struct EnumerationDto(
     INamedTypeSymbol EnumType,
     string DtoTypeName,
-    string DtoNamespace
+    string DtoNamespace,
+    type? baseType = default
 )
 {
+    public readonly string? BaseType => baseType?.FullName;
+    public const string CompilerGeneratedAttributes = Constants.CompilerGeneratedAttributes;
     public readonly string EnumTypeName => EnumType.MetadataName;
     public readonly string EnumNamespace => EnumType.ContainingNamespace.MetadataName;
     public readonly string EnumUnderlyingType => EnumType.EnumUnderlyingType.MetadataName;
     public readonly DateTimeOffset Timestamp = DateTimeOffset.Now;
     public string Author { get; set; } = "Unattributed";
     public string LicenseExpression { get; set; } = "Unlicense";
+    public string LicenseUrl => $"https://opensource.org/license/{LicenseExpression}";
     public readonly string DataStructureType =>
         EnumType
             .GetAttributes()
@@ -61,7 +65,8 @@ public record struct EnumerationDto(
                             @this.DtoTypeName,
                             @this.DtoNamespace,
                             @this.EnumType.EnumUnderlyingType.MetadataName,
-                            @this.EnumType.MetadataName
+                            @this.EnumType.MetadataName,
+                            @this.BaseType
                         )
                 )
                 .ToArray();

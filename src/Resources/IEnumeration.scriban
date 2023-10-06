@@ -1,6 +1,7 @@
 namespace {{ dto_namespace }}.Abstractions;
 using {{ dto_namespace }};
 
+{{ compiler_generated_attributes }}
 public partial interface I{{ dto_type_name }} :
   IHaveAName,
     IHaveAValue,
