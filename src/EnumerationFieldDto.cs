@@ -12,11 +12,13 @@ public record struct EnumerationFieldDto(
     string DtoTypeName,
     string DtoNamespace,
     string EnumUnderlyingType,
-    string EnumType
+    string EnumType,
+    string? BaseType = default
 )
 {
     private static readonly MD5 MD5 = MD5.Create();
 
+    public const string CompilerGeneratedAttributes = Constants.CompilerGeneratedAttributes;
     public readonly string EnumTypeName => EnumType;
     public readonly string EnumerationName => DtoTypeName;
     public readonly string EnumNamespace => EnumSymbol.Type.ContainingNamespace.ToDisplayString();
@@ -76,9 +78,9 @@ public record struct EnumerationFieldDto(
         UrlAttribute?.ConstructorArguments.FirstOrDefault().Value?.ToString()
         ?? Format(
             UriPattern,
-            Join(":", DtoNamespace.Split('.').Select(s => s.ToSnakeCase())),
-            DtoTypeName.ToSnakeCase(),
-            FieldName.ToSnakeCase()
+            Join(":", DtoNamespace.Split('.').Select(s => s.ToKebabCase())),
+            DtoTypeName.ToKebabCase(),
+            FieldName.ToKebabCase()
         );
     public readonly string GuidString =>
         GuidAttribute?.ConstructorArguments.FirstOrDefault().Value?.ToString()

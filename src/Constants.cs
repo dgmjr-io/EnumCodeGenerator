@@ -3,9 +3,9 @@ using System;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Security;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 using Microsoft.CodeAnalysis.CSharp;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 using Template = Scrib::Scriban.Template;
 
@@ -56,6 +56,9 @@ namespace Dgmjr.Enumerations.CodeGenerator
         public const string System = nameof(System);
 #pragma warning restore
 
+        public const string CompilerGeneratedAttributes =
+            $"[System.Runtime.CompilerServices.CompilerGenerated, System.CodeDom.Compiler.GeneratedCode(\"{AssemblyName}\", \"{AssemblyVersion}\")]";
+
         public const string AttributeName = "Enumeration";
         public const string AttributeNamespace = "Dgmjr.Enumerations";
         public const string AttributeFullName = AttributeNamespace + "." + AttributeName;
@@ -93,7 +96,8 @@ namespace Dgmjr.Enumerations.CodeGenerator
                     filename,
                     toolName = AssemblyName,
                     toolVersion = AssemblyVersion,
-                    timestamp = DateTimeOffset.Now
+                    timestamp = DateTimeOffset.Now,
+                    CompilerGeneratedAttributes
                 }
             );
 
