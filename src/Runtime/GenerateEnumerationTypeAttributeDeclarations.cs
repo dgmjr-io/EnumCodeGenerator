@@ -1,7 +1,7 @@
 using System;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
-public abstract class GenerateEnumerationTypeAttribute(
+internal abstract class GenerateEnumerationTypeAttribute(
     string? typeName = default,
     string? @namespace = default
 ) : Attribute
@@ -11,19 +11,19 @@ public abstract class GenerateEnumerationTypeAttribute(
 }
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
-public sealed class GenerateEnumerationRecordStructAttribute(
+internal sealed class GenerateEnumerationRecordStructAttribute(
     string? typeName = default,
     string? @namespace = default
 ) : GenerateEnumerationTypeAttribute(typeName, @namespace) { }
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
-public sealed class GenerateEnumerationStructAttribute(
+internal sealed class GenerateEnumerationStructAttribute(
     string? typeName = default,
     string? @namespace = default
 ) : GenerateEnumerationTypeAttribute(typeName, @namespace) { }
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
-public sealed class GenerateEnumerationRecordClassAttribute(
+internal sealed class GenerateEnumerationRecordClassAttribute(
     string? typeName = default,
     string? @namespace = default,
     type? baseType = default
@@ -33,7 +33,7 @@ public sealed class GenerateEnumerationRecordClassAttribute(
 }
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
-public sealed class GenerateEnumerationClassAttribute(
+internal sealed class GenerateEnumerationClassAttribute(
     string? typeName = default,
     string? @namespace = default,
     type? baseType = default

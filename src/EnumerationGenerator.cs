@@ -20,8 +20,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
 
-// using Dgmjr.CodeGeneration.Logging;
 using Dgmjr.Enumerations.CodeGenerator;
+using Dgmjr.Enumerations.CodeGenerator.Logging;
 using static Dgmjr.Enumerations.CodeGenerator.Constants;
 
 using IigInitCtx = IncrementalGeneratorInitializationContext;
@@ -33,9 +33,9 @@ using SrcProdCtx = SourceProductionContext;
 [Generator]
 public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
 {
-    public ILogger Logger => _logger;
+    public ILogger Logger => (_logger as ILogger)!;
 
-    private ILogger _logger;
+    private IDisposable _logger;
 
     public void Initialize(IigInitCtx context)
     {
@@ -56,13 +56,12 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
             Debugger.Launch();
         }
 
-        // using (
-        //     _logger = (
-        //         new FileLogg(
-        //             Options.Create(new ConsoleLoggerOptions())
-        //         ).CreateLogger<EnumDataStructureGenerator>()
-        //     )!
-        // )
+        using (
+            _logger = (
+                new LoggerProvider(context).CreateLogger<EnumDataStructureGenerator>()
+                as IDisposable
+            )!
+        )
         {
             foreach (var attributeClass in AttributeClasses)
             {
@@ -180,7 +179,8 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
             var interfaceDeclaration = GenerateInterfaceDeclaration(
                 enumSymbol,
                 dtoTypeName,
-                dtoNamespace
+                dtoNamespace,
+                baseType
             );
             fileName = $"I{dtoTypeName}.g.cs";
             context.AddSource(
@@ -247,12 +247,13 @@ public class EnumDataStructureGenerator : IIncrementalGenerator, ILog
     private static CompilationUnitSyntax GenerateInterfaceDeclaration(
         INamedTypeSymbol enumSymbol,
         string dtoTypeName,
-        string dtoNamespace
+        string dtoNamespace,
+        type? baseType
     )
     {
         return ParseCompilationUnit(
             IEnumerationDeclarationTemplate.Render(
-                new EnumerationDto(enumSymbol, dtoTypeName, dtoNamespace)
+                new EnumerationDto(enumSymbol, dtoTypeName, dtoNamespace, baseType)
             )
         );
 

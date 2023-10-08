@@ -10,7 +10,7 @@
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 
-namespace Dgmjr.Enumerations.CodeGenerator;
+namespace Dgmjr.Enumerations.CodeGenerator.Logging;
 
 using Microsoft.Extensions.Logging;
 using static Microsoft.Extensions.Logging.LogLevel;
@@ -20,6 +20,37 @@ using System.Collections.Immutable;
 
 public static partial class LoggingExtensions
 {
+    private static readonly Action<ILogger, string, Exception?> _LogNewScope =
+        LoggerMessage.Define<string>(Trace, LogTransactionScopeStartedId, "{0}: ");
+    private static readonly Action<
+        ILogger,
+        IIncrementalGenerator,
+        DateTimeOffset,
+        Exception?
+    > _beginLog = LoggerMessage.Define<IIncrementalGenerator, DateTimeOffset>(
+        Trace,
+        LogBeginLogId,
+        "Begin Log for {0} {1:u}"
+    );
+    private static readonly Action<ILogger, string, DateTimeOffset, Exception?> _beginLog2 =
+        LoggerMessage.Define<string, DateTimeOffset>(
+            Trace,
+            LogBeginLogId,
+            "Begin Log for {0} {1:u}"
+        );
+
+    public static void LogNewScope(this ILogger logger, string newScope) =>
+        _LogNewScope(logger, newScope, null);
+
+    public static void LogBeginLog(
+        this ILogger logger,
+        IIncrementalGenerator generator,
+        DateTimeOffset dto
+    ) => _beginLog(logger, generator, dto.ToLocalTime(), null);
+
+    public static void LogBeginLog(this ILogger logger, string generator, DateTimeOffset dto) =>
+        _beginLog2(logger, generator, dto.ToLocalTime(), null);
+
     [LoggerMessage(
         LogCheckingAttributeClassId,
         Information,
@@ -108,6 +139,7 @@ public static partial class LoggingExtensions
 
 public static class EventIds
 {
+    public const int LogBeginLogId = 0;
     public const int LogCheckingAttributeClassId = 1;
     public const int LogCheckingNodeId = 2;
     public const int LogIsEnumDeclarationSyntaxId = 3;
@@ -116,5 +148,6 @@ public static class EventIds
     public const int LogGeneratingDtoDeclarationId = 6;
     public const int LogGeneratingNestedDataStructureDeclarationId = 7;
     public const int LogValuesProviderId = 8;
+    public const int LogTransactionScopeStartedId = 9;
     public const int EndOfLogId = int.MaxValue;
 }
