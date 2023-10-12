@@ -18,7 +18,7 @@ public abstract class CSharpSourceGeneratorVerifier<TSourceGenerator>
     const string ExitCodeEnum_cs = "ExitCodeEnum.cs";
 
     [Fact]
-    public void SimpleGeneratorTest()
+    public void RunTest()
     {
         var inputCompilation = CreateCompilation(
             new StreamReader(
@@ -31,11 +31,10 @@ public abstract class CSharpSourceGeneratorVerifier<TSourceGenerator>
         var generator = new TSourceGenerator();
 
         // Create the driver that will control the generation, passing in our generator
-        GeneratorDriver driver = CSharpGeneratorDriver.Create(generator.AsSourceGenerator());
-
+        var driver = CSharpGeneratorDriver.Create(generator.AsSourceGenerator());
         // Run the generation pass
         // (Note: the generator driver itself is immutable, and all calls return an updated version of the driver that you should use for subsequent calls)
-        driver = driver.RunGeneratorsAndUpdateCompilation(
+        var driver2 = driver.RunGeneratorsAndUpdateCompilation(
             inputCompilation,
             out var outputCompilation,
             out var diagnostics
@@ -47,7 +46,7 @@ public abstract class CSharpSourceGeneratorVerifier<TSourceGenerator>
         outputCompilation.GetDiagnostics().Should().BeEmpty(); // verify the compilation with the added source has no diagnostics
 
         // Or we can look at the results directly:
-        var runResult = driver.GetRunResult();
+        var runResult = driver2.GetRunResult();
 
         // The runResult contains the combined results of all generators passed to the driver
         runResult.GeneratedTrees.Length.Should().Be(1);
@@ -67,11 +66,12 @@ public abstract class CSharpSourceGeneratorVerifier<TSourceGenerator>
             new[] { CSharpSyntaxTree.ParseText(source) },
             new[]
             {
-                MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location)
+                MetadataReference.CreateFromFile(
+                    typeof(EnumSourceGeneratorTest).GetTypeInfo().Assembly.Location
+                )
             },
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
         );
 }
 
-public class EnumSourceGeneratorTest
-    : CSharpSourceGeneratorVerifier<Dgmjr.Enumerations.CodeGenerator.EnumDataStructureGenerator> { }
+public class EnumSourceGeneratorTest : CSharpSourceGeneratorVerifier<EnumDataStructureGenerator> { }

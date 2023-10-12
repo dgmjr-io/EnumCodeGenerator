@@ -14,7 +14,7 @@ namespace System.Enums;
 
 using System.ComponentModel.DataAnnotations;
 
-[GenerateEnumerationRecordStructAttribute("ExitCode", "System")]
+[GenerateEnumerationRecordStruct("ExitCode", "System")]
 public enum ExitCode : byte
 {
     [Display(Name = "Success", Description = "The command was successful.", ShortName = "SUCCESS")]

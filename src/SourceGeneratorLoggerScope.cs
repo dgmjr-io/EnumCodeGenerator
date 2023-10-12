@@ -1,3 +1,15 @@
+/*
+ * SourceGeneratorLoggerScope.cs
+ *
+ *   Created: 2023-10-10-09:00:48
+ *   Modified: 2023-10-12-08:28:51
+ *
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
+ *
+ *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
+ *      License: MIT (https://opensource.org/licenses/MIT)
+ */
+
 namespace Dgmjr.Enumerations.CodeGenerator.Logging;
 
 using Dgmjr.Enumerations.CodeGenerator;

@@ -12,11 +12,14 @@
 
 namespace System;
 
-public partial record class NonsenseWordBase
+public abstract partial record class NonsenseWordBase
 {
-    private string _name =>
-        GetType().GetRuntimeProperties().FirstOrDefault(prop => prop.Name == "Name")?.GetValue(this)
-        as string;
+    // public virtual string _Name =>
+    //     GetType().GetRuntimeProperties().FirstOrDefault(prop => prop.Name == "Name")?.GetValue(this)
+    //         as string
+    //     ?? "Name";
 
-    public override string ToString() => $"I am a nonsense word and I say, \"{this._name}\"";
+    public abstract string Name { get; }
+
+    public override string ToString() => $"I am a nonsense word and I say, \"{this.Name}\"";
 }

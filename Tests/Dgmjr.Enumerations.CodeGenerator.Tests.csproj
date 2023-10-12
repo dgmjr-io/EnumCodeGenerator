@@ -1,3 +1,15 @@
+<!--
+ * Dgmjr.Enumerations.CodeGenerator.Tests.csproj
+ *
+ *   Created: 2023-10-10-09:00:48
+ *   Modified: 2023-10-12-08:28:10
+ *
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
+ *
+ *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
+ *      License: MIT (https://opensource.org/licenses/MIT)
+-->
+
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -10,16 +22,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="coverlet.collector"  />
+    <PackageReference Include="Dgmjr.Abstractions" />
+    <PackageReference Include="Dgmjr.CodeGeneration.Extensions.DiagnosticsExtensions" />
+    <PackageReference Include="Dgmjr.CodeGeneration.Testing" />
+    <PackageReference Include="Dgmjr.System.Extensions" />
+    <PackageReference Include="FluentAssertions.Usings"  />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.XUnit" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="XUnit.Usings" />
     <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" />
-    <PackageReference Include="coverlet.collector"  />
-    <PackageReference Include="FluentAssertions.Usings"  />
-    <PackageReference Include="Dgmjr.CodeGeneration.Testing" />
-    <PackageReference Include="Dgmjr.CodeGeneration.Extensions.DiagnosticsExtensions" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.XUnit" />
-    <ProjectReference Include="../src/Dgmjr.Enumerations.CodeGenerator.csproj" Targets="Restore;Build" />
+    <ProjectReference Include="../src/Dgmjr.Enumerations.CodeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" IncludeAssets="Analyzers;Build" ExcludeAssets="Native;BuildTransitive;ContentFiles" PrivateAssets="All" />
     <!-- <ProjectReference Include="../src/Runtime/Dgmjr.Enumerations.CodeGenerator.Runtime.csproj" Targets="Restore;Build" /> -->
   </ItemGroup>
 

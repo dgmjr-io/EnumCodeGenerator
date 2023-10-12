@@ -1,3 +1,17 @@
+/*
+ * EnumerationDto.cs
+ *
+ *   Created: 2023-10-10-09:00:48
+ *   Modified: 2023-10-12-08:28:31
+ *
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
+ *
+ *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
+ *      License: MIT (https://opensource.org/licenses/MIT)
+ */
+
+using System.IO;
+
 namespace Dgmjr.Enumerations.CodeGenerator;
 
 using System.Collections.Immutable;
@@ -18,10 +32,15 @@ public record struct EnumerationDto(
     INamedTypeSymbol EnumType,
     string DtoTypeName,
     string DtoNamespace,
-    type? baseType = default
+    type? BaseTypeType = default
 )
 {
-    public readonly string? BaseType => baseType?.FullName;
+    public readonly string? BaseType =>
+        DataStructureType.Contains(@struct) && BaseTypeType.IsClass
+            ? throw new InvalidDataException(
+                "The enumeration data structure must be a class to support inheritance."
+            )
+            : BaseTypeType?.FullName;
     public const string CompilerGeneratedAttributes = Constants.CompilerGeneratedAttributes;
     public readonly string EnumTypeName => EnumType.MetadataName;
     public readonly string EnumNamespace => EnumType.ContainingNamespace.MetadataName;
@@ -29,7 +48,7 @@ public record struct EnumerationDto(
     public readonly DateTimeOffset Timestamp = DateTimeOffset.Now;
     public string Author { get; set; } = "Unattributed";
     public string LicenseExpression { get; set; } = "Unlicense";
-    public string LicenseUrl => $"https://opensource.org/license/{LicenseExpression}";
+    public readonly string LicenseUrl => $"https://opensource.org/license/{LicenseExpression}";
     public readonly string DataStructureType =>
         EnumType
             .GetAttributes()

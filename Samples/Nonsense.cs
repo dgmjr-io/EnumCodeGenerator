@@ -12,7 +12,7 @@
 
 namespace System.Enums;
 
-[GenerateEnumerationRecordClass("NonsenseWord", "System", typeof(NonsenseWordBase))]
+[GenerateEnumerationRecordClass("NonsenseWord", "System")]
 public enum Nonsense
 {
     [Display(
