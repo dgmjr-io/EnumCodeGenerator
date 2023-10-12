@@ -1,3 +1,15 @@
+/*
+ * EnumerationFieldDto.cs
+ *
+ *   Created: 2023-10-10-09:00:48
+ *   Modified: 2023-10-12-08:28:34
+ *
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
+ *
+ *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
+ *      License: MIT (https://opensource.org/licenses/MIT)
+ */
+
 namespace Dgmjr.Enumerations.CodeGenerator;
 
 using System;
@@ -34,7 +46,9 @@ public record struct EnumerationFieldDto(
     private readonly AttributeData? UrlAttribute =>
         EnumSymbol
             .GetAttributes()
-            .FirstOrDefault(a => a.AttributeClass.Name == Constants.UrlAttribute);
+            .FirstOrDefault(
+                a => a.AttributeClass.Name is Constants.UrlAttribute or Constants.UriAttribute
+            );
     private readonly AttributeData? SynonymsAttribute =>
         EnumSymbol
             .GetAttributes()

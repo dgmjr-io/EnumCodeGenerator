@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.Build.Traversal">
+<Project Sdk="Microsoft.NET.Sdk">
   <Sdk Name="MetaPackageSdk" />
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <IncludeInSolutionFile>false</IncludeInSolutionFile>
     <SlnGenLaunchVisualStudio>false</SlnGenLaunchVisualStudio>
     <Configurations>Local;Debug;Testing;Staging;Release;</Configurations>
@@ -9,5 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="./src/Dgmjr.Enumerations.CodeGenerator.csproj" />
     <ProjectReference Include="./Samples/Dgmjr.Enumerations.CodeGenerator.Samples.csproj" />
+    <ProjectReference Include="./Tests/Dgmjr.Enumerations.CodeGenerator.Tests.csproj" />
   </ItemGroup>
 </Project>

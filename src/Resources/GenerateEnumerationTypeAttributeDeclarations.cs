@@ -1,28 +1,37 @@
 using System;
+using static System.AttributeTargets;
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
-internal abstract class GenerateEnumerationTypeAttribute(
-    string? typeName = default,
-    string? @namespace = default
-) : Attribute
+using ATargets = System.AttributeTargets;
+
+[AttributeUsage(Class | Struct | ATargets.Enum)]
+internal abstract class GenerateEnumerationTypeAttribute : Attribute
 {
-    public string? Namespace { get; } = @namespace;
-    public string? TypeName { get; } = typeName;
+    protected GenerateEnumerationTypeAttribute(
+        string? typeName = default,
+        string? @namespace = default
+    )
+    {
+        Namespace = @namespace;
+        TypeName = typeName;
+    }
+
+    public string? Namespace { get; }
+    public string? TypeName { get; }
 }
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
+[AttributeUsage(Class | Struct | ATargets.Enum)]
 internal sealed class GenerateEnumerationRecordStructAttribute(
     string? typeName = default,
     string? @namespace = default
 ) : GenerateEnumerationTypeAttribute(typeName, @namespace) { }
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
+[AttributeUsage(Class | Struct | ATargets.Enum)]
 internal sealed class GenerateEnumerationStructAttribute(
     string? typeName = default,
     string? @namespace = default
 ) : GenerateEnumerationTypeAttribute(typeName, @namespace) { }
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
+[AttributeUsage(Class | Struct | ATargets.Enum)]
 internal sealed class GenerateEnumerationRecordClassAttribute(
     string? typeName = default,
     string? @namespace = default,
@@ -32,7 +41,7 @@ internal sealed class GenerateEnumerationRecordClassAttribute(
     public type? BaseType { get; } = baseType;
 }
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
+[AttributeUsage(Class | Struct | ATargets.Enum)]
 internal sealed class GenerateEnumerationClassAttribute(
     string? typeName = default,
     string? @namespace = default,

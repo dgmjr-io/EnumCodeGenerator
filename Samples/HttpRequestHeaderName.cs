@@ -13,7 +13,7 @@ namespace System.Net.Http.Headers.Enums;
 
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using HReqH = System.Net.Http.Headers.HttpResponseHeaderNames;
+using HRespH = HttpResponseHeaderNames;
 
 /// <summary>
 /// Contains the standard set of headers applicable to an HTTP request.
@@ -24,14 +24,14 @@ public enum HttpRequestHeaderName
     /// <summary>The number of the page being requested</summary>
     /// <value>X-Page-Number</value>
     [EnumMember(Value = "X-Page-Number")]
-    [Display(Name = HReqH.XPageNumber, Description = "The number of the page being requested")]
+    [Display(Name = HRespH.XPageNumber, Description = "The number of the page being requested")]
     [Uri("urn:system:net:http:http-request-header-name:x-page-number")]
     XPageNumber,
 
     /// <summary>The size of the page being requested</summary>
     /// <value>X-Page-Size</value>
     [EnumMember(Value = "X-Page-Size")]
-    [Display(Name = HReqH.XPageSize, Description = "The size of the page being requested")]
+    [Display(Name = HRespH.XPageSize, Description = "The size of the page being requested")]
     XPageSize,
 
     /// <summary>The MIME types of the response the client can understand.</summary>
