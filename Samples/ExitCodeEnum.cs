@@ -4,9 +4,9 @@
  *   Created: 2023-01-29-01:25:45
  *   Modified: 2023-01-29-01:25:46
  *
- *   Author: David G. Mooore, Jr. <david@dgmjr.io>
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
  *
- *   Copyright © 2022-2023 David G. Mooore, Jr., All Rights Reserved
+ *   Copyright © 2022-2023 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 
@@ -14,6 +14,18 @@ namespace System.Enums;
 
 using System.ComponentModel.DataAnnotations;
 
+/// <summary>
+/// Defines enumeration called ExitCode that represents exit codes for a command-line application. It includes various exit codes with corresponding display names and descriptions. The ExitCode enumeration can be used to represent the exit status of a command-line application.
+/// </summary>
+/// <example>
+/// <code>
+/// ExitCode exitCode = ExitCode.Success;
+/// Console.WriteLine($"Exit Code: {exitCode}");
+/// </code>
+/// </example>
+/// <remarks>
+/// The ExitCode enumeration provides a set of exit codes that can be used to indicate the success or failure of a command-line application.
+/// </remarks>
 [GenerateEnumerationRecordStruct("ExitCode", "System")]
 public enum ExitCode : byte
 {
