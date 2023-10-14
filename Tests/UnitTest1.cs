@@ -10,6 +10,8 @@ using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using System;
 using System.Reflection;
+using Microsoft.Build.Locator;
+using Microsoft.CodeAnalysis.MSBuild;
 
 public abstract class CSharpSourceGeneratorVerifier<TSourceGenerator>
     where TSourceGenerator : IIncrementalGenerator, new()

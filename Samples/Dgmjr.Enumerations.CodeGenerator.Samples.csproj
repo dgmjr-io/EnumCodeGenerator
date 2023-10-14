@@ -12,15 +12,16 @@
 
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeInSolutionFile>true</IncludeInSolutionFile>
     <WarningsAsErrors>$(WarningsAsErrors);CS8785</WarningsAsErrors>
+    <CopyLocalLockFileAssembples>true</CopyLocalLockFileAssembples>
   </PropertyGroup>
   <ItemGroup>
     <SourceGeneratorPackageReference Include="Dgmjr.Enumerations.CodeGenerator" />
     <!-- <PackageReference Include="Dgmjr.Enumerations.CodeGenerator" IncludeAssets="Analyzers;Build" ExcludeAssets="Native;BuildTransitive;ContentFiles" PrivateAssets="All" /> -->
-    <!-- <ProjectReference Include="../src/Dgmjr.Enumerations.CodeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" IncludeAssets="Analyzers;Build" ExcludeAssets="Native;BuildTransitive;ContentFiles" PrivateAssets="All" /> -->
+    <!-- <ProjectReference Include="../src/Dgmjr.Enumerations.CodeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" IncludeAssets="Analyzers;Build" ExcludeAssets="Native;BuildTransitive;ContentFiles" PrivateAssets="None" /> -->
     <PackageReference Include="Dgmjr.Enumerations.Enumeration" />
     <PackageReference Include="Dgmjr.Enumerations.Abstractions" />
     <PackageReference Include="Dgmjr.Primitives" />
