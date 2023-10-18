@@ -37,7 +37,7 @@
     <PackageReference Include="XUnit.Usings" />
     <PackageReference Include="xunit" />
 
-    <ProjectReference Include="../src/Dgmjr.Enumerations.CodeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" IncludeAssets="Analyzers;Build" ExcludeAssets="Native;BuildTransitive;ContentFiles" PrivateAssets="All" />
+    <ProjectReference Include="../src/Dgmjr.Enumerations.CodeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" IncludeAssets="Analyzers;Build;Compile;Runtime" ExcludeAssets="Native;BuildTransitive;ContentFiles" PrivateAssets="All" />
 
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" />
     <UsingsPackageReference Include="MSBuild.Usings" />

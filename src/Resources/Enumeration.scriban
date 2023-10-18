@@ -7,20 +7,18 @@ using System.Text;
 using static System.StringComparison;
 
 {{ compiler_generated_attributes }}
-public {%{{ if base_type == "" || base_type == null  }} static {{ end }}%} partial {{ data_structure_type }} {{ dto_type_name }} {%{{ if base_type != "" && base_type != null }} : {{ base_type }}{{ end }}%}
+public {{ if base_type == "" || base_type == null  }} static {{ end }} partial {{ data_structure_type }} {{ dto_type_name }} {{ if base_type != "" && base_type != null }} : {{ base_type }}{{ end }}
 {
     /// <summary>Converts the <paramref name="value"/> to an object of type</summary>
-    public static I{{ dto_type_name }}? FromValue({{ enum_type }} value) => Parse(e => ((IHaveAValue<{{ enum_type }}>)e).Value.Equals(value));
+    public static I{{ dto_type_name }}? FromValue({{ enum_namespace }}.{{ enum_type_name }} value) => Parse(e => ((IHaveAValue<{{ enum_namespace }}.{{ enum_type_name }}>)e).Value.Equals(value));
 
     /// <summary>Converts the <paramref name="value"/> to an object of type <see cref="{{ dto_type_name }}" /></summary>
-    public static I{{ dto_type_name }}? FromValue(object value) => Parse(e => ((IHaveAValue<{{ enum_type }}>)e).Value.Equals(value));
+    public static I{{ dto_type_name }}? FromValue(object value) => Parse(e => ((IHaveAValue<{{ enum_namespace }}.{{ enum_type_name }}>)e).Value.Equals(value));
 
     /// <summary>Retrieves a list of values that are members of the enumeration.</summary>
-    public static {{ enum_type }}[] GetAllValues() =>
+    public static {{ enum_namespace }}.{{ enum_type_name }}[] GetAllValues() =>
       new[] {
-        {{ for field in fields ~}}
-          {{ dto_type_name }}.{{ field.field_name }}.Value {{ if !for.last }}, {{ end }}
-        {{~ end }}
+        {{ fields_values }}
       };
 
     /// <summary>Parses the <paramref name="value"/> to an object of type <see cref="I{{ dto_type_name }}"/>.</summary>
@@ -33,7 +31,7 @@ public {%{{ if base_type == "" || base_type == null  }} static {{ end }}%} parti
     public static I{{ dto_type_name }}? Parse(Func<I{{ dto_type_name }}, bool> matchPredicate)
         => Parse(matchPredicate, true);
 
-    private static I{{ dto_type_name}} Parse(Func<I{{ dto_type_name }}, bool> matchPredicate, bool throwOnNotFound)
+    private static I{{ dto_type_name }} Parse(Func<I{{ dto_type_name }}, bool> matchPredicate, bool throwOnNotFound)
         => GetAll().Where(matchPredicate).SingleOrDefault() ??
             (!throwOnNotFound ? default :
             throw new InvalidCastException($"There was no matching {{ dto_type_name }} found."));
@@ -62,8 +60,6 @@ public {%{{ if base_type == "" || base_type == null  }} static {{ end }}%} parti
     /// <returns>all <see cref="I{{ dto_type_name }}" />s</returns>
     public static IEnumerable<I{{ dto_type_name }}> GetAll() =>
       new[] {
-        {{ for field in fields ~}}
-          {{ dto_type_name }}.{{ field.field_name }}.Instance {{ if !for.last }}, {{ end }}
-        {{~ end }}
+        {{ fields_instances }}
       };
 }

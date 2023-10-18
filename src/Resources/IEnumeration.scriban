@@ -3,10 +3,10 @@ using {{ dto_namespace }};
 
 {{ compiler_generated_attributes }}
 public partial interface I{{ dto_type_name }} :
-  IHaveAName,
+IHaveAName,
     IHaveAValue,
     IHaveAValue<{{ enum_underlying_type }}>,
-    IHaveAValue<{{ enum_type }}>,
+    IHaveAValue<{{ enum_namespace }}.{{ enum_type_name }}>,
     IHaveADescription,
     IHaveAUri,
     IHaveAUriString,
@@ -20,7 +20,7 @@ public partial interface I{{ dto_type_name }} :
     IConvertible,
     IEquatable<{{ enum_underlying_type }}>,
     IEquatable<I{{ dto_type_name }}>
-  {
+{
     new uri Uri { get; }
     int Order { get; }
-  }
+}

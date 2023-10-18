@@ -15,147 +15,284 @@ using System;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Security;
+
 using Microsoft.CodeAnalysis.CSharp;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+
 using Template = Scrib::Scriban.Template;
 
-namespace Dgmjr.Enumerations.CodeGenerator
+namespace Dgmjr.Enumerations.CodeGenerator;
+
+internal static class Constants
 {
-    public static class Constants
+    // Public const fields
+    public const string _g = ".g";
+    public const string _cs = ".cs";
+    public const string _g_cs = _g + _cs;
+    public const string @class = nameof(@class);
+    public const string @global = nameof(@global);
+    public const string @record = nameof(@record);
+    public const string @struct = nameof(@struct);
+    public const string global__ = $"{@global}::";
+    public const string record_class = $"{@record} {@class}";
+    public const string record_struct = $"{@record} {@struct}";
+    public const string scriban = nameof(scriban);
+    public const string Comment = "/* nothing to see here */";
+
+    public const string AssemblyName = ThisAssembly.Project.AssemblyName;
+    public const string AssemblyVersion = ThisAssembly.Info.Version;
+    public const string AttributeFullName = AttributeNamespace + "." + AttributeName;
+    public const string AttributeName = "Enumeration";
+    public const string AttributeNamespace = "Dgmjr.Enumerations";
+    public const string CompilerGeneratedAttributes =
+        $"[System.Runtime.CompilerServices.CompilerGenerated, System.CodeDom.Compiler.GeneratedCode(\"{AssemblyName}\", \"{AssemblyVersion}\")]";
+    public const string Description = nameof(Description);
+    public const string DgmjrAbstractionsNamespace = "Dgmjr.Abstractions";
+    public const string DisplayAttribute = nameof(DisplayAttribute);
+    public const string DisplayName = nameof(DisplayName);
+    public const string Enumeration = nameof(Enumeration);
+    public const string GenerateEnumerationClassAttribute = nameof(
+        GenerateEnumerationClassAttribute
+    );
+    public const string GenerateEnumerationRecordClassAttribute = nameof(
+        GenerateEnumerationRecordClassAttribute
+    );
+    public const string GenerateEnumerationRecordStructAttribute = nameof(
+        GenerateEnumerationRecordStructAttribute
+    );
+    public const string GenerateEnumerationStructAttribute = nameof(
+        GenerateEnumerationStructAttribute
+    );
+    public const string GenerateEnumerationTypeAttributes = nameof(
+        GenerateEnumerationTypeAttributes
+    );
+    public const string GroupName = nameof(GroupName);
+    public const string GuidAttribute = nameof(GuidAttribute);
+    public const string Id = nameof(Id);
+    public const string Name = nameof(Name);
+    public const string NestedEnumerationType = nameof(NestedEnumerationType);
+    public const string Order = nameof(Order);
+    public const string ShortName = nameof(ShortName);
+    public const string SynonymsAttribute = nameof(SynonymsAttribute);
+    public const string System = nameof(System);
+    public const string UriAttribute = nameof(UriAttribute);
+    public const string UriPattern = "urn:publicid:{0}:{1}:{2}";
+    public const string UrlAttribute = nameof(UrlAttribute);
+    public const string Value = nameof(Value);
+    public const string ThisAssemblyName = ThisAssembly.Project.AssemblyName;
+    public const string ThisAssemblyVersion = ThisAssembly.Info.Version;
+
+    // Public static readonly fields
+    public static readonly string[] AttributeClasses =
     {
-        // Public const fields
-        public const string _cs = ".cs";
-        public const string @class = nameof(@class);
-        public const string @global = nameof(@global);
-        public const string @record = nameof(@record);
-        public const string @struct = nameof(@struct);
-        public const string global__ = $"{@global}::";
-        public const string record_class = $"{@record} {@class}";
-        public const string record_struct = $"{@record} {@struct}";
-        public const string scriban = nameof(scriban);
+        GenerateEnumerationClassAttribute,
+        GenerateEnumerationRecordClassAttribute,
+        GenerateEnumerationRecordStructAttribute,
+        GenerateEnumerationStructAttribute
+    };
 
-        public const string AssemblyName = ThisAssembly.Project.AssemblyName;
-        public const string AssemblyVersion = ThisAssembly.Info.Version;
-        public const string AttributeFullName = AttributeNamespace + "." + AttributeName;
-        public const string AttributeName = "Enumeration";
-        public const string AttributeNamespace = "Dgmjr.Enumerations";
-        public const string CompilerGeneratedAttributes =
-            $"[System.Runtime.CompilerServices.CompilerGenerated, System.CodeDom.Compiler.GeneratedCode(\"{AssemblyName}\", \"{AssemblyVersion}\")]";
-        public const string Description = nameof(Description);
-        public const string DgmjrAbstractionsNamespace = "Dgmjr.Abstractions";
-        public const string DisplayAttribute = nameof(DisplayAttribute);
-        public const string DisplayName = nameof(DisplayName);
-        public const string Enumeration = nameof(Enumeration);
-        public const string GenerateEnumerationClassAttribute = nameof(
-            GenerateEnumerationClassAttribute
+    // Header constant
+    private static readonly string Header = typeof(Constants).Assembly.ReadAssemblyResourceAllText(
+        $"{nameof(Header)}.{scriban}"
+    );
+
+    // $$$"""
+    // /*
+    // * <auto-generated>
+    // *     {{ filename }}
+    // *     This file was auto-generated by: {{{ThisAssemblyName}}}
+    // *     Version: {{{ThisAssemblyVersion}}}
+    // *     Generated: {{ timestamp }}
+    // *     Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
+    // * </auto-generated>
+    // */
+
+    // using static System.AttributeTargets;
+    // using static System.Text.RegularExpressions.RegexOptions;
+    // using System;
+    // using System.CodeDom.Compiler;
+    // using System.Collections.Generic;
+    // using System.Diagnostics.CodeAnalysis;
+    // using System.Globalization;
+    // using System.Linq;
+    // using System.Runtime.CompilerServices;
+    // using System.Text;
+    // using System.Text.RegularExpressions;
+    // #if NET7_0_OR_GREATER
+    // using StringSyntax = System.Diagnostics.CodeAnalysis.StringSyntaxAttribute;
+    // #endif
+    // #nullable enable
+
+    // """;
+
+    private static readonly Template HeaderTemplate = Template.Parse(Header);
+
+    private static readonly string GenerateEnumerationTypeAttributeDeclarations =
+        ParseCompilationUnit(
+                typeof(Constants).Assembly
+                    .GetManifestResourceStream(
+                        nameof(GenerateEnumerationTypeAttributeDeclarations) + _cs
+                    )
+                    .ReadToEnd()
+            )
+            .NormalizeWhitespace()
+            .GetText()
+            .ToString();
+
+    private static readonly string EnumerationDeclaration =
+        typeof(Constants).Assembly.ReadAssemblyResourceAllText($"{Enumeration}.{scriban}");
+
+    private static readonly string IEnumerationDeclaration =
+        typeof(Constants).Assembly.ReadAssemblyResourceAllText($"I{Enumeration}.{scriban}");
+
+    // """
+    //     namespace {{ dto_namespace }}.Abstractions;
+    //     using {{ dto_namespace }};
+
+    //     {{ compiler_generated_attributes }}
+    //     public partial interface I{{ dto_type_name }} :
+    //     IHaveAName,
+    //         IHaveAValue,
+    //         IHaveAValue<{{ enum_underlying_type }}>,
+    //         IHaveAValue<{{ enum_namespace }}.{{ enum_type_name }}>,
+    //         IHaveADescription,
+    //         IHaveAUri,
+    //         IHaveAUriString,
+    //         IHaveSynonyms,
+    //         IHaveAShortName,
+    //         IHaveAGuid,
+    //         IHaveAGuidString,
+    //         IHaveADisplayName,
+    //         IIdentifiable,
+    //         IIdentifiable<{{ enum_underlying_type }}>,
+    //         IConvertible,
+    //         IEquatable<{{ enum_underlying_type }}>,
+    //         IEquatable<I{{ dto_type_name }}>
+    //     {
+    //         new uri Uri { get; }
+    //         int Order { get; }
+    //     }
+    //     """;
+
+    private static readonly string NestedEnumerationTypeDeclaration =
+        typeof(Constants).Assembly.ReadAssemblyResourceAllText(
+            $"{NestedEnumerationType}.{scriban}"
         );
-        public const string GenerateEnumerationRecordClassAttribute = nameof(
-            GenerateEnumerationRecordClassAttribute
-        );
-        public const string GenerateEnumerationRecordStructAttribute = nameof(
-            GenerateEnumerationRecordStructAttribute
-        );
-        public const string GenerateEnumerationStructAttribute = nameof(
-            GenerateEnumerationStructAttribute
-        );
-        public const string GenerateEnumerationTypeAttributes = nameof(
-            GenerateEnumerationTypeAttributes
-        );
-        public const string GroupName = nameof(GroupName);
-        public const string GuidAttribute = nameof(GuidAttribute);
-        public const string Id = nameof(Id);
-        public const string Name = nameof(Name);
-        public const string NestedEnumerationType = nameof(NestedEnumerationType);
-        public const string Order = nameof(Order);
-        public const string ShortName = nameof(ShortName);
-        public const string SynonymsAttribute = nameof(SynonymsAttribute);
-        public const string System = nameof(System);
-        public const string UriAttribute = nameof(UriAttribute);
-        public const string UriPattern = "urn:{0}:{1}:{2}";
-        public const string UrlAttribute = nameof(UrlAttribute);
-        public const string Value = nameof(Value);
 
-        // Public static readonly fields
-        public static readonly string[] AttributeClasses =
-        {
-            GenerateEnumerationClassAttribute,
-            GenerateEnumerationRecordClassAttribute,
-            GenerateEnumerationRecordStructAttribute,
-            GenerateEnumerationStructAttribute
-        };
+    private static readonly Template EnumerationDeclarationTemplate = Template.Parse(
+        EnumerationDeclaration,
+        nameof(EnumerationDeclaration)
+    );
 
-        public static readonly Template HeaderTemplate = Template.Parse(Header);
+    private static readonly Template IEnumerationDeclarationTemplate = Template.Parse(
+        IEnumerationDeclaration,
+        nameof(IEnumerationDeclaration)
+    );
 
-        public static readonly string GenerateEnumerationTypeAttributeDeclarations =
-            ParseCompilationUnit(
-                    typeof(Constants).Assembly
-                        .GetManifestResourceStream(
-                            nameof(GenerateEnumerationTypeAttributeDeclarations) + _cs
-                        )
-                        .ReadToEnd()
-                )
-                .NormalizeWhitespace()
-                .GetText()
-                .ToString();
+    private static readonly Template NestedEnumerationTypeDeclarationTemplate = Template.Parse(
+        NestedEnumerationTypeDeclaration,
+        nameof(NestedEnumerationTypeDeclaration)
+    );
 
-        public static readonly string EnumerationDeclaration =
-            typeof(Constants).Assembly.ReadAssemblyResourceAllText($"{Enumeration}.{scriban}");
+    public static string RenderHeader(string filename) => //Comment;
+        HeaderTemplate.Render(new FilenameAndTimestampTuple(filename));
 
-        public static readonly string IEnumerationDeclaration =
-            typeof(Constants).Assembly.ReadAssemblyResourceAllText($"I{Enumeration}.{scriban}");
+    // Header
+    //     .Replace("{{ filename }}", filename)
+    //     .Replace(
+    //         "{{ timestamp }}",
+    //         DateTimeOffset.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.ffffzzzZ")
+    //     );
 
-        public static readonly string NestedEnumerationTypeDeclaration =
-            typeof(Constants).Assembly.ReadAssemblyResourceAllText(
-                $"{NestedEnumerationType}.{scriban}"
+    public static string RenderIEnumerationDeclaration(EnumerationDto e) => //Comment;
+        // IEnumerationDeclarationTemplate.Render(e);
+        IEnumerationDeclaration
+            .Replace("{{ dto_namespace }}", e.DtoNamespace)
+            .Replace("{{ compiler_generated_attributes }}", e.CompilerGeneratedAttributes)
+            .Replace("{{ dto_type_name }}", e.DtoTypeName)
+            .Replace("{{ enum_underlying_type }}", e.EnumUnderlyingType)
+            .Replace("{{ enum_type_name }}", e.EnumTypeName)
+            .Replace("{{ enum_namespace }}", e.EnumNamespace);
+
+    public static string RenderEnumerationDeclaration(EnumerationDto e) => //Comment;
+        // EnumerationDeclarationTemplate.Render(e);
+        EnumerationDeclaration
+            .Replace("{{ dto_namespace }}", e.DtoNamespace)
+            .Replace("{{ compiler_generated_attributes }}", CompilerGeneratedAttributes)
+            .Replace("{{ dto_type_name }}", e.DtoTypeName)
+            .Replace("{{ enum_underlying_type }}", e.EnumUnderlyingType)
+            .Replace("{{ enum_type_name }}", e.EnumTypeName)
+            .Replace("{{ enum_namespace }}", e.EnumNamespace)
+            .Replace("{{ fields_instances }}", e.FieldsInstances)
+            .Replace("{{ fields_values }}", e.FieldsValues)
+            .Replace("{{ data_structure_type }}", e.DataStructureType)
+            .Replace("{{ if base_type == \"\" || base_type == null  }} static {{ end }}", "")
+            .Replace(
+                "{{ if base_type != \"\" && base_type != null }} : {{ base_type }}{{ end }}",
+                e.BaseType is not null ? " : " + e.BaseType : ""
             );
 
-        public static readonly Template EnumerationDeclarationTemplate = Template.Parse(
-            EnumerationDeclaration
-        );
+    // EnumerationDeclarationTemplate.Render(e);
 
-        public static readonly Template IEnumerationDeclarationTemplate = Template.Parse(
-            IEnumerationDeclaration
-        );
+    public static string RenderNestedEnumerationTypeDeclaration(EnumerationFieldDto e) => //Comment;
+        NestedEnumerationTypeDeclarationTemplate.Render(e);
 
-        public static readonly Template NestedEnumerationTypeDeclarationTemplate = Template.Parse(
-            NestedEnumerationTypeDeclaration
-        );
+    // NestedEnumerationTypeDeclaration
+    //     .Replace("{{ dto_namespace }}", e.DtoNamespace)
+    //     .Replace("{{ compiler_generated_attributes }}", CompilerGeneratedAttributes)
+    //     .Replace("{{ dto_type_name }}", e.DtoTypeName)
+    //     .Replace("{{ enum_underlying_type }}", e.EnumUnderlyingType)
+    //     .Replace("{{ enum_type_name }}", e.EnumTypeName)
+    //     .Replace("{{ enum_namespace }}", e.EnumNamespace)
+    //     .Replace("{{ name }}", e.FieldName)
+    //     .Replace("{{ value }}", e.Value)
+    //     .Replace("{{ description }}", e.Description)
+    //     .Replace("{{ uri }}", e.UriString)
+    //     .Replace("{{ id }}", e.Id)
+    //     .Replace("{{ uri_string }}", e.UriString)
+    //     .Replace("{{ synonyms }}", e.Synonyms)
+    //     .Replace("{{ short_name }}", e.ShortName)
+    //     .Replace("{{ guid }}", e.GuidString)
+    //     .Replace("{{ guid_string }}", e.GuidString)
+    //     .Replace("{{ display_name }}", e.DisplayName)
+    //     .Replace("{{ order }}", e.Order.ToString());
 
-        // Header constant
-        public const string Header = $$$"""
-        /*
-         * <auto-generated>
-         *     This code was auto-generated by {{{AssemblyName}}}
-         *     on {{ timestamp }}.
-         *     Changes to this file may cause incorrect
-         *     behavior and will be lost if the code is regenerated.
-         * </auto-generated>
-         */
+    public static string RenderEnumerationTypeAttributeDeclarations() => //Comment;
+        RenderHeader(GenerateEnumerationTypeAttributes + _cs)
+        + GenerateEnumerationTypeAttributeDeclarations;
 
-        using static System.AttributeTargets;
-        using static System.Text.RegularExpressions.RegexOptions;
-        using System;
-        using System.CodeDom.Compiler;
-        using System.Collections.Generic;
-        using System.Diagnostics.CodeAnalysis;
-        using System.Globalization;
-        using System.Linq;
-        using System.Runtime.CompilerServices;
-        using System.Text;
-        using System.Text.RegularExpressions;
-        #if NET7_0_OR_GREATER
-        using StringSyntax = System.Diagnostics.CodeAnalysis.StringSyntaxAttribute;
-        #endif
-        #nullable enable
-        """;
+    /*
+* <auto-generated>
+* {{ filename }}
+* This file was auto-generated by: {{ this_assembly_name }}
+* Version: {{ this_assembly_version }}
+* Generated: {{ timestamp }}
+* Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
+* </auto-generated>
+*/
 
-        public static string HeaderFilledIn(string filename) =>
-            HeaderTemplate.Render(
-                new
-                {
-                    Filename = filename,
-                    Timestamp = DateTimeOffset.Now.ToString("yyyy-mm-ddTHH:mm:ss.ffffzzzZ")
-                }
-            );
-    }
+    // using static System.AttributeTargets;
+    // using static System.Text.RegularExpressions.RegexOptions;
+    // using System;
+    // using System.CodeDom.Compiler;
+    // using System.Collections.Generic;
+    // using System.Diagnostics.CodeAnalysis;
+    // using System.Globalization;
+    // using System.Linq;
+    // using System.Runtime.CompilerServices;
+    // using System.Text;
+    // using System.Text.RegularExpressions;
+    // #if NET7_0_OR_GREATER
+    // using StringSyntax = System.Diagnostics.CodeAnalysis.StringSyntaxAttribute;
+    // #endif
+    // #nullable enable
+    // HeaderTemplate.Render(
+    //     new
+    //     {
+    //         Filename = filename,
+    //         Timestamp = DateTimeOffset.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.ffffzzzZ"),
+    //         ThisAssemblyName,
+    //         ThisAssemblyVersion
+    //     }
+    // );
 }

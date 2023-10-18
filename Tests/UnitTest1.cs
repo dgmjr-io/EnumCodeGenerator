@@ -1,17 +1,17 @@
-namespace Dgmjr.Enumerations.CodeGenerator.Tests;
+using System;
+using System.Collections.Immutable;
+using System.Reflection;
+
+using Microsoft.Build.Locator;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Testing;
+using Microsoft.CodeAnalysis.MSBuild;
+using Microsoft.CodeAnalysis.Testing.Verifiers;
 
 using Dgmjr.CodeGeneration.Testing;
 
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Testing;
-using Microsoft.CodeAnalysis.Testing.Verifiers;
-
-using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
-using System;
-using System.Reflection;
-using Microsoft.Build.Locator;
-using Microsoft.CodeAnalysis.MSBuild;
+namespace Dgmjr.Enumerations.CodeGenerator.Tests;
 
 public abstract class CSharpSourceGeneratorVerifier<TSourceGenerator>
     where TSourceGenerator : IIncrementalGenerator, new()
@@ -76,4 +76,4 @@ public abstract class CSharpSourceGeneratorVerifier<TSourceGenerator>
         );
 }
 
-public class EnumSourceGeneratorTest : CSharpSourceGeneratorVerifier<EnumDataStructureGenerator> { }
+public class EnumSourceGeneratorTest : CSharpSourceGeneratorVerifier<EnumerationGenerator> { }

@@ -28,7 +28,7 @@ using static Constants;
 
 using Dgmjr.Enumerations.CodeGenerator;
 
-public record struct EnumerationDto(
+internal record struct EnumerationDto(
     INamedTypeSymbol EnumType,
     string DtoTypeName,
     string DtoNamespace,
@@ -36,38 +36,53 @@ public record struct EnumerationDto(
 )
 {
     public readonly string? BaseType =>
-        DataStructureType.Contains(@struct) && BaseTypeType.IsClass
+        DataStructureType.Contains(@struct) && (BaseTypeType?.IsClass ?? false)
             ? throw new InvalidDataException(
                 "The enumeration data structure must be a class to support inheritance."
             )
             : BaseTypeType?.FullName;
-    public const string CompilerGeneratedAttributes = Constants.CompilerGeneratedAttributes;
+    public readonly string CompilerGeneratedAttributes => Constants.CompilerGeneratedAttributes;
     public readonly string EnumTypeName => EnumType.MetadataName;
     public readonly string EnumNamespace => EnumType.ContainingNamespace.MetadataName;
-    public readonly string EnumUnderlyingType => EnumType.EnumUnderlyingType.MetadataName;
+    public readonly string EnumUnderlyingType => EnumType.EnumUnderlyingType?.MetadataName ?? "int";
+    public readonly string FieldsInstances
+    {
+        get
+        {
+            var @this = this;
+            return Join(
+                ", ",
+                @this.Fields.Select(f => $"{@this.DtoTypeName}.{f.FieldName}.Instance")
+            );
+        }
+    }
+    public readonly string FieldsValues
+    {
+        get
+        {
+            var @this = this;
+            return Join(", ", @this.Fields.Select(f => $"{@this.DtoTypeName}.{f.FieldName}.Value"));
+        }
+    }
     public readonly DateTimeOffset Timestamp = DateTimeOffset.Now;
-    public string Author { get; set; } = "Unattributed";
-    public string LicenseExpression { get; set; } = "Unlicense";
-    public readonly string LicenseUrl => $"https://opensource.org/license/{LicenseExpression}";
     public readonly string DataStructureType =>
         EnumType
             .GetAttributes()
             .Select(
                 a =>
-                    a.AttributeClass.Name == GenerateEnumerationRecordStructAttribute
+                    a.AttributeClass?.Name == GenerateEnumerationRecordStructAttribute
                         ? record_struct
-                        : a.AttributeClass.Name == GenerateEnumerationRecordClassAttribute
+                        : a.AttributeClass?.Name == GenerateEnumerationRecordClassAttribute
                             ? record_class
-                            : a.AttributeClass.Name == GenerateEnumerationClassAttribute
+                            : a.AttributeClass?.Name == GenerateEnumerationClassAttribute
                                 ? @class
-                                : a.AttributeClass.Name == GenerateEnumerationStructAttribute
+                                : a.AttributeClass?.Name == GenerateEnumerationStructAttribute
                                     ? @struct
                                     : null
             )
             .WhereNotNull()
             .FirstOrDefault();
 
-#pragma warning disable S2365
     public readonly EnumerationFieldDto[] Fields
     {
         get
@@ -83,13 +98,12 @@ public record struct EnumerationDto(
                             @this.DataStructureType,
                             @this.DtoTypeName,
                             @this.DtoNamespace,
-                            @this.EnumType.EnumUnderlyingType.MetadataName,
-                            @this.EnumType.MetadataName,
+                            @this.EnumType?.EnumUnderlyingType?.MetadataName ?? "int",
+                            @this.EnumType?.MetadataName,
                             @this.BaseType
                         )
                 )
                 .ToArray();
         }
     }
-#pragma warning restore
 }

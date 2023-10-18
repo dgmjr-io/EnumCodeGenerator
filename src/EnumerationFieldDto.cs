@@ -18,7 +18,7 @@ using System.Text.Json;
 
 using static Constants;
 
-public record struct EnumerationFieldDto(
+internal record struct EnumerationFieldDto(
     IFieldSymbol EnumSymbol,
     string DataStructureType,
     string DtoTypeName,
@@ -34,7 +34,7 @@ public record struct EnumerationFieldDto(
     public readonly string EnumTypeName => EnumType;
     public readonly string EnumerationName => DtoTypeName;
     public readonly string EnumNamespace => EnumSymbol.Type.ContainingNamespace.ToDisplayString();
-    public readonly object? Value => EnumSymbol.ConstantValue?.ToString();
+    public readonly string? Value => EnumSymbol.ConstantValue?.ToString();
     private readonly AttributeData? DisplayAttribute =>
         EnumSymbol
             .GetAttributes()
@@ -105,7 +105,7 @@ public record struct EnumerationFieldDto(
             ", ",
             (
                 SynonymsAttribute?.ConstructorArguments.FirstOrDefault().Value as string[]
-                ?? Array.Empty<string>()
+                ?? Empty<string>()
             )?.Select(s => $"\"{s}\"")
         );
 
