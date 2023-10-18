@@ -1,7 +1,7 @@
 namespace System.Net.Http.Enums;
 
 [GenerateEnumerationRecordStructAttribute("HttpMethods", "System.Net.Http"), Flags]
-public enum HttpMethod : byte
+public enum HttpMethod : sbyte
 {
     None = 0,
     Get = 1,

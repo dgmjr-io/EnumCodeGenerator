@@ -17,6 +17,9 @@
     <IncludeInSolutionFile>true</IncludeInSolutionFile>
     <WarningsAsErrors>$(WarningsAsErrors);CS8785</WarningsAsErrors>
     <CopyLocalLockFileAssembples>true</CopyLocalLockFileAssembples>
+    <NoWarn>$(NoWarn);CS0105;CS9113</NoWarn>
+    <IsNuGetized>false</IsNuGetized>
+    <Description>Samples for the DGMJR Enumeration data structure generator</Description>
   </PropertyGroup>
   <ItemGroup>
     <SourceGeneratorPackageReference Include="Dgmjr.Enumerations.CodeGenerator" />
