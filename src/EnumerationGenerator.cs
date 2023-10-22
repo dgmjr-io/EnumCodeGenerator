@@ -66,8 +66,7 @@ public class EnumerationGenerator : IIncrementalGenerator, ILog
 
         using (
             _logger = (
-                new LoggerProvider(context).CreateLogger<EnumerationGenerator>()
-                as IDisposable
+                new LoggerProvider(context).CreateLogger<EnumerationGenerator>() as IDisposable
             )!
         )
         {
@@ -209,6 +208,7 @@ public class EnumerationGenerator : IIncrementalGenerator, ILog
                 dataStructureType,
                 baseType
             );
+            fileName = $"{dtoTypeName}.g.cs";
             context.AddSource(
                 fileName,
                 $"""
@@ -234,7 +234,8 @@ public class EnumerationGenerator : IIncrementalGenerator, ILog
                     fieldName,
                     fieldValue,
                     dataStructureType,
-                    dtoNamespace
+                    dtoNamespace,
+                    baseType
                 );
 
                 fileName = $"{dtoTypeName}.{fieldName}.g.cs";
@@ -286,7 +287,8 @@ public class EnumerationGenerator : IIncrementalGenerator, ILog
         string fieldName,
         object fieldValue,
         string dataStructureType,
-        string dtoNamespace
+        string dtoNamespace,
+        type? baseType = default
     )
     {
         Logger?.LogInformation($"Generating nested class for {enumSymbol.Name}.{fieldValue}");
@@ -299,7 +301,8 @@ public class EnumerationGenerator : IIncrementalGenerator, ILog
                     dtoTypeName,
                     dtoNamespace,
                     enumSymbol.EnumUnderlyingType.ToDisplayString(),
-                    enumSymbol.MetadataName
+                    enumSymbol.MetadataName,
+                    baseType
                 )
             )
         );

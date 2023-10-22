@@ -11,23 +11,35 @@
  */
 namespace System;
 
-[GenerateEnumerationRecordClass]
+[GenerateEnumerationRecordClass("YesNoIdc", "System", typeof(YesNo))]
 public enum YesNoIdcEnum
 {
     /// <summary>I  don't care</summary>
-    [Display(Name = "I don't care", ShortName = "IDC", Description = "I don't care", Prompt = "Yes/No/IDC?")]
+    [Display(
+        Name = "I don't care",
+        ShortName = "IDC",
+        Description = "I don't care",
+        Prompt = "Yes/No/IDC?"
+    )]
     Idc = -1,
+
     /// <summary>I don't give a fuck</summary>
-    [Display(Name = "I don't give a fuck", ShortName = "IDGAF", Description = "I don't give a fuck", Prompt = "Yes/No/IDC?")]
+    [Display(
+        Name = "I don't give a fuck",
+        ShortName = "IDGAF",
+        Description = "I don't give a fuck",
+        Prompt = "Yes/No/IDC?"
+    )]
     Idgaf = Idc,
 }
 
-[GenerateEnumerationRecordClass]
+[GenerateEnumerationRecordClass("YesNo", "System")]
 public enum YesNoEnum
 {
     /// <summary>No, negative, nope, false, etc.</summary>
     [Display(Name = "No", ShortName = "No", Description = "Negative", Prompt = "Yes or no?")]
     No = 0,
+
     /// <summary>Yes, affirmative, yep, true, etc.</summary>
     [Display(Name = "Yes", ShortName = "Yes", Description = "Affirmative", Prompt = "Yes or no?")]
     Yes = 1,
@@ -37,12 +49,18 @@ public enum YesNoEnum
 public partial record class YesNo
 {
     // public YesNo() : this((YesNoEnum)No.Id) { }
-    public static implicit operator YesNo(YesNoEnum value) => FromValue(value);
+    public static implicit operator YesNo(YesNoEnum value) => FromValue(value) as YesNo;
+
+    // public static implicit operator YesNo(YesNoIdc yesNoIdc) => yesNoIdc.
 }
 
-[Display(Name = "Yes/No/IDC", ShortName = "Yes/No/IDC", Description = "Yes/No/IDC", Prompt = "Yes/No/IDC?")]
+[Display(
+    Name = "Yes/No/IDC",
+    ShortName = "Yes/No/IDC",
+    Description = "Yes/No/IDC",
+    Prompt = "Yes/No/IDC?"
+)]
 public partial record class YesNoIdc : YesNo
 {
     // public YesNoIdc() : base() { }
-
 }

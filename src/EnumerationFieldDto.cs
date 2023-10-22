@@ -25,16 +25,20 @@ internal record struct EnumerationFieldDto(
     string DtoNamespace,
     string EnumUnderlyingType,
     string EnumType,
-    string? BaseType = default
+    type? BaseTypeType = default
 )
 {
     private static readonly MD5 MD5 = MD5.Create();
 
     public const string CompilerGeneratedAttributes = Constants.CompilerGeneratedAttributes;
+    public readonly string BaseType =>
+        IsClass ? (BaseTypeType?.FullName ?? string.Empty) : string.Empty;
     public readonly string EnumTypeName => EnumType;
     public readonly string EnumerationName => DtoTypeName;
     public readonly string EnumNamespace => EnumSymbol.Type.ContainingNamespace.ToDisplayString();
     public readonly string? Value => EnumSymbol.ConstantValue?.ToString();
+    public readonly bool IsRecord => DataStructureType.Contains(@record, OrdinalIgnoreCase);
+    public readonly bool IsClass => DataStructureType.Contains(@class, OrdinalIgnoreCase);
     private readonly AttributeData? DisplayAttribute =>
         EnumSymbol
             .GetAttributes()

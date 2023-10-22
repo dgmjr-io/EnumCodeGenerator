@@ -88,6 +88,7 @@ internal record struct EnumerationDto(
         get
         {
             var @this = this;
+#pragma warning disable S2365
             return EnumType
                 .GetMembers()
                 .OfType<IFieldSymbol>()
@@ -99,11 +100,11 @@ internal record struct EnumerationDto(
                             @this.DtoTypeName,
                             @this.DtoNamespace,
                             @this.EnumType?.EnumUnderlyingType?.MetadataName ?? "int",
-                            @this.EnumType?.MetadataName,
-                            @this.BaseType
+                            @this.EnumType?.MetadataName
                         )
                 )
                 .ToArray();
+#pragma warning restore S2365
         }
     }
 }

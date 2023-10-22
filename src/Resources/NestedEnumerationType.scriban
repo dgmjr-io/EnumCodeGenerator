@@ -1,10 +1,12 @@
 namespace {{ dto_namespace }};
 using {{ dto_namespace }}.Abstractions;
 
-public partial {{ data_structure_type }} {{ dto_type_name }} {{ if base_type != "" && base_type != null }} : {{ base_type }}{{ end }}
+public partial {{ data_structure_type }} @{{ dto_type_name }} {{ if base_type != "" && base_type != null }} : {{ base_type }}{{ end }}
 {
+  /// <summary>{{ description }}</summary>
+  /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" /><value>
   {{ compiler_generated_attributes }}
-  public partial {{ data_structure_type }} {{ field_name }} :
+  public partial {{ data_structure_type }} @{{ field_name }} :
       {{ if base_type != "" && base_type != null }}{{ dto_type_name }}, {{ end }}
       I{{ enumeration_name }},
       IHaveAName,
@@ -13,6 +15,7 @@ public partial {{ data_structure_type }} {{ dto_type_name }} {{ if base_type != 
       IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>,
       IHaveADescription,
       IHaveAUri,
+      IHaveAuri,
       IHaveAUriString,
       IHaveSynonyms,
       IHaveAShortName,
@@ -126,7 +129,7 @@ public partial {{ data_structure_type }} {{ dto_type_name }} {{ if base_type != 
 
       /// <summary>The {{ enumeration_name }}'s URI</summary>
       /// <value>{{ uri_string }}</value>
-      uri I{{ dto_type_name }}.Uri => uri.From(Uri.ToString());
+      System.uri IHaveAuri.Uri => System.uri.From(Uri.ToString());
 
       /// <summary>The order in which the {{ enumeration_name }} should appear</summary>
       /// <value>{{ order }}</value>
@@ -135,16 +138,7 @@ public partial {{ data_structure_type }} {{ dto_type_name }} {{ if base_type != 
 
       /// <summary>The {{ enumeration_name }}'s URI</summary>
       /// <value>{{ uri_string }}</value>
-      string IHaveAUriString.UriString => UriString;
-
-      /// <summary>The {{ enumeration_name }}'s URI</summary>
-      /// <value>{{ uri_string }}</value>
       uri I{{ dto_type_name }}.Uri => uri.From(Uri.ToString());
-
-      /// <summary>The order in which the {{ enumeration_name }} should appear</summary>
-      /// <value>{{ order }}</value>
-      /// <default>0</default>
-      int I{{ enumeration_name }}.Order => Order;
 
       /// <summary>The {{ enumeration_name }}'s Id as an <see langword="object" /></summary>
       /// <value>{{ id }}</value>
@@ -273,5 +267,9 @@ public partial {{ data_structure_type }} {{ dto_type_name }} {{ if base_type != 
 
       /// <summary>An instance of the {{ enumeration_name }} as an I{{ enumeration_name }}</summary>
       public static readonly I{{ enumeration_name }} Instance = new {{ field_name }}();
+
+      {{ if !is_record }}
+      public {{ if is_class }}override{{ end }} bool Equals(object other) => other is IHaveAValue<{{ enum_namespace }}.{{ enum_type }}> ihav ? this == ihav : false;
+      {{ end }}
   }
 }
