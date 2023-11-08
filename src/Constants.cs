@@ -1,3 +1,4 @@
+using System.Reflection.PortableExecutable;
 /*
  * Constants.cs
  *
@@ -51,6 +52,7 @@ internal static class Constants
     public const string DisplayAttribute = nameof(DisplayAttribute);
     public const string DisplayName = nameof(DisplayName);
     public const string Enumeration = nameof(Enumeration);
+    public const string EnumerationJsonConverter = nameof(EnumerationJsonConverter);
     public const string GenerateEnumerationClassAttribute = nameof(
         GenerateEnumerationClassAttribute
     );
@@ -144,6 +146,10 @@ internal static class Constants
 
     private static readonly string IEnumerationDeclaration =
         typeof(Constants).Assembly.ReadAssemblyResourceAllText($"I{Enumeration}.{scriban}");
+    private static readonly string EnumerationJsonConverterDeclaration =
+        typeof(Constants).Assembly.ReadAssemblyResourceAllText(
+            $"{EnumerationJsonConverter}.{scriban}"
+        );
 
     // """
     //     namespace {{ dto_namespace }}.Abstractions;
@@ -194,6 +200,10 @@ internal static class Constants
         nameof(NestedEnumerationTypeDeclaration)
     );
 
+    private static readonly Template EnumerationJsonConverterDeclarationTemplate = Template.Parse(
+        EnumerationJsonConverterDeclaration
+    );
+
     public static string RenderHeader(string filename) => //Comment;
         HeaderTemplate.Render(new FilenameAndTimestampTuple(filename));
 
@@ -203,6 +213,10 @@ internal static class Constants
     //         "{{ timestamp }}",
     //         DateTimeOffset.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.ffffzzzZ")
     //     );
+
+    public static string RenderJsonConverterDeclaration(EnumerationFieldDto e) => //Comment;
+        // IEnumerationDeclarationTemplate.Render(e);
+        EnumerationJsonConverterDeclarationTemplate.Render(e);
 
     public static string RenderIEnumerationDeclaration(EnumerationDto e) => //Comment;
         // IEnumerationDeclarationTemplate.Render(e);

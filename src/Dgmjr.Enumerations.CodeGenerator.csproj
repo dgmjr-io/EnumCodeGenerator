@@ -18,6 +18,7 @@
     <Description>This package contains a source generator, which generates enumeration data structures from enum types.</Description>
     <IsRoslynComponent>true</IsRoslynComponent>
     <NoWarn>$(NoWarn);S3903;RCS1110;S3604</NoWarn>
+    <ProjectGuid>C4622771-2A7B-42E6-9B3C-8F71CDD7E65B</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
     <!-- <PackageReference Include="Dgmjr.CodeGeneration.Logging" /> -->
@@ -34,7 +35,7 @@
     <PackageReference Include="Scriban.Signed" Aliases="Scrib" />
     <PackageReference Include="ThisAssembly.AssemblyInfo" />
     <PackageReference Include="ThisAssembly.Project" />
-    <UsingsPackageReference Include="System.Text.Json.Usings" />
+    <PackageReference Include="System.Text.Json.Usings" IncludeAssets="Build;BuildTransitive;BuildMultitargeting;Runtime;Compile" ExcludeAssets="ContentFiles;Native;Analyzers" PrivateAssets="None" />
   </ItemGroup>
 
   <ItemGroup>

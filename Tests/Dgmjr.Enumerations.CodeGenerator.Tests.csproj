@@ -19,6 +19,7 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <ProjectGuid>8037C3AA-FC4B-4379-8C4E-0517FC90E94E</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,7 +41,7 @@
     <ProjectReference Include="../src/Dgmjr.Enumerations.CodeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" IncludeAssets="Analyzers;Build;Compile;Runtime" ExcludeAssets="Native;BuildTransitive;ContentFiles" PrivateAssets="All" />
 
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" />
-    <UsingsPackageReference Include="MSBuild.Usings" />
+    <PackageReference Include="MSBuild.Usings" IncludeAssets="Build;BuildTransitive;BuildMultitargeting;Runtime;Compile" ExcludeAssets="ContentFiles;Native;Analyzers" PrivateAssets="None" />
     <!-- <ProjectReference Include="../src/Runtime/Dgmjr.Enumerations.CodeGenerator.Runtime.csproj" Targets="Restore;Build" /> -->
   </ItemGroup>
 

@@ -6,27 +6,10 @@ public partial {{ data_structure_type }} @{{ dto_type_name }} {{ if base_type !=
   /// <summary>{{ description }}</summary>
   /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" /><value>
   {{ compiler_generated_attributes }}
+  [{{ field_name }}JsonConverterAttribute]
   public partial {{ data_structure_type }} @{{ field_name }} :
       {{ if base_type != "" && base_type != null }}{{ dto_type_name }}, {{ end }}
-      I{{ enumeration_name }},
-      IHaveAName,
-      IHaveAValue,
-      IHaveAValue<{{ enum_underlying_type }}>,
-      IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>,
-      IHaveADescription,
-      IHaveAUri,
-      IHaveAuri,
-      IHaveAUriString,
-      IHaveSynonyms,
-      IHaveAShortName,
-      IHaveAGuid,
-      IHaveAGuidString,
-      IHaveADisplayName,
-      IIdentifiable,
-      IIdentifiable<{{ enum_underlying_type }}>,
-      IConvertible,
-      IEquatable<{{ enum_underlying_type }}>,
-      IEquatable<I{{ dto_type_name }}>
+      I{{ enumeration_name }}
   {
       /// <summary>The {{ enumeration_name }}'s value</summary>
       /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" /></value>
@@ -79,80 +62,98 @@ public partial {{ data_structure_type }} @{{ dto_type_name }} {{ if base_type !=
 
       /// <summary>The {{ enumeration_name }}'s synonyms</summary>
       /// <value>{{ synonyms }}</value>
+      [JsonIgnore, XmlIgnore]
       public static readonly string[] Synonyms = new string[] {
         {{ synonyms }}
       };
 
       /// <summary>The {{ enumeration_name }}'s value</summary>
       /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" /></value>
+      [JsonIgnore, XmlIgnore]
       {{ enum_namespace }}.{{ enum_type }} IHaveAValue<{{ enum_namespace }}.{{ enum_type }}>.Value => Value;
 
       /// <summary>The {{ enumeration_name }}'s value as a(n) <see langword="{{ enum_underlying_type }}" /></summary>
       /// <value>{{ id }}</value>
+      [JsonIgnore, XmlIgnore]
       {{ enum_underlying_type }} IHaveAValue<{{ enum_underlying_type }}>.Value => Id;
 
       /// <summary>The {{ enumeration_name }}'s GUID</summary>
       /// <value>{{ guid_string }}</value>
+      [JsonIgnore, XmlIgnore]
       guid IHaveAGuid.Guid => Guid;
 
       /// <summary>The {{ enumeration_name }}'s GUID</summary>
       /// <value>{{ guid_string }}</value>
+      [JsonIgnore, XmlIgnore]
       string IHaveAGuidString.GuidString => GuidString;
 
       /// <summary>The {{ enumeration_name }}'s display name</summary>
       /// <value>{{ display_name }}</value>
+      [JsonIgnore, XmlIgnore]
       string IHaveADisplayName.DisplayName => DisplayName;
 
       /// <summary>The {{ enumeration_name }}'s value</summary>
       /// <value><see cref="{{ enum_namespace }}.{{ enum_type }}.{{ field_name }}" /><value>
+      [JsonIgnore, XmlIgnore]
       object IHaveAValue.Value => Value;
 
       /// <summary>A short description of the {{ enumeration_name }}</summary>
       /// <value>{{ description }}</value>
+      [JsonIgnore, XmlIgnore]
       string IHaveADescription.Description => Description;
 
       /// <summary>The {{ enumeration_name }}'s name</summary>
       /// <value>{{ field_name }}</value>
+      [JsonIgnore, XmlIgnore]
       string IHaveAName.Name => Name;
 
       /// <summary>The {{ enumeration_name }}'s short name</summary>
       /// <value>{{ short_name }}</value>
+      [JsonIgnore, XmlIgnore]
       string IHaveAShortName.ShortName => ShortName;
 
       /// <summary>The {{ enumeration_name }}'s URI</summary>
       /// <value>{{ uri_string }}</value>
+      [JsonIgnore, XmlIgnore]
       Uri IHaveAUri.Uri => Uri;
 
       /// <summary>The {{ enumeration_name }}'s URI</summary>
       /// <value>{{ uri_string }}</value>
+      [JsonIgnore, XmlIgnore]
       string IHaveAUriString.UriString => UriString;
 
       /// <summary>The {{ enumeration_name }}'s URI</summary>
       /// <value>{{ uri_string }}</value>
+      [JsonIgnore, XmlIgnore]
       System.uri IHaveAuri.Uri => System.uri.From(Uri.ToString());
 
       /// <summary>The order in which the {{ enumeration_name }} should appear</summary>
       /// <value>{{ order }}</value>
       /// <default>0</default>
+      [JsonIgnore, XmlIgnore]
       int I{{ enumeration_name }}.Order => Order;
 
       /// <summary>The {{ enumeration_name }}'s URI</summary>
       /// <value>{{ uri_string }}</value>
+      [JsonIgnore, XmlIgnore]
       uri I{{ dto_type_name }}.Uri => uri.From(Uri.ToString());
 
       /// <summary>The {{ enumeration_name }}'s Id as an <see langword="object" /></summary>
       /// <value>{{ id }}</value>
+      [JsonIgnore, XmlIgnore]
       object IIdentifiable.Id => Id;
 
       /// <summary>The {{ enumeration_name }}'s Id as a(n) <see langword="{{ enum_underlying_type }}" /></summary>
       /// <value>{{ id }}</value>
+      [JsonIgnore, XmlIgnore]
       {{ enum_underlying_type }} IIdentifiable<{{ enum_underlying_type }}>.Id => Id;
 
       /// <summary>The {{ enumeration_name }}'s synonyms</summary>
       /// <value>{{ synonyms }}</value>
+      [JsonIgnore, XmlIgnore]
       string[]  IHaveSynonyms.Synonyms { get => Synonyms; init { } }
 
-      bool IEquatable<I{{ enumeration_name }}>.Equals(I{{ enumeration_name }} value)
+      bool IEquatable<I{{ enumeration_name }}>.Equals(I{{ enumeration_name }}? value)
         => this == value;
 
         bool IEquatable<{{ enum_underlying_type }}>.Equals({{ enum_underlying_type }} value)

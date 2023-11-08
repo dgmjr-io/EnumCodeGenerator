@@ -246,6 +246,27 @@ public class EnumerationGenerator : IIncrementalGenerator, ILog
                     {nestedClassDeclaration.NormalizeWhitespace().GetText()}
                     """
                 );
+                // Generate the nested class declaration
+                var jsonConverterDeclaration = RenderJsonConverterDeclaration(
+                    new EnumerationFieldDto(
+                        enumSymbol.GetMembers(fieldName).OfType<IFieldSymbol>().FirstOrDefault(),
+                        dataStructureType,
+                        dtoTypeName,
+                        dtoNamespace,
+                        enumSymbol.EnumUnderlyingType.ToDisplayString(),
+                        enumSymbol.MetadataName,
+                        baseType
+                    )
+                );
+
+                fileName = $"{dtoTypeName}.{fieldName}JsonConverter.g.cs";
+                context.AddSource(
+                    fileName,
+                    $"""
+                    {RenderHeader(fileName)}
+                    {ParseCompilationUnit(jsonConverterDeclaration).NormalizeWhitespace().GetText()}
+                    """
+                );
             }
         }
     }

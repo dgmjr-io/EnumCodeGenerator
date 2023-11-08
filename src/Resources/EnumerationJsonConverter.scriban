@@ -1,0 +1,31 @@
+namespace {{ dto_namespace }};
+using {{ dto_namespace }}.Abstractions;
+
+public partial {{ data_structure_type }} @{{ dto_type_name }}
+{
+  {{ compiler_generated_attributes }}
+  public class {{ field_name }}JsonConverter : System.Text.Json.Serialization.JsonConverter<I{{ dto_type_name }}>
+  {
+      public override bool CanConvert(type typeToConvert) =>
+          typeof(I{{ dto_type_name }}).IsAssignableFrom(typeToConvert);
+
+      public override I{{ dto_type_name }} Read(
+          ref Utf8JsonReader reader,
+          type typeToConvert,
+          JsonSerializerOptions options
+      ) =>
+        @{{ dto_type_name }}.Parse(
+              reader.TokenType == JsonTokenType.String
+                  ? reader.GetString()
+                  : reader.GetInt32().ToString()
+          );
+
+      public override void Write(Utf8JsonWriter writer, I{{ dto_type_name }} value, Jso options) =>
+          writer.WriteStringValue(value.ShortName);
+  }
+
+  public class {{ field_name }}JsonConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
+  {
+      public {{ field_name }}JsonConverterAttribute() : base(typeof({{ field_name }}JsonConverter)) { }
+  }
+}
