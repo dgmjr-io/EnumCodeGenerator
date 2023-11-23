@@ -128,11 +128,11 @@ public class EnumerationsGeneratorLogger : ILogger, IDisposable
                 _context.RegisterPostInitializationOutput(
                     ctx => ctx.AddSource("log.g.cs", GetLogs())
                 );
-                new FileInfo(
-                    Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "log.g.txt")
-                )
-                    .CreateText()
-                    .Write(GetLogs());
+                // new FileInfo(
+                //     Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "log.g.txt")
+                // )
+                //     .CreateText()
+                //     .Write(GetLogs());
             }
             disposedValue = true;
         }

@@ -1,4 +1,3 @@
-using System.Reflection.PortableExecutable;
 /*
  * Constants.cs
  *
