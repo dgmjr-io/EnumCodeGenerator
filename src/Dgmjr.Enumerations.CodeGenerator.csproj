@@ -30,12 +30,12 @@
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" />
-    <PackageReference Include="Microsoft.Extensions.Logging." />
     <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="Scriban.Signed" Aliases="Scrib" />
     <PackageReference Include="ThisAssembly.AssemblyInfo" />
     <PackageReference Include="ThisAssembly.Project" />
     <PackageReference Include="System.Text.Json.Usings" IncludeAssets="Build;BuildTransitive;BuildMultitargeting;Runtime;Compile" ExcludeAssets="ContentFiles;Native;Analyzers" PrivateAssets="None" />
+    <PackageReference Include="System.Private.CoreLib.Polyfills" IncludeAssets="ContentFiles;Build;BuildTransitive;BuildMultitargeting" ExcludeAssets="Analyzers;Runtime;Native" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

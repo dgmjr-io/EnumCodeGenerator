@@ -35,18 +35,18 @@ internal sealed class GenerateEnumerationStructAttribute(
 internal sealed class GenerateEnumerationRecordClassAttribute(
     string? typeName = default,
     string? @namespace = default,
-    type? baseType = default
+    Type? baseType = default
 ) : GenerateEnumerationTypeAttribute(typeName, @namespace)
 {
-    public type? BaseType { get; } = baseType;
+    public Type? BaseType { get; } = baseType;
 }
 
 [AttributeUsage(Class | Struct | ATargets.Enum)]
 internal sealed class GenerateEnumerationClassAttribute(
     string? typeName = default,
     string? @namespace = default,
-    type? baseType = default
+    Type? baseType = default
 ) : GenerateEnumerationTypeAttribute(typeName, @namespace)
 {
-    public type? BaseType { get; } = baseType;
+    public Type? BaseType { get; } = baseType;
 }

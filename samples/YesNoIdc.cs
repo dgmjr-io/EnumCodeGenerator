@@ -49,7 +49,7 @@ public enum YesNoEnum
 public partial record class YesNo
 {
     // public YesNo() : this((YesNoEnum)No.Id) { }
-    public static implicit operator YesNo(YesNoEnum value) => FromValue(value) as YesNo;
+    public static implicit operator YesNo?(YesNoEnum value) => FromValue(value) as YesNo;
 
     // public static implicit operator YesNo(YesNoIdc yesNoIdc) => yesNoIdc.
 }

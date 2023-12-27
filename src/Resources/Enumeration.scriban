@@ -24,14 +24,14 @@ public {{ if base_type == "" || base_type == null  }} static {{ end }} partial {
     /// <summary>Parses the <paramref name="value"/> to an object of type <see cref="I{{ dto_type_name }}"/>.</summary>
     /// <exception cref="InvalidCastException">if no matching item was found</exception>
     public static I{{ dto_type_name }} Parse(string value)
-        => Parse(e => e.Name == value || e.DisplayName == value || e.GuidString == value || e.UriString == value || e.ShortName == value);
+        => Parse(e => e.Name == value || e.DisplayName == value || e.GuidString == value || e.UriString == value || e.ShortName == value)!;
 
     /// <summary>Uses the predicate the <paramref name="matchPredicate"/> to find an object of type <see cref="I{{ dto_type_name }}"/>.</summary>
     /// <exception cref="InvalidCastException">if no matching item was found</exception>
-    public static I{{ dto_type_name }} Parse(Func<I{{ dto_type_name }}, bool> matchPredicate)
+    public static I{{ dto_type_name }}? Parse(Func<I{{ dto_type_name }}, bool> matchPredicate)
         => Parse(matchPredicate, true);
 
-    private static I{{ dto_type_name }} Parse(Func<I{{ dto_type_name }}, bool> matchPredicate, bool throwOnNotFound)
+    private static I{{ dto_type_name }}? Parse(Func<I{{ dto_type_name }}, bool> matchPredicate, bool throwOnNotFound = true)
         => GetAll().Where(matchPredicate).SingleOrDefault() ??
             (!throwOnNotFound ? default :
             throw new InvalidCastException($"There was no matching {{ dto_type_name }} found."));
