@@ -23,6 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Dgmjr.Enumerations.CodeGenerator" IncludeAssets="Analyzers;Build" ExcludeAssets="Native;BuildTransitive;BuildMultitargeting;ContentFiles;Compile;Runtime" PrivateAssets="All" />
+    <PackageReference Include="Dgmjr.Enumerations.CodeGenerator.Runtime" />
     <!-- <PackageReference Include="Dgmjr.Enumerations.CodeGenerator" IncludeAssets="Analyzers;Build" ExcludeAssets="Native;BuildTransitive;ContentFiles" PrivateAssets="All" /> -->
     <!-- <ProjectReference Include="../src/Dgmjr.Enumerations.CodeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" IncludeAssets="Analyzers;Build" ExcludeAssets="Native;BuildTransitive;ContentFiles" PrivateAssets="None" /> -->
     <PackageReference Include="Dgmjr.Enumerations.Enumeration" />

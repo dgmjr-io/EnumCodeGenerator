@@ -1,37 +1,31 @@
 using System;
-using static System.AttributeTargets;
 
-using ATargets = System.AttributeTargets;
+using Targets = System.AttributeTargets;
+using UsageAttribute = System.AttributeUsageAttribute;
 
-[AttributeUsage(Class | Struct | ATargets.Enum)]
-internal abstract class GenerateEnumerationTypeAttribute : Attribute
+[Usage(Targets.Class | Targets.Struct | Targets.Enum)]
+internal abstract class GenerateEnumerationTypeAttribute(
+    string? typeName = default,
+    string? @namespace = default
+) : Attribute
 {
-    protected GenerateEnumerationTypeAttribute(
-        string? typeName = default,
-        string? @namespace = default
-    )
-    {
-        Namespace = @namespace;
-        TypeName = typeName;
-    }
-
-    public string? Namespace { get; }
-    public string? TypeName { get; }
+    public string? Namespace { get; } = @namespace;
+    public string? TypeName { get; } = @typeName;
 }
 
-[AttributeUsage(Class | Struct | ATargets.Enum)]
+[Usage(Targets.Class | Targets.Struct | Targets.Enum)]
 internal sealed class GenerateEnumerationRecordStructAttribute(
     string? typeName = default,
     string? @namespace = default
 ) : GenerateEnumerationTypeAttribute(typeName, @namespace) { }
 
-[AttributeUsage(Class | Struct | ATargets.Enum)]
+[Usage(Targets.Class | Targets.Struct | Targets.Enum)]
 internal sealed class GenerateEnumerationStructAttribute(
     string? typeName = default,
     string? @namespace = default
 ) : GenerateEnumerationTypeAttribute(typeName, @namespace) { }
 
-[AttributeUsage(Class | Struct | ATargets.Enum)]
+[Usage(Targets.Class | Targets.Struct | Targets.Enum)]
 internal sealed class GenerateEnumerationRecordClassAttribute(
     string? typeName = default,
     string? @namespace = default,
@@ -41,7 +35,7 @@ internal sealed class GenerateEnumerationRecordClassAttribute(
     public Type? BaseType { get; } = baseType;
 }
 
-[AttributeUsage(Class | Struct | ATargets.Enum)]
+[Usage(Targets.Class | Targets.Struct | Targets.Enum)]
 internal sealed class GenerateEnumerationClassAttribute(
     string? typeName = default,
     string? @namespace = default,
