@@ -1,3 +1,4 @@
+#if NO
 namespace {{ dto_namespace }};
 using {{ dto_namespace }}.Abstractions;
 
@@ -29,3 +30,4 @@ public partial {{ data_structure_type }} @{{ dto_type_name }}
       public {{ field_name }}JsonConverterAttribute() : base(typeof({{ field_name }}JsonConverter)) { }
   }
 }
+#endif

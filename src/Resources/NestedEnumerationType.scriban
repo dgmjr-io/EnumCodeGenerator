@@ -1,5 +1,7 @@
 namespace {{ dto_namespace }};
 using {{ dto_namespace }}.Abstractions;
+using DTO_TYPE = @{{ dto_type_name }};
+using ENUM_TYPE = {{ enum_namespace }}.{{ enum_type_name }};
 
 public partial {{ data_structure_type }} @{{ dto_type_name }} {{ if base_type != "" && base_type != null }} : {{ base_type }}{{ end }}
 {
@@ -122,31 +124,21 @@ public partial {{ data_structure_type }} @{{ dto_type_name }} {{ if base_type !=
       [JsonIgnore, XmlIgnore]
       string IHaveAUriString.UriString => UriString;
 
-      /// <summary>The {{ enumeration_name }}'s URI</summary>
-      /// <value>{{ uri_string }}</value>
-      [JsonIgnore, XmlIgnore]
-      System.uri IHaveAuri.Uri => System.uri.From(Uri.ToString());
-
       /// <summary>The order in which the {{ enumeration_name }} should appear</summary>
       /// <value>{{ order }}</value>
       /// <default>0</default>
       [JsonIgnore, XmlIgnore]
       int I{{ enumeration_name }}.Order => Order;
 
-      /// <summary>The {{ enumeration_name }}'s URI</summary>
-      /// <value>{{ uri_string }}</value>
-      [JsonIgnore, XmlIgnore]
-      uri I{{ dto_type_name }}.Uri => uri.From(Uri.ToString());
-
       /// <summary>The {{ enumeration_name }}'s Id as an <see langword="object" /></summary>
       /// <value>{{ id }}</value>
       [JsonIgnore, XmlIgnore]
       object IIdentifiable.Id => Id;
 
-      /// <summary>The {{ enumeration_name }}'s Id as a(n) <see langword="{{ enum_underlying_type }}" /></summary>
+      /// <summary>The {{ enumeration_name }}'s Id as an <see langword="{{ enum_underlying_type }}" /></summary>
       /// <value>{{ id }}</value>
       [JsonIgnore, XmlIgnore]
-      {{ enum_underlying_type }} IIdentifiable<{{ enum_underlying_type }}>.Id => Id;
+      {{ enum_underlying_type }} IIdentifiable<{{ enum_underlying_type }}>.Id => ({{ enum_underlying_type }})Id;
 
       /// <summary>The {{ enumeration_name }}'s synonyms</summary>
       /// <value>{{ synonyms }}</value>
@@ -159,8 +151,6 @@ public partial {{ data_structure_type }} @{{ dto_type_name }} {{ if base_type !=
         bool IEquatable<{{ enum_underlying_type }}>.Equals({{ enum_underlying_type }} value)
           => (({{ enum_namespace }}.{{ enum_type }})Convert.ChangeType(value, typeof({{ enum_namespace }}.{{ enum_type }}))) == Value;
 
-      public int CompareTo(object? other) => other is IEnumeration ie ? CompareTo(ie) : -1;
-      public int CompareTo(IEnumeration other) => Order.CompareTo(other.Order);
       public override int GetHashCode() => Id.GetHashCode();
 
       public TypeCode GetTypeCode() => Convert.GetTypeCode(Value);

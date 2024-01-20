@@ -1,8 +1,9 @@
 namespace {{ dto_namespace }}.Abstractions;
 using {{ dto_namespace }};
+using Dgmjr.Enumerations;
 
 {{ compiler_generated_attributes }}
-[EnumerationJsonConverter]
+[Dgmjr.Enumerations.EnumerationJsonConverter]
 public partial interface I{{ dto_type_name }} :
 IHaveAName,
     IHaveAValue,
@@ -10,7 +11,6 @@ IHaveAName,
     IHaveAValue<{{ enum_namespace }}.{{ enum_type_name }}>,
     IHaveADescription,
     IHaveAUri,
-    IHaveAuri,
     IHaveAUriString,
     IHaveSynonyms,
     IHaveAShortName,
@@ -23,6 +23,5 @@ IHaveAName,
     IEquatable<{{ enum_underlying_type }}>,
     IEquatable<I{{ dto_type_name }}>
 {
-    new uri Uri { get; }
     int Order { get; }
 }

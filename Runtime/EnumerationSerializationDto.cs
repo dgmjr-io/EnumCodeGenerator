@@ -6,7 +6,8 @@ using System.Text.Json.Nodes;
 
 using Dgmjr.Abstractions;
 
-public record class EnumerationSerializationDto(uri Uri,
+public record class EnumerationSerializationDto(
+    uri Uri,
     string Description,
     IDictionary<string, object> Ids,
     IStringDictionary Names
@@ -25,18 +26,20 @@ public record class EnumerationSerializationDto(uri Uri,
             ImmutableDictionary<string, string>.Empty
         );
 
-    public static EnumerationSerializationDto FromEnumeration(
-        object e
-    ) =>
+    public static EnumerationSerializationDto FromEnumeration(object e) =>
         new(
-            (e as IHaveAUri).Uri.ToString(),
-            (e as IHaveADescription).Description,
-            new Dictionary<string, object>() { { Id, (e as IIdentifiable).Id }, { Guid, (e as IHaveAGuid).Guid } },
+            (e as IHaveAUri)?.Uri.ToString(),
+            (e as IHaveADescription)?.Description,
+            new Dictionary<string, object>()
+            {
+                { Id, (e as IIdentifiable)?.Id },
+                { Guid, (e as IHaveAGuid)?.Guid }
+            },
             new StringDictionary()
             {
-                { Name, (e as IHaveAName).Name },
-                { Short, (e as IHaveAShortName).ShortName },
-                { Display, (e as IHaveADisplayName).DisplayName }
+                { Name, (e as IHaveAName)?.Name },
+                { Short, (e as IHaveAShortName)?.ShortName },
+                { Display, (e as IHaveADisplayName)?.DisplayName }
             }
         );
 
@@ -63,9 +66,7 @@ public record class EnumerationSerializationDto<TEnumeration>(
         IHaveADisplayName,
         IHaveAGuid
 {
-    public static EnumerationSerializationDto<TEnumeration> FromEnumeration(
-        TEnumeration e
-    ) =>
+    public static EnumerationSerializationDto<TEnumeration> FromEnumeration(TEnumeration e) =>
         new(
             e.Uri.ToString(),
             e.Description,
