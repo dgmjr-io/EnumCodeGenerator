@@ -24,6 +24,7 @@
     <!-- <PackageReference Include="Dgmjr.CodeGeneration.Logging" /> -->
     <!-- <ProjectReference Include="./Runtime/Dgmjr.Enumerations.CodeGenerator.Runtime.csproj" Targets="Restore;Build" /> -->
     <PackageReference Include="Dgmjr.Abstractions" />
+    <PackageReference Include="Dgmjr.Primitives" />
     <PackageReference Include="Dgmjr.System.Extensions" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
@@ -35,7 +36,6 @@
     <PackageReference Include="ThisAssembly.AssemblyInfo" />
     <PackageReference Include="ThisAssembly.Project" />
     <PackageReference Include="System.Text.Json.Usings" IncludeAssets="Build;BuildTransitive;BuildMultitargeting;Runtime;Compile" ExcludeAssets="ContentFiles;Native;Analyzers" PrivateAssets="None" />
-    <PackageReference Include="System.Private.CoreLib.Polyfills" IncludeAssets="ContentFiles;Build;BuildTransitive;BuildMultitargeting" ExcludeAssets="Analyzers;Runtime;Native" PrivateAssets="All" />
     <ProjectReference Include="../Runtime/Dgmjr.Enumerations.CodeGenerator.Runtime.csproj" />
   </ItemGroup>
 
@@ -52,7 +52,7 @@
 
   <ItemGroup>
     <PackageFile Include="$(OutputPath)/*.dll" PackagePath="analyzers/dotnet/cs/%(Filename)%(Extension)" Visible="false" />
-    <!-- <PackageFile Include="./Runtime/bin/**/*.dll" PackagePath="lib/$(TargetFramework)/%(Filename)%(Extension)" Visible="false" /> -->
+    <PackageFile Include="../Runtime/bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).Runtime.dll" PackagePath="lib/$(TargetFramework)/%(Filename)%(Extension)" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>

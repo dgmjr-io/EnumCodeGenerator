@@ -12,6 +12,5 @@
 
 <Project>
   <ItemGroup>
-    <PackageReference Include="Dgmjr.Primitives" />
   </ItemGroup>
 </Project>

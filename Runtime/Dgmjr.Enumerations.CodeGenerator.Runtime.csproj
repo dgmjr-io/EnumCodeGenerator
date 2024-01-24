@@ -5,6 +5,7 @@
   <ItemGroup>
     <PackageReference Include="Dgmjr.Abstractions" />
     <PackageReference Include="Dgmjr.Primitives" />
+    <PackageReference Include="System.Polyfills" />
     <PackageReference Include="System.Collections.Immutable" />
     <PackageReference Include="System.Text.Json.Usings" IncludeAssets="Build;BuildTransitive;BuildMultitargeting;Runtime;Compile" ExcludeAssets="ContentFiles;Native;Analyzers" PrivateAssets="None" />
   </ItemGroup>
